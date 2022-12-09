@@ -4,19 +4,28 @@ import time
 
 with open('data.txt', 'r') as file:
     student_list = file.readlines()
-    student_list = list(map(lambda x :x.split(":"), student_list))
-    student_list = list(map(lambda x : Student(x[0],x[1],x[2],x[3]), student_list))
+    student_list = list(map(lambda x:x.split(":"), student_list))
+    student_list = list(map(lambda x:Student(x[0],x[1],x[2],x[3]), student_list))
     student_dict = {s.ID : s for s in student_list}
+
+def Replace_password(Username,Password,Password_new,Passsword_repeat):
+    """return true if replace password succeeded"""
+    if Username in student_dict and Password in student_dict:
+        if Password_new == Passsword_repeat:
+            student_dict[Username].password = Password_new
+            return True
+
+    return False
 
 def CheckLogin(Username,Password):
     """a function that returns true or false if the username and password exsists int database"""
-    with open(r'data.txt', 'r') as file:
-        # read all content from a file using read()
-        content = file.read()
-        # check if string present or not
-        if Username in content and Password in content: return True
-    return False
-
+    if Username in student_dict:
+        if student_dict[ID].username == Username and student_dict[ID].secret_word == Secret:
+            return student_dict[ID].password
+        else :
+            return "ID exists but username or secret word do not"
+    else:
+        return "ID doesn't exists"
 def GetForgotPassword(Username,ID,Secret):
     """function that returns current password """
     if ID in student_dict:
@@ -67,7 +76,7 @@ def ChangePassword():
     change_password_layout = [[sg.Text("Change Password")],
                               [sg.Text("Username :", size=(15, 1)), sg.InputText('', size=(20, 1), key='input_username')],
                               [sg.Text("Current Password :", size=(15, 1)),
-                               sg.InputText('', size=(20, 1), key='input_password', password_char='●')],
+                               sg.InputText('', size=(20, 1), key='input_current_password', password_char='●')],
                               [sg.Text("New Password :", size=(15, 1)), sg.InputText('', size=(20, 1), key='input_new_password', password_char='●')],
                               [sg.Text("Repeat Password :", size=(15, 1)), sg.InputText('', size=(20, 1), key='input_repeat_new_password', password_char='●')],
                               [sg.Text(size=(30, 1), key="Error")],
@@ -83,11 +92,10 @@ def ChangePassword():
             input_new_password = change_password_values['input_new_password']
             input_repeat_new_password = change_password_values['input_repeat_new_password']
 
-            if input_username == '' or input_ID == '' or input_new_password == '' or input_repeat_new_password == '' :
+            if input_username == '' or input_current_password == '' or input_new_password == '' or input_repeat_new_password == '' :
                 change_password_window["Error"].update("One or more of the fields not entered")
             else:
-                if input_ID in student_dict:
-                    student_dict[ID].password = input_new_password
+                Replace_password(input_username,input_current_password,input_new_password,input_repeat_new_password)
 
         if change_password_event == sg.WIN_CLOSED or change_password_event == "Exit":
             change_password_window.close()
