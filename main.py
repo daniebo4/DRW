@@ -1,6 +1,25 @@
 import PySimpleGUI as sg
+from Student import Student
+import time
+
+
+
+def CheckLogin(Username,Password):
+    """a function that returns true or false if the username and password exsists int database"""
+    with open(r'data.txt', 'r') as file:
+        # read all content from a file using read()
+        content = file.read()
+        # check if string present or not
+        if Username in content and Password in content: return True
+    return False
+
+def GetForgotPassword(username,ID,secret):
+    """a function that returns true or false if the username and password and secret word are true """
+
+
 
 def Register():
+    """The register window layout elements properties are here, when func is called open a new window"""
     register_layout = [[sg.Text("Register :")],
         [sg.Text("Username :",size = (10,1)), sg.InputText('',size=(20,1), key='input_username')],
         [sg.Text("Password :",size = (10,1)), sg.InputText('',size=(20,1), key='input_password', password_char='●')],
@@ -12,6 +31,7 @@ def Register():
 
     register_window = sg.Window("Register", register_layout)
     while True:
+        Register_success = False#if the user didnt fill one of the fields the bool will be false and register wont close
         register_event, register_values = register_window.read()
         if register_event == "Register":
             input_username = register_values['input_username']
@@ -21,10 +41,18 @@ def Register():
 
             if input_username == '' or input_password == '' or input_ID == ''or input_secret_word == '':
                 register_window["Error"].update("One or more of the fields not entered")
+            else:
+                f = open('data.txt','a')
+                f.write(input_username+':'+input_password+':'+input_ID+':'+input_secret_word+':'+'Student'+"\n")
+                f.close()
+                Register_success=True
 
-        if register_event == sg.WIN_CLOSED or register_event == "Exit":
+        if register_event == sg.WIN_CLOSED or register_event == "Exit" or (register_event == "Register" and Register_success==True) :
             register_window.close()
             break
+        """TO DO :
+        - check if username or id already registered
+        """
 
 def ChangePassword():
     change_password_layout = [[sg.Text("Change Password")],
@@ -68,6 +96,7 @@ def ForgotPassword():
             input_username = forgot_password_values['input_username']
             input_ID = forgot_password_values['input_ID']
             input_secret_word = forgot_password_values['input_secret_word']
+            print(CheckForgotPassword(input_username,input_ID,input_secret_word))
 
             if input_username == '' or input_ID == '' or input_secret_word == '':
                 forgot_password_window["Error"].update("One or more of the fields not entered")
@@ -76,6 +105,31 @@ def ForgotPassword():
             forgot_password_window.close()
             break
 
+def StudentMenu():
+    StudentMenu_layout = [[sg.Text("Forgot Password")],
+                              [sg.Text("Username :", size=(10, 1)),
+                               sg.InputText('', size=(20, 1), key='input_username')],
+                              [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID')],
+                              [sg.Text("Secret Word :", size=(10, 1)),
+                               sg.InputText('', size=(20, 1), key='input_secret_word')],
+                              [sg.Text(size=(30, 1), key="Error")],
+                              [sg.Submit(button_text="Confirm"),
+                               sg.Exit(pad=((150, 0), (0, 0)))]]
+
+    StudentMenu_window = sg.Window("Forgot Password", StudentMenu_layout)
+    while True:
+        forgot_password_event, forgot_password_values = StudentMenu_window.read()
+        if forgot_password_event == "Confirm":
+            input_username = forgot_password_values['input_username']
+            input_ID = forgot_password_values['input_ID']
+            input_secret_word = forgot_password_values['input_secret_word']
+
+            if input_username == '' or input_ID == '' or input_secret_word == '':
+                StudentMenu_window["Error"].update("One or more of the fields not entered")
+
+        if forgot_password_event == sg.WIN_CLOSED or forgot_password_event == "Exit":
+            StudentMenu_window.close()
+            break
 
 login_layout = [[sg.Text("Welcome to the design department\ninventory management system !")],
           [sg.Text("Username :",size = (10,1)), sg.InputText('',size=(20,1), key='input_username'), sg.Submit(button_text="Change password")],
@@ -106,6 +160,12 @@ while True:
         elif input_username == '':
             login_window["Error"].update("Username not entered")
 
+        else:
+            if CheckLogin(input_username,input_password):
+                StudentMenu()
+            else:
+                login_window["Error"].update("Username or password incorrect")
+
     if login_event == "Register":
         Register()
 
@@ -115,9 +175,9 @@ while True:
     if login_event == " Forgot password ": # There are spaces before and after the string
         ForgotPassword()
 
-
-
     if login_event == "Exit" or login_event == sg.WIN_CLOSED:
+        #time.sleep(5)
         break
 
 login_window.close()
+
