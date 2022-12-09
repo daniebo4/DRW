@@ -1,1 +1,2 @@
-username:password:ID:secret
+hadas:hasidim:yesodot:hahama
+lior:abergel:1234:nice project !
