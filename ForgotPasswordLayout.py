@@ -20,7 +20,7 @@ def GetForgotPassword(Username, ID, Secret):
 
 
 def ActivatForgotPassword():
-    forgot_password_layout = [[sg.Text("Forgot Password")],
+    forgot_password_layout = [[sg.Text("Forgot Password",justification='center')],
                               [sg.Text("Username :", size=(10, 1)),
                                sg.InputText('', size=(20, 1), key='input_username')],
                               [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID')],
@@ -28,9 +28,9 @@ def ActivatForgotPassword():
                                sg.InputText('', size=(20, 1), key='input_secret_word')],
                               [sg.Text(size=(30, 1), key="Output")],
                               [sg.Submit(button_text="Confirm"),
-                               sg.Exit(pad=((150, 0), (0, 0)))]]
+                               sg.Exit(pad=((150, 0), (0, 0)))],]
 
-    forgot_password_window = sg.Window("Forgot Password", forgot_password_layout)
+    forgot_password_window = sg.Window("Forgot Password", forgot_password_layout, resizable=True, finalize=True, element_justification='c')
     while True:
         forgot_password_event, forgot_password_values = forgot_password_window.read()
         if forgot_password_event == "Confirm":

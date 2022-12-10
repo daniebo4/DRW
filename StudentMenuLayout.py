@@ -17,7 +17,7 @@ def ActivateStudentMenu():
                           [sg.Submit(button_text="Confirm"),
                            sg.Exit(pad=((150, 0), (0, 0)))]]
 
-    StudentMenu_window = sg.Window("Forgot Password", StudentMenu_layout)
+    StudentMenu_window = sg.Window("Forgot Password", StudentMenu_layout, element_justification='c')
     while True:
         forgot_password_event, forgot_password_values = StudentMenu_window.read()
         if forgot_password_event == "Confirm":

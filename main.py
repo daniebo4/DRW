@@ -1,13 +1,11 @@
 import PySimpleGUI as sg
 from Database_Personas import Student
 from Database_Personas import Worker
-import StudentMenuLayout
-import ChangePasswordLayout
-import RegisterLayout
 import ForgotPasswordLayout
+import ChangePasswordLayout
 import WorkerMenuLayout
-
-import time
+import StudentMenuLayout
+import RegisterLayout
 
 with open('Students_data.txt', 'r') as file:
     student_list = file.readlines()
@@ -23,19 +21,20 @@ with open('Workers_data.txt', 'r') as file:
 
 
 def CheckLoginStudent(ID, Password):
-    """a function that checks if ID and password are matching"""
+    """a function that checks if student`s ID and password are matching"""
     if ID in student_dict.keys():
         return student_dict[ID].password == Password
     return False
 
 
 def CheckLoginWorker(ID, Password):
+    """a function that checks if worker`s ID and password are matching"""
     if ID in Worker_dict.keys():
         return Worker_dict[ID].password == Password
     return False
 
 
-login_layout = [[sg.Text("Welcome to the design department\ninventory management system !")],
+login_layout = [[sg.Text("Welcome to the design department\n inventory management system !")],
                 [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID'),
                  sg.Submit(button_text="Change password")],
                 [sg.Text("Password :", size=(10, 1)),
@@ -46,7 +45,7 @@ login_layout = [[sg.Text("Welcome to the design department\ninventory management
                  sg.Submit(button_text="Register"),
                  sg.Exit(pad=((210, 0), (0, 0)))]]
 
-login_window = sg.Window("Inventory Management System ", login_layout)
+login_window = sg.Window("Inventory Management System ", login_layout, element_justification='c')
 
 # Main event loop
 while True:
@@ -74,6 +73,8 @@ while True:
             # else checks if the user is a worker and matching password
             elif CheckLoginWorker(input_ID, input_password):
                 WorkerMenuLayout.ActivateWorkerMenu()
+
+            # if
 
             else:
                 login_window["Error"].update("ID or password incorrect")

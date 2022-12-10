@@ -5,7 +5,7 @@ from Student import Student
 with open('Students_data.txt', 'r') as file:
     student_list = file.readlines()
     student_list = list(map(lambda x:x.split(":"), student_list))
-    student_list = list(map(lambda x:Student(x[0],x[1],x[2],x[3]), student_list))
+    student_list = list(map(lambda x:Student(x[0], x[1], x[2], x[3]), student_list))
     student_dict = {s.ID: s for s in student_list}
 
 
@@ -21,7 +21,7 @@ def ActivateRegisterLayout():
         [sg.Submit(button_text="Register"),
         sg.Exit(pad= ((90, 0), (0,0)))]]
 
-    register_window = sg.Window("Register", register_layout)
+    register_window = sg.Window("Register", register_layout, element_justification='c')
     while True:
         # if the user didn't fill one of the fields the bool will be false and register won't close
         Register_success = False
