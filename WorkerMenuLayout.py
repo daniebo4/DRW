@@ -1,23 +1,25 @@
-
 import PySimpleGUI as sg
 from Student import Student
 
-with open('Students_data.txt', 'r') as file:
+with open('data.txt', 'r') as file:
     student_list = file.readlines()
     student_list = list(map(lambda x: x.split(":"), student_list))
     student_list = list(map(lambda x: Student(x[0], x[1], x[2], x[3]), student_list))
     student_dict = {s.ID: s for s in student_list}
 
-def ActivateStudentMenu():
-    StudentMenu_layout = [[sg.Text("Student Menu")],
 
-                          [sg.Text("Secret Word :", size=(10, 1)),
-                           sg.InputText('', size=(20, 1), key='input_secret_word')],
-                          [sg.Text(size=(30, 1), key="Error")],
-                          [sg.Submit(button_text="Confirm"),
-                           sg.Exit(pad=((150, 0), (0, 0)))]]
+def ActivateWorkerMenu():
+    WorkerMenu_layout = [[sg.Text("Worker Menu")],
+                         [sg.Text("Username :", size=(10, 1)),
+                          sg.InputText('', size=(20, 1), key='input_username')],
+                         [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID')],
+                         [sg.Text("Secret Word :", size=(10, 1)),
+                          sg.InputText('', size=(20, 1), key='input_secret_word')],
+                         [sg.Text(size=(30, 1), key="Error")],
+                         [sg.Submit(button_text="Confirm"),
+                          sg.Exit(pad=((150, 0), (0, 0)))]]
 
-    StudentMenu_window = sg.Window("Forgot Password", StudentMenu_layout)
+    StudentMenu_window = sg.Window("Forgot Password", WorkerMenu_layout)
     while True:
         forgot_password_event, forgot_password_values = StudentMenu_window.read()
         if forgot_password_event == "Confirm":
@@ -31,6 +33,3 @@ def ActivateStudentMenu():
         if forgot_password_event == sg.WIN_CLOSED or forgot_password_event == "Exit":
             StudentMenu_window.close()
             break
-
-
-

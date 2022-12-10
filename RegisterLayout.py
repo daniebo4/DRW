@@ -2,7 +2,7 @@
 import PySimpleGUI as sg
 from Student import Student
 
-with open('data.txt', 'r') as file:
+with open('Students_data.txt', 'r') as file:
     student_list = file.readlines()
     student_list = list(map(lambda x:x.split(":"), student_list))
     student_list = list(map(lambda x:Student(x[0],x[1],x[2],x[3]), student_list))
@@ -23,7 +23,8 @@ def ActivateRegisterLayout():
 
     register_window = sg.Window("Register", register_layout)
     while True:
-        Register_success = False #if the user didnt fill one of the fields the bool will be false and register wont close
+        # if the user didn't fill one of the fields the bool will be false and register won't close
+        Register_success = False
         register_event, register_values = register_window.read()
         if register_event == "Register":
             input_ID = register_values['input_ID']
@@ -33,10 +34,10 @@ def ActivateRegisterLayout():
             if input_ID == '' or input_password == '' or input_name == '' or input_secret_word == '':
                 register_window["Error"].update("One or more of the fields not entered")
             else:
-                with open('data.txt', 'a') as file:
+                with open('Students_data.txt', 'a') as file:
                     file.write(input_ID + ':' + input_password + ':' + input_name + ':' + input_secret_word + "\n")
                     file.close()
-                student_dict.update({input_ID : Student(input_ID, input_password, input_name, input_secret_word)})
+                student_dict.update({input_ID: Student(input_ID, input_password, input_name, input_secret_word)})
                 Register_success = True
 
         if register_event == sg.WIN_CLOSED or register_event == "Exit" or (register_event == "Register" and Register_success):
