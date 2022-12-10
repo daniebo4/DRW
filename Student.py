@@ -4,5 +4,3 @@ class Student:
         self.password = password
         self.ID = ID
         self.secret_word = secret_word.replace("\n", "")
-
-
