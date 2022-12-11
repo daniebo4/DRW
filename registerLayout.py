@@ -1,13 +1,7 @@
 import PySimpleGUI as sg
 from database_Personas import Student
+from database_Personas import Data_base
 import main
-
-"""with open('Students_data.txt', 'r') as file:
-    student_list = file.readlines()
-    student_list = list(map(lambda x: x.split(":"), student_list))
-    student_list = list(map(lambda x: Student(x[0], x[1], x[2], x[3]), student_list))
-    student_dict = {s.ID: s for s in student_list}"""
-
 
 def open_register_window():
     """The register window layout elements properties are here, when func is called open a new window"""
@@ -36,7 +30,7 @@ def open_register_window():
             else:
                 with open('Students_data.txt', 'a') as file:
                     file.write(f"{input_ID}:{input_password}:{input_name}:{input_secret_word}\n")
-                main.student_dict[input_ID] = Student(input_ID, input_password, input_name, input_secret_word)
+                main.db.student_dict[input_ID] = Student(input_ID, input_password, input_name, input_secret_word)
                 register_success = True
 
         if register_event == sg.WIN_CLOSED or register_event == "Exit" or (

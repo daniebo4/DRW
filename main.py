@@ -1,32 +1,25 @@
 import PySimpleGUI as sg
 from database_Personas import Student
 from database_Personas import Worker
+from database_Personas import Data_base
 import forgotPasswordLayout
 import changePasswordLayout
 import workerMenuLayout
 import studentMenuLayout
 import registerLayout
 
-# Databases are text files , following lines translate the data to dictionaries for easier access and manipulation
-with open('Students_data.txt', 'r') as file: # Students database
-    student_list = file.readlines()
-    student_list = list(map(lambda x: x.split(":"), student_list))
-    student_list = list(map(lambda x: Student(x[0], x[1], x[2], x[3]), student_list))
-    student_dict = {s.ID: s for s in student_list}
+db = Data_base('Students_data.txt', 'Workers_data.txt')
 
-with open('Workers_data.txt', 'r') as file: # Workers database
-    worker_list = file.readlines()
-    worker_list = list(map(lambda x: x.split(":"), worker_list))
-    worker_list = list(map(lambda x: Worker(x[0], x[1], x[2], x[3]), worker_list))
-    worker_dict = {w.ID: w for w in worker_list}
 
 def check_login_student(ID, Password):
     """a function that checks if student`s ID and password are matching"""
     return ID in student_dict and student_dict[ID].password == Password
 
+
 def check_login_worker(ID, Password):
     """a function that checks if worker`s ID and password are matching"""
     return ID in worker_dict and worker_dict[ID].password == Password
+
 
 login_layout = [[sg.Text("Welcome to the design department\n inventory management system !")],
                 [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID'),
@@ -40,6 +33,7 @@ login_layout = [[sg.Text("Welcome to the design department\n inventory managemen
                  sg.Exit(pad=((210, 0), (0, 0)))]]
 
 login_window = sg.Window("Inventory Management System ", login_layout, element_justification='c')
+
 
 def main():
     # Main event loop
@@ -76,7 +70,7 @@ def main():
         if login_event == "Register":
             registerLayout.open_register_window()
             # changes to students dict made in registerLayout not seen in main's student dict
-            # find way to do this without opening databas in each file
+            # find way to do this without opening database in each file
 
         if login_event == "Change password":
             changePasswordLayout.open_change_password_window()
@@ -88,6 +82,7 @@ def main():
             break
 
     login_window.close()
+
 
 if __name__ == "__main__":
     main()

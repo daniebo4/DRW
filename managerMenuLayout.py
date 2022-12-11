@@ -5,7 +5,7 @@ import main
 
 
 def open_worker_window():
-    worker_menu_layout = [[sg.Text("Worker Menu")],
+    worker_menu_layout = [[sg.Text("Manager Menu")],
                           [sg.Text("Username :", size=(10, 1)),
                           sg.InputText('', size=(20, 1), key='input_username')],
                           [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID')],

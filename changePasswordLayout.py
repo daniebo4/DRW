@@ -1,12 +1,7 @@
 import PySimpleGUI as sg
 from database_Personas import Student
-
-with open('Students_data.txt', 'r') as file:
-    student_list = file.readlines()
-    student_list = list(map(lambda x: x.split(":"), student_list))
-    student_list = list(map(lambda x: Student(x[0], x[1], x[2], x[3]), student_list))
-    student_dict = {s.ID: s for s in student_list}
-
+from database_Personas import Data_base
+import main
 
 def open_change_password_window():
     change_password_layout = [[sg.Text("Change Password")],
@@ -34,18 +29,19 @@ def open_change_password_window():
             if input_ID == '' or input_current_password == '' or input_new_password == '' or input_repeat_new_password == '':
                 change_password_window["Error"].update("One or more of the fields not entered")
             else:
-                if input_ID not in student_dict:
+                if input_ID not in main.db.student_dict:
                     change_password_window["Error"].update("ID doesnt exist")
-                elif student_dict[input_ID].password != input_current_password:
+                elif main.db.student_dict[input_ID].password != input_current_password:
                     change_password_window["Error"].update("Current password not correct")
                 elif input_new_password != input_repeat_new_password:
                     change_password_window["Error"].update("New passwords don't match")
                 else:
-                    student_dict[input_ID].password = input_new_password
+                    main.db.student_dict[input_ID].password = input_new_password
                     change_success = True
-                    with open('data.txt', 'a') as file:
-                        pass
+                    with open('Students_data.txt', 'w') as file:
                         # find how to write to the correct line in file
+                        for s in main.db.student_dict.values():
+                            file.write(f"{s.ID}:{s.password}:{s.name}:{s.secret_word}\n")
 
         if change_password_event == sg.WIN_CLOSED or change_password_event == "Exit" or change_success:
             change_password_window.close()
