@@ -14,9 +14,9 @@ def get_forgot_password(Username, ID, Secret):
         if student_dict[ID].username == Username and student_dict[ID].secret_word == Secret:
             return student_dict[ID].password
         else:
-            return "ID exists but username or secret word do not"
+            return "ID exists but username or secret word doesn't"
     else:
-        return "ID doesn't exists"
+        return "ID doesn't exist"
 
 
 def open_forgot_password_window():
@@ -39,10 +39,10 @@ def open_forgot_password_window():
             input_secret_word = forgot_password_values['input_secret_word']
 
             if input_username == '' or input_ID == '' or input_secret_word == '':
-                forgot_password_window["Output"].update("One or more of the fields not entered")
+                forgot_password_window["Output"].update("One or more fields not provided")
             else:
                 if get_forgot_password(input_username, input_ID, input_secret_word) not in (
-                        "ID exists but username or secret word do not", "ID doesn't exists"):
+                        "ID exists but username or secret word doesn't", "ID doesn't exist"):
                     forgot_password_window["Output"].update(
                         get_forgot_password(input_username, input_ID, input_secret_word))
 
