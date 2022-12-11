@@ -1,7 +1,5 @@
-
-
 class Student:
-    def __init__(self, username, password, ID, secret_word,):
+    def __init__(self, username, password, ID, secret_word):
         self.username = username
         self.password = password
         self.ID = ID
@@ -15,7 +13,8 @@ class Worker:
         self.ID = ID
         self.secret_word = secret_word.replace("\n", "")
 
-class Maneger:
+
+class Manager:
     def __init__(self, username, password, ID, secret_word):
         self.username = username
         self.password = password
