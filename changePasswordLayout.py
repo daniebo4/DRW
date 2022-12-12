@@ -14,7 +14,7 @@ def open_change_password_window():
                                sg.InputText('', size=(20, 1), key='input_repeat_new_password', password_char='●')],
                               [sg.Text(size=(30, 1), key="Error")],
                               [sg.Submit(button_text="Confirm"),
-                               sg.Exit(pad=((190, 0), (0, 0)))]]
+                               sg.Exit(pad=((190, 0), (0, 0)))]] #fdsg
 
     change_password_window = sg.Window("Change Password", change_password_layout)
     while True:
