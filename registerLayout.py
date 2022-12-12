@@ -1,7 +1,5 @@
 import PySimpleGUI as sg
-from database_Personas import Student
-from database_Personas import DataBase
-import main
+
 
 def open_register_window():
     """The register window layout elements properties are here, when func is called open a new window"""
@@ -27,6 +25,7 @@ def open_register_window():
             input_secret_word = register_values['input_secret_word']
             if input_ID == '' or input_password == '' or input_name == '' or input_secret_word == '':
                 register_window["Error"].update("One or more of the fields not entered")
+
             else:
                 with open('Students_data.txt', 'a') as file:
                     file.write(f"{input_ID}:{input_password}:{input_name}:{input_secret_word}\n")

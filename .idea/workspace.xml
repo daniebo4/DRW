@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2513eb0e-759c-4d70-b843-d072404ad6ca" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/registerLayout_testing.py" afterDir="false" />
+    <list default="true" id="2513eb0e-759c-4d70-b843-d072404ad6ca" name="Changes" comment="Create unit testing for register layout">
+      <change afterPath="$PROJECT_DIR$/forgotPassword_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/DRW.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DRW.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Students_data.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Students_data.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/registerLayout.py" beforeDir="false" afterPath="$PROJECT_DIR$/registerLayout.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/registerLayout_testing.py" beforeDir="false" afterPath="$PROJECT_DIR$/registerLayout_testing.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,7 +41,55 @@
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Daniel\Desktop\GitProjects\DRW\DRW" />
+      <recent name="C:\Users\Daniel\Desktop\GitProjects\DRW\DRW\TestingUnit" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.forgotPassword_test (1)">
+    <configuration name="forgotPassword_test (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="DRW" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/forgotPassword_test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="forgotPassword_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="DRW" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/TestingUnit" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="C:\Users\Daniel\Desktop\GitProjects\DRW\DRW\forgotPassword_test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="DRW" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -60,9 +111,26 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="Python tests in forgotPassword_test.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="DRW" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/TestingUnit" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/forgotPassword_test.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.forgotPassword_test (1)" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python tests.Python tests in forgotPassword_test.py" />
+        <item itemvalue="Python.forgotPassword_test" />
       </list>
     </recent_temporary>
   </component>
@@ -75,6 +143,14 @@
       <option name="presentableId" value="Default" />
       <updated>1670852771061</updated>
     </task>
+    <task id="LOCAL-00001" summary="Create unit testing for register layout">
+      <created>1670869160332</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1670869160332</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -87,5 +163,20 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Create unit testing for register layout" />
+    <option name="LAST_COMMIT_MESSAGE" value="Create unit testing for register layout" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/forgotPassword_test.py</url>
+          <line>5</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
