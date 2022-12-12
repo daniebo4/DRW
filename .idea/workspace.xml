@@ -1,40 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AutoImportSettings">
-    <option name="autoReloadType" value="SELECTIVE" />
-  </component>
   <component name="ChangeListManager">
-    <list default="true" id="2513eb0e-759c-4d70-b843-d072404ad6ca" name="Changes" comment="manager login">
+    <list default="true" id="2513eb0e-759c-4d70-b843-d072404ad6ca" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/registerLayout_testing.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Students_data.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Students_data.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/changePasswordLayout.py" beforeDir="false" afterPath="$PROJECT_DIR$/changePasswordLayout.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database_Personas.py" beforeDir="false" afterPath="$PROJECT_DIR$/database_Personas.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/forgotPasswordLayout.py" beforeDir="false" afterPath="$PROJECT_DIR$/forgotPasswordLayout.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/managerMenuLayout.py" beforeDir="false" afterPath="$PROJECT_DIR$/managerMenuLayout.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/registerLayout.py" beforeDir="false" afterPath="$PROJECT_DIR$/registerLayout.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workerMenuLayout.py" beforeDir="false" afterPath="$PROJECT_DIR$/workerMenuLayout.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN"
-  }
-}]]></component>
-  <component name="GithubPullRequestsUISettings">
-    <option name="selectedUrlAndAccountId">
-      <UrlAndAccount>
-        <option name="accountId" value="79678d1d-ab31-43c3-9f33-53f06f1a5a88" />
-        <option name="url" value="https://github.com/daniebo4/DRW.git" />
-      </UrlAndAccount>
-    </option>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -45,14 +30,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Daniel/Desktop/GitProjects/DRW/DRW&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "C:/Users/Daniel/Desktop/GitProjects/DRW/DRW",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="DRW" />
@@ -90,14 +75,6 @@
       <option name="presentableId" value="Default" />
       <updated>1670852771061</updated>
     </task>
-    <task id="LOCAL‎-00001" summary="manager login">
-      <created>1670857234783</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL‎-00001" />
-      <option name="project" value="LOCAL‎" />
-      <updated>1670857234783</updated>
-    </task>
-    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -110,16 +87,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="manager login" />
-    <option name="LAST_COMMIT_MESSAGE" value="manager login" />
-  </component>
-  <component name="XDebuggerManager">
-    <watches-manager>
-      <configuration name="PythonConfigurationType">
-        <watch expression="db" language="Python" />
-      </configuration>
-    </watches-manager>
   </component>
 </project>
