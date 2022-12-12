@@ -35,7 +35,7 @@ class Data_base:
             self.student_dict = {s.ID: s for s in student_list}
 
 
-        with open(file_dir_w, 'a+') as file2: # Workers database
+        with open(file_dir_w, 'r+') as file2: # Workers database
             worker_list = file2.readlines()
             if os.path.getsize(file_dir_w) == 0:
                 file2.write("admin:admin:admin:admin\n")

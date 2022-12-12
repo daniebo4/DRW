@@ -6,37 +6,25 @@ import forgotPasswordLayout
 import changePasswordLayout
 import workerMenuLayout
 import studentMenuLayout
+import managerMenuLayout
 import registerLayout
 
 db = Data_base('Students_data.txt', 'Workers_data.txt')
-#test
-
-def check_login_student(ID, Password):
-    """a function that checks if student`s ID and password are matching"""
-    return ID in db.student_dict and db.student_dict[ID].password == Password
-
-
-def check_login_worker(ID, Password):
-    """a function that checks if worker`s ID and password are matching"""
-    return ID in db.worker_dict and db.worker_dict[ID].password == Password
-
-
-login_layout = [[sg.Text("Welcome to the design department\n inventory management system !")],
-                [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID'),
-                 sg.Submit(button_text="Change password")],
-                [sg.Text("Password :", size=(10, 1)),
-                 sg.InputText('', size=(20, 1), key='input_password', password_char='●'),
-                 sg.Submit(button_text=" Forgot password ")],
-                [sg.Text(size=(30, 1), key="Error")],
-                [sg.Submit(button_text="Log in"),
-                 sg.Submit(button_text="Register"),
-                 sg.Exit(pad=((210, 0), (0, 0)))]]
-
-login_window = sg.Window("Inventory Management System ", login_layout, element_justification='c')
-
 
 def main():
     # Main event loop
+    login_layout = [[sg.Text("Welcome to the design department\n inventory management system !")],
+                    [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID'),
+                     sg.Submit(button_text="Change password")],
+                    [sg.Text("Password :", size=(10, 1)),
+                     sg.InputText('', size=(20, 1), key='input_password', password_char='●'),
+                     sg.Submit(button_text=" Forgot password ")],
+                    [sg.Text(size=(30, 1), key="Error")],
+                    [sg.Submit(button_text="Log in"),
+                     sg.Submit(button_text="Register"),
+                     sg.Exit(pad=((210, 0), (0, 0)))]]
+
+    login_window = sg.Window("Inventory Management System ", login_layout, element_justification='c')
     while True:
         login_event, login_values = login_window.read()
 
@@ -59,8 +47,11 @@ def main():
                     studentMenuLayout.open_student_window()
 
                 # else checks if the user is a worker
-                elif check_login_worker(input_ID, input_password):
+                elif check_login_worker(input_ID, input_password) and input_ID != 'admin':
                     workerMenuLayout.open_worker_window()
+
+                elif check_login_worker(input_ID, input_password):
+                    managerMenuLayout.open_manager_window()
 
                 # if
 
@@ -82,6 +73,16 @@ def main():
             break
 
     login_window.close()
+
+
+def check_login_student(ID, Password):
+    """a function that checks if student`s ID and password are matching"""
+    return ID in db.student_dict and db.student_dict[ID].password == Password
+
+
+def check_login_worker(ID, Password):
+    """a function that checks if worker`s ID and password are matching"""
+    return ID in db.worker_dict and db.worker_dict[ID].password == Password
 
 
 if __name__ == "__main__":
