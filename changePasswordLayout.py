@@ -27,10 +27,10 @@ def open_change_password_window():
             input_repeat_new_password = change_password_values['input_repeat_new_password']
 
             if input_ID == '' or input_current_password == '' or input_new_password == '' or input_repeat_new_password == '':
-                change_password_window["Error"].update("One or more fields not provided")
+                change_password_window["Error"].update("One or more of the fields not entered")
             else:
                 if input_ID not in main.db.student_dict:
-                    change_password_window["Error"].update("ID doesn't exist")
+                    change_password_window["Error"].update("ID doesnt exist")
                 elif main.db.student_dict[input_ID].password != input_current_password:
                     change_password_window["Error"].update("Current password not correct")
                 elif input_new_password != input_repeat_new_password:

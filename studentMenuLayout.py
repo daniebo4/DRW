@@ -1,11 +1,6 @@
 import PySimpleGUI as sg
 from database_Personas import Student
-
-with open('Students_data.txt', 'r') as file:
-    student_list = file.readlines()
-    student_list = list(map(lambda x: x.split(":"), student_list))
-    student_list = list(map(lambda x: Student(x[0], x[1], x[2], x[3]), student_list))
-    student_dict = {s.ID: s for s in student_list}
+import main
 
 
 def open_student_window():

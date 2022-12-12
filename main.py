@@ -13,12 +13,12 @@ db = Data_base('Students_data.txt', 'Workers_data.txt')
 
 def check_login_student(ID, Password):
     """a function that checks if student`s ID and password are matching"""
-    return ID in student_dict and student_dict[ID].password == Password
+    return ID in db.student_dict and db.student_dict[ID].password == Password
 
 
 def check_login_worker(ID, Password):
     """a function that checks if worker`s ID and password are matching"""
-    return ID in worker_dict and worker_dict[ID].password == Password
+    return ID in db.worker_dict and db.worker_dict[ID].password == Password
 
 
 login_layout = [[sg.Text("Welcome to the design department\n inventory management system !")],
