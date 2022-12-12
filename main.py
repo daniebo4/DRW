@@ -1,7 +1,7 @@
 import PySimpleGUI as sg
 from database_Personas import Student
 from database_Personas import Worker
-from database_Personas import Data_base
+from database_Personas import DataBase
 import forgotPasswordLayout
 import changePasswordLayout
 import workerMenuLayout
@@ -9,9 +9,10 @@ import studentMenuLayout
 import managerMenuLayout
 import registerLayout
 
-db = Data_base('Students_data.txt', 'Workers_data.txt')
+db = DataBase('Students_data.txt', 'Workers_data.txt')
 
-def main():
+def mainMenu():
+    global db
     # Main event loop
     login_layout = [[sg.Text("Welcome to the design department\n inventory management system !")],
                     [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID'),
@@ -53,18 +54,18 @@ def main():
                 elif check_login_worker(input_ID, input_password):
                     managerMenuLayout.open_manager_window()
 
-                # if
-
                 else:
                     login_window["Error"].update("ID or password incorrect")
 
         if login_event == "Register":
             registerLayout.open_register_window()
+            db = DataBase('Students_data.txt', 'Workers_data.txt')
             # changes to students dict made in registerLayout not seen in main's student dict
             # find way to do this without opening database in each file
 
         if login_event == "Change password":
             changePasswordLayout.open_change_password_window()
+            db = DataBase('Students_data.txt', 'Workers_data.txt')
 
         if login_event == " Forgot password ":  # There are spaces before and after the string
             forgotPasswordLayout.open_forgot_password_window()
@@ -73,6 +74,14 @@ def main():
             break
 
     login_window.close()
+
+
+'''def append_to_data_base(input_obj):
+    global db
+    if isinstance(input_obj, Student):
+        db.student_dict[input_obj.ID] = input_obj
+    elif isinstance(input_obj, Worker):
+        db.worker_dict[input_obj.ID] = input_obj'''
 
 
 def check_login_student(ID, Password):
@@ -86,4 +95,4 @@ def check_login_worker(ID, Password):
 
 
 if __name__ == "__main__":
-    main()
+    mainMenu()

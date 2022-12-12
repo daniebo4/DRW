@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 from database_Personas import Student
-from database_Personas import Data_base
+from database_Personas import DataBase
 import main
 
 def open_register_window():
@@ -30,7 +30,6 @@ def open_register_window():
             else:
                 with open('Students_data.txt', 'a') as file:
                     file.write(f"{input_ID}:{input_password}:{input_name}:{input_secret_word}\n")
-                main.db.student_dict[input_ID] = Student(input_ID, input_password, input_name, input_secret_word)
                 register_success = True
 
         if register_event == sg.WIN_CLOSED or register_event == "Exit" or (

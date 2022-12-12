@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 from database_Personas import Worker
-from database_Personas import Data_base
+from database_Personas import DataBase
 import main
 
 def open_manager_window():

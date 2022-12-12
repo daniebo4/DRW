@@ -1,7 +1,6 @@
 import PySimpleGUI as sg
-from database_Personas import Student
-from database_Personas import Data_base
 import main
+
 
 def open_change_password_window():
     change_password_layout = [[sg.Text("Change Password")],
