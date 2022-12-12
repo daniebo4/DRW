@@ -4,8 +4,3 @@ A python project created to satisfy the needs of students in the design deparatm
 Main features: loan items, return items, add items
 
 # More documentation to come! don't neglect!
-a
-a
-a
-a
-a
