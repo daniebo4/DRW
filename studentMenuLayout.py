@@ -6,7 +6,7 @@ import main
 def open_student_window():
     student_menu_layout = [[sg.Text("Student Menu")],
                            [sg.Text("Secret Word :", size=(10, 1)),
-                           sg.InputText('', size=(20, 1), key='input_secret_word')],
+                           sg.InputText('', size=(20, 1), key='input_secret_word',)],
                            [sg.Text(size=(30, 1), key="Error")],
                            [sg.Submit(button_text="Confirm"),
                            sg.Exit(pad=((150, 0), (0, 0)))]]

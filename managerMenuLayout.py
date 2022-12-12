@@ -3,16 +3,17 @@ from database_Personas import Worker
 from database_Personas import DataBase
 import main
 
+
 def open_manager_window():
     manager_menu_layout = [[sg.Text("Manager Menu")],
                            [sg.Text("Username :", size=(10, 1)),
-                           sg.InputText('', size=(20, 1), key='input_username')],
+                            sg.InputText('', size=(20, 1), key='input_username')],
                            [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID')],
                            [sg.Text("Secret Word :", size=(10, 1)),
-                           sg.InputText('', size=(20, 1), key='input_secret_word')],
+                            sg.InputText('', size=(20, 1), key='input_secret_word')],
                            [sg.Text(size=(30, 1), key="Error")],
                            [sg.Submit(button_text="Confirm"),
-                           sg.Exit(pad=((150, 0), (0, 0)))]]
+                            sg.Exit(pad=((150, 0), (0, 0)))]]
 
     manager_menu_window = sg.Window("Forgot Password", manager_menu_layout, element_justification='c')
     while True:

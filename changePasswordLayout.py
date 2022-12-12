@@ -27,6 +27,8 @@ def open_change_password_window():
 
             if input_ID == '' or input_current_password == '' or input_new_password == '' or input_repeat_new_password == '':
                 change_password_window["Error"].update("One or more of the fields not entered")
+            if not input_ID.isdigit():
+                change_password_window["Error"].update("ID can only contain numbers")
             else:
                 if input_ID not in main.db.student_dict:
                     change_password_window["Error"].update("ID doesnt exist")

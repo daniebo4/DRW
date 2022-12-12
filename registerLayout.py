@@ -25,6 +25,8 @@ def open_register_window():
             input_secret_word = register_values['input_secret_word']
             if input_ID == '' or input_password == '' or input_name == '' or input_secret_word == '':
                 register_window["Error"].update("One or more of the fields not entered")
+            if not input_ID.isdigit():
+                register_window["Error"].update("ID can only contain numbers")
 
             else:
                 with open('Students_data.txt', 'a') as file:

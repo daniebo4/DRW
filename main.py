@@ -11,6 +11,7 @@ import registerLayout
 
 db = DataBase('Students_data.txt', 'Workers_data.txt')
 
+
 def mainMenu():
     global db
     # Main event loop
@@ -60,8 +61,6 @@ def mainMenu():
         if login_event == "Register":
             registerLayout.open_register_window()
             db = DataBase('Students_data.txt', 'Workers_data.txt')
-            # changes to students dict made in registerLayout not seen in main's student dict
-            # find way to do this without opening database in each file
 
         if login_event == "Change password":
             changePasswordLayout.open_change_password_window()
