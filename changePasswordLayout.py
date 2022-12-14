@@ -1,35 +1,36 @@
 import PySimpleGUI as sg
 import main
 
+change_errors= ("One or more of the fields not entered", "ID can only contain numbers", "ID doesnt exist",
+               "Current password not correct", "New passwords don't match" )
 
+'''
 def change_student(input_ID, input_new_password):
     """writes the student in Student_data"""
-    main.db.student_dict[input_ID].password = input_new_password
     change_success = True
-    with open('Students_data.txt', 'w') as file:
-        # find how to write to the correct line in file
-        for s in main.db.student_dict.values():
-            file.write(f"{s.ID}:{s.password}:{s.name}:{s.secret_word}\n")
-
+    
+'''
 
 def attempt_to_change(input_ID, input_current_password, input_new_password, input_repeat_new_password):
     """The function gets the input and tries to create a new student
     account and returns a string based on what happened """
     if input_ID == '' or input_current_password == '' or input_new_password == '' or input_repeat_new_password == '':
-        return "One or more of the fields not entered"
+        return change_errors[0]
     if not input_ID.isdigit():
-        return "ID can only contain numbers"
+        return change_errors[1]
     else:
         if input_ID not in main.db.student_dict:
-            return "ID doesnt exist"
+            return change_errors[2]
         elif main.db.student_dict[input_ID].password != input_current_password:
-            return "Current password not correct"
+            return change_errors[3]
         elif input_new_password != input_repeat_new_password:
-            return "New passwords don't match"
+            return change_errors[4]
         else:
-            # if all the input are correct then writes the student in Students_data
-            change_student(input_ID, input_new_password)
-            return "Your password has been changed"
+            main.db.student_dict[input_ID].password = input_new_password
+            with open('Students_data.txt', 'w') as file:
+                for s in main.db.student_dict.values():
+                    file.write(f"{s.ID}:{s.password}:{s.name}:{s.secret_word}\n")
+            return True
 
 
 def open_change_password_window():
@@ -55,9 +56,10 @@ def open_change_password_window():
             input_new_password = change_password_values['input_new_password']
             input_repeat_new_password = change_password_values['input_repeat_new_password']
             # The system calls the function below to try to register with the input it got from the GUI
-            change_password_window["Error"].update(
-                attempt_to_change(input_ID, input_current_password, input_new_password, input_repeat_new_password))
-            # attempt_to_change tries to change login data of a user
-        if change_password_event == sg.WIN_CLOSED or change_password_event == "Exit" or change_success:
+            change_check_res = attempt_to_change(input_ID, input_current_password, input_new_password, input_repeat_new_password)
+            if change_check_res is not True:
+                change_password_window["Error"].update(change_check_res)
+
+        if change_password_event == sg.WIN_CLOSED or change_password_event == "Exit" or change_check_res is True:
             change_password_window.close()
             break

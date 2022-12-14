@@ -1,4 +1,20 @@
 import PySimpleGUI as sg
+import main
+
+register_errors=("One or more of the fields not entered", "ID can only contain numbers",
+                 "Name cant contain numbers", "ID already exist in the system!!!!")
+
+def check_register(input_ID, input_password, input_name, input_secret_word):
+    if input_ID == '' or input_password == '' or input_name == '' or input_secret_word == '':
+        return register_errors[0]
+    elif not input_ID.isdigit():
+        return register_errors[1]
+    elif any(char.isdigit() for char in input_name):
+        return register_errors[2]
+    elif input_ID in main.db.student_dict:
+        return register_errors[3]
+    else:
+        return True
 
 
 def open_register_window():
@@ -15,26 +31,23 @@ def open_register_window():
                         sg.Exit(pad=((90, 0), (0, 0)))]]
 
     register_window = sg.Window("Register", register_layout, element_justification='c')
+
     while True:
-        register_success = False  # checks validity of input , if True - window will close
         register_event, register_values = register_window.read()
         if register_event == "Register":
             input_ID = register_values['input_ID']
             input_password = register_values['input_password']
             input_name = register_values['input_name']
             input_secret_word = register_values['input_secret_word']
-            if input_ID == '' or input_password == '' or input_name == '' or input_secret_word == '':
-                register_window["Error"].update("One or more of the fields not entered")
-            if not input_ID.isdigit():
-                register_window["Error"].update("ID can only contain numbers")
-
-            else:
+            register_check_res = check_register(input_ID, input_password, input_name, input_secret_word)
+            if register_check_res==True:
                 with open('Students_data.txt', 'a') as file:
                     file.write(f"{input_ID}:{input_password}:{input_name}:{input_secret_word}\n")
-                register_success = True
+            else:
+                register_window["Error"].update(register_check_res)
 
         if register_event == sg.WIN_CLOSED or register_event == "Exit" or (
-                register_event == "Register" and register_success):
+                register_event == "Register" and register_check_res==True):
             register_window.close()
             break
         """TO DO :
