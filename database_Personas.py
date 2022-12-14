@@ -24,7 +24,7 @@ class Manager:
         self.password = password
         self.name = name
         self.secret_word = secret_word.replace("\n", "")
-'''
+'''  # class manager in case needed
 
 
 class DataBase:

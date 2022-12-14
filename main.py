@@ -1,15 +1,18 @@
+import os
 import PySimpleGUI as sg
-from database_Personas import Student
-from database_Personas import Worker
 from database_Personas import DataBase
-import forgotPasswordLayout
-import changePasswordLayout
-import workerMenuLayout
-import studentMenuLayout
-import managerMenuLayout
-import registerLayout
+from Layouts import forgotPasswordLayout
+from Layouts import changePasswordLayout
+from Layouts import workerMenuLayout
+from Layouts import studentMenuLayout
+from Layouts import managerMenuLayout
+from Layouts import registerLayout
 
-db = DataBase('Students_data.txt', 'Workers_data.txt')
+project_root_dir = os.path.dirname(os.path.abspath(__file__))  # Finds path to current project folder
+db = DataBase(project_root_dir + '\\Students_data.txt', project_root_dir + '\\Workers_data.txt')  # Gets path to
+
+
+# student and worker database
 
 
 def mainMenu():
@@ -52,9 +55,11 @@ def mainMenu():
                 elif check_login_worker(input_ID, input_password) and input_ID != 'admin':
                     workerMenuLayout.open_worker_window()
 
+                # else check if the user is the admin
                 elif check_login_worker(input_ID, input_password):
                     managerMenuLayout.open_manager_window()
 
+                # conclude that user is not registered / details incorrect
                 else:
                     login_window["Error"].update("ID or password incorrect")
 
@@ -66,7 +71,7 @@ def mainMenu():
             changePasswordLayout.open_change_password_window()
             db = DataBase('Students_data.txt', 'Workers_data.txt')
 
-        if login_event == " Forgot password ":  # There are spaces before and after the string
+        if login_event == " Forgot password ":  # There are spaces before and after the string !!!!
             forgotPasswordLayout.open_forgot_password_window()
 
         if login_event == "Exit" or login_event == sg.WIN_CLOSED:
@@ -80,7 +85,7 @@ def mainMenu():
     if isinstance(input_obj, Student):
         db.student_dict[input_obj.ID] = input_obj
     elif isinstance(input_obj, Worker):
-        db.worker_dict[input_obj.ID] = input_obj'''
+        db.worker_dict[input_obj.ID] = input_obj'''  # back up function in case database management system is changed
 
 
 def check_login_student(ID, Password):

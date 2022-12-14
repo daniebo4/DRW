@@ -1,9 +1,9 @@
 import unittest
-import changePasswordLayout
+from Layouts import changePasswordLayout
 import main
 
 
-class ChangePassword_test(unittest.TestCase):
+class ChangePasswordTest(unittest.TestCase):
     def test1_fields_not_entered(self):
         # Test if one of fields is empty
         self.assertEqual(changePasswordLayout.attempt_to_change(' ', '   ', '1', ''),
@@ -19,6 +19,7 @@ class ChangePassword_test(unittest.TestCase):
                          changePasswordLayout.change_errors[1])
 
     def test2_ID_incorrect(self):
+        # Test if ID exists in student database
         if main.db.student_dict:
             s = list(main.db.student_dict.values())[0]
             if len(s.ID) == 1:
@@ -27,7 +28,8 @@ class ChangePassword_test(unittest.TestCase):
                     incorrect_ID = chr(ord(incorrect_ID) + 1)
             else:
                 incorrect_ID = s.ID[0]
-            self.assertEqual(changePasswordLayout.attempt_to_change( incorrect_ID,'a','a', 'a'), changePasswordLayout.change_errors[2])
+            self.assertEqual(changePasswordLayout.attempt_to_change(incorrect_ID, 'a', 'a', 'a'),
+                             changePasswordLayout.change_errors[2])
 
     def test3_current_password_incorrect(self):
         # Test if the current password doesn't match
@@ -37,12 +39,11 @@ class ChangePassword_test(unittest.TestCase):
                          changePasswordLayout.change_errors[3])
 
     def test4_new_password_not_match(self):
+        # Test if two new passwords input don't match (should be equal)
         self.assertEqual(changePasswordLayout.attempt_to_change('1', '1', '5', '6'),
                          changePasswordLayout.change_errors[4])
         self.assertEqual(changePasswordLayout.attempt_to_change('1', '1', 'sss', '55'),
                          changePasswordLayout.change_errors[4])
-
-
 
 
 if __name__ == '__main__':
