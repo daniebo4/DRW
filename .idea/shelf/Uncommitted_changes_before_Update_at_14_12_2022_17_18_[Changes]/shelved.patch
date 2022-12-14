@@ -1,0 +1,162 @@
+Index: changePasswordLayout_test.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import unittest\r\nimport changePasswordLayout\r\nimport main\r\n\r\n\r\nclass ChangePassword_test(unittest.TestCase):\r\n    def test1_fields_not_entered(self):\r\n        # Test if one of fields is empty\r\n        self.assertEqual(changePasswordLayout.attempt_to_change(' ', '   ', '1', ''),\r\n                         \"One or more of the fields not entered\")\r\n        self.assertEqual(changePasswordLayout.attempt_to_change('#@!$%', '   ', '1', ''),\r\n                         \"One or more of the fields not entered\")\r\n\r\n    def test2_id_is_digits(self):\r\n        # Test if the ID isn't all numbers\r\n        self.assertEqual(changePasswordLayout.attempt_to_change('abc', '1', '2', '2'),\r\n                         \"ID can only contain numbers\")\r\n        self.assertEqual(changePasswordLayout.attempt_to_change('!cs1cx', '1', '2', '2'),\r\n                         \"ID can only contain numbers\")\r\n\r\n    def test3_current_password_incorrect(self):\r\n        # Test if the current password doesn't match\r\n        self.assertEqual(changePasswordLayout.attempt_to_change('1', '4521', '3', '3'),\r\n                         \"Current password not correct\")\r\n        self.assertEqual(changePasswordLayout.attempt_to_change('1', '!2!1', '3', '3'),\r\n                         \"Current password not correct\")\r\n\r\n    def test4_new_password_not_match(self):\r\n        self.assertEqual(changePasswordLayout.attempt_to_change('1', '1', '5', '6'),\r\n                         \"New passwords don't match\")\r\n        self.assertEqual(changePasswordLayout.attempt_to_change('1', '1', 'sss', '55'),\r\n                         \"New passwords don't match\")\r\n\r\n\r\n\r\n\r\nif __name__ == '__main__':\r\n    unittest.main()\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/changePasswordLayout_test.py b/changePasswordLayout_test.py
+--- a/changePasswordLayout_test.py	(revision 90928696452ad6d5517a5e9fd362e27229c43ff8)
++++ b/changePasswordLayout_test.py	(date 1671024549419)
+@@ -3,7 +3,7 @@
+ import main
+ 
+ 
+-class ChangePassword_test(unittest.TestCase):
++class ChangePasswordTest(unittest.TestCase):
+     def test1_fields_not_entered(self):
+         # Test if one of fields is empty
+         self.assertEqual(changePasswordLayout.attempt_to_change(' ', '   ', '1', ''),
+Index: forgotPassword_test.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import unittest\r\nimport forgotPasswordLayout\r\nimport main\r\n\r\n\r\nclass GetPasswordTest(unittest.TestCase):\r\n    def test1_fields_not_entered(self):\r\n        self.assertEqual(forgotPasswordLayout.get_forgot_password('1', '2', ''),\r\n                         \"One or more of the fields not entered\")\r\n\r\n    def test2_ID_not_only_digits(self):\r\n        self.assertEqual(forgotPasswordLayout.get_forgot_password('a', 'a', 'a'), \"ID can only contain numbers\")\r\n\r\n    def test3_correct_ID_and_password(self):\r\n        if main.db.student_dict:\r\n            s = list(main.db.student_dict.values())[0]\r\n            if len(s.secret_word) == 1:\r\n                incorrect_secret_word = chr(ord(s.secret_word) + 1)\r\n            else:\r\n                incorrect_secret_word = s.secret_word[0]\r\n            self.assertEqual(forgotPasswordLayout.get_forgot_password(s.name, s.password, incorrect_secret_word),\r\n                             \"ID exists but name or secret word do not\")\r\n\r\n    def test4_correct_ID_and_secret_word(self):\r\n        if main.db.student_dict:\r\n            s = list(main.db.student_dict.values())[0]\r\n            if len(s.password) == 1:\r\n                incorrect_password = chr(ord(s.password) + 1)\r\n            else:\r\n                incorrect_password = s.password[0]\r\n            self.assertEqual(forgotPasswordLayout.get_forgot_password(s.name, incorrect_password, s.secret_word),\r\n                             \"ID exists but name or secret word do not\")\r\n\r\n    def test5_ID_not_correct(self):\r\n        if main.db.student_dict:\r\n            s = list(main.db.student_dict.values())[0]\r\n            if len(s.ID) == 1:\r\n                incorrect_ID = s.ID\r\n                while incorrect_ID in main.db.student_dict:\r\n                    incorrect_ID = chr(ord(incorrect_ID) + 1)\r\n            else:\r\n                incorrect_ID = s.ID[0]\r\n            self.assertEqual(forgotPasswordLayout.get_forgot_password('a', incorrect_ID, 'a'), \"ID doesn't exists\")\r\n\r\n\r\nif __name__ == '__main__':\r\n    unittest.main()\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/forgotPassword_test.py b/forgotPassword_test.py
+--- a/forgotPassword_test.py	(revision 90928696452ad6d5517a5e9fd362e27229c43ff8)
++++ b/forgotPassword_test.py	(date 1671027641555)
+@@ -6,7 +6,7 @@
+ class GetPasswordTest(unittest.TestCase):
+     def test1_fields_not_entered(self):
+         self.assertEqual(forgotPasswordLayout.get_forgot_password('1', '2', ''),
+-                         "One or more of the fields not entered")
++                         forgotPasswordLayout.errors[0])
+ 
+     def test2_ID_not_only_digits(self):
+         self.assertEqual(forgotPasswordLayout.get_forgot_password('a', 'a', 'a'), "ID can only contain numbers")
+Index: changePasswordLayout.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import PySimpleGUI as sg\r\nimport main\r\n\r\n\r\ndef change_student(input_ID, input_new_password):\r\n    \"\"\"writes the student in Student_data\"\"\"\r\n    main.db.student_dict[input_ID].password = input_new_password\r\n    change_success = True\r\n    with open('Students_data.txt', 'w') as file:\r\n        # find how to write to the correct line in file\r\n        for s in main.db.student_dict.values():\r\n            file.write(f\"{s.ID}:{s.password}:{s.name}:{s.secret_word}\\n\")\r\n\r\n\r\ndef attempt_to_change(input_ID, input_current_password, input_new_password, input_repeat_new_password):\r\n    \"\"\"The function gets the input and tries to create a new student\r\n    account and returns a string based on what happened \"\"\"\r\n    if input_ID == '' or input_current_password == '' or input_new_password == '' or input_repeat_new_password == '':\r\n        return \"One or more of the fields not entered\"\r\n    if not input_ID.isdigit():\r\n        return \"ID can only contain numbers\"\r\n    else:\r\n        if input_ID not in main.db.student_dict:\r\n            return \"ID doesnt exist\"\r\n        elif main.db.student_dict[input_ID].password != input_current_password:\r\n            return \"Current password not correct\"\r\n        elif input_new_password != input_repeat_new_password:\r\n            return \"New passwords don't match\"\r\n        else:\r\n            # if all the input are correct then writes the student in Students_data\r\n            change_student(input_ID, input_new_password)\r\n            return \"Your password has been changed\"\r\n\r\n\r\ndef open_change_password_window():\r\n    change_password_layout = [[sg.Text(\"Change Password\")],\r\n                              [sg.Text(\"ID :\", size=(15, 1)), sg.InputText('', size=(20, 1), key='input_ID')],\r\n                              [sg.Text(\"Current Password :\", size=(15, 1)),\r\n                               sg.InputText('', size=(20, 1), key='input_current_password', password_char='●')],\r\n                              [sg.Text(\"New Password :\", size=(15, 1)),\r\n                               sg.InputText('', size=(20, 1), key='input_new_password', password_char='●')],\r\n                              [sg.Text(\"Repeat Password :\", size=(15, 1)),\r\n                               sg.InputText('', size=(20, 1), key='input_repeat_new_password', password_char='●')],\r\n                              [sg.Text(size=(30, 1), key=\"Error\")],\r\n                              [sg.Submit(button_text=\"Confirm\"),\r\n                               sg.Exit(pad=((190, 0), (0, 0)))]]\r\n\r\n    change_password_window = sg.Window(\"Change Password\", change_password_layout, element_justification='c')\r\n    while True:\r\n        change_success = False\r\n        change_password_event, change_password_values = change_password_window.read()\r\n        if change_password_event == \"Confirm\":\r\n            input_ID = change_password_values['input_ID']\r\n            input_current_password = change_password_values['input_current_password']\r\n            input_new_password = change_password_values['input_new_password']\r\n            input_repeat_new_password = change_password_values['input_repeat_new_password']\r\n            # The system calls the function below to try to register with the input it got from the GUI\r\n            change_password_window[\"Error\"].update(\r\n                attempt_to_change(input_ID, input_current_password, input_new_password, input_repeat_new_password))\r\n            # attempt_to_change tries to change login data of a user\r\n        if change_password_event == sg.WIN_CLOSED or change_password_event == \"Exit\" or change_success:\r\n            change_password_window.close()\r\n            break\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/changePasswordLayout.py b/changePasswordLayout.py
+--- a/changePasswordLayout.py	(revision 90928696452ad6d5517a5e9fd362e27229c43ff8)
++++ b/changePasswordLayout.py	(date 1671029318480)
+@@ -2,14 +2,13 @@
+ import main
+ 
+ 
+-def change_student(input_ID, input_new_password):
+-    """writes the student in Student_data"""
++"""def change_student(input_ID, input_new_password):
+     main.db.student_dict[input_ID].password = input_new_password
+     change_success = True
+     with open('Students_data.txt', 'w') as file:
+         # find how to write to the correct line in file
+         for s in main.db.student_dict.values():
+-            file.write(f"{s.ID}:{s.password}:{s.name}:{s.secret_word}\n")
++            file.write(f"{s.ID}:{s.password}:{s.name}:{s.secret_word}\n")"""
+ 
+ 
+ def attempt_to_change(input_ID, input_current_password, input_new_password, input_repeat_new_password):
+@@ -61,3 +60,5 @@
+         if change_password_event == sg.WIN_CLOSED or change_password_event == "Exit" or change_success:
+             change_password_window.close()
+             break
++
++        change_check_res
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ProjectRootManager\" version=\"2\" project-jdk-name=\"Python 3.11\" project-jdk-type=\"Python SDK\" />\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 90928696452ad6d5517a5e9fd362e27229c43ff8)
++++ b/.idea/misc.xml	(date 1671024302267)
+@@ -1,4 +1,4 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11" project-jdk-type="Python SDK" />
++  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (DRW)" project-jdk-type="Python SDK" />
+ </project>
+\ No newline at end of file
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"2513eb0e-759c-4d70-b843-d072404ad6ca\" name=\"Changes\" comment=\"Created a file named changePasswordLayout_test.py\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/DRW.iml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/DRW.iml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/misc.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/misc.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/changePasswordLayout.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/changePasswordLayout.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/changePasswordLayout_test.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/changePasswordLayout_test.py\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Python Script\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"HighlightingSettingsPerFile\">\r\n    <setting file=\"file://$USER_HOME$/AppData/Local/Programs/Python/Python311/Lib/site-packages/PySimpleGUI/PySimpleGUI.py\" root0=\"SKIP_INSPECTION\" />\r\n    <setting file=\"file://$USER_HOME$/AppData/Local/Programs/Python/Python311/Lib/tkinter/__init__.py\" root0=\"SKIP_INSPECTION\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2IofHSMLiZmpMeB1i9V9GEtpRga\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;last_opened_file_path&quot;: &quot;C:/Users/Daniel/Desktop/GitProjects/DRW/DRW&quot;,\r\n    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;\r\n  }\r\n}</component>\r\n  <component name=\"RunManager\" selected=\"Python tests.Python tests in changePasswordLayout_test.py\">\r\n    <configuration name=\"main\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"DRW\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/main.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"Python tests for forgotPassword_test.GetPasswordTest.test3_correct_ID_and_password\" type=\"tests\" factoryName=\"Autodetect\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"DRW\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"_new_additionalArguments\" value=\"&quot;&quot;\" />\r\n      <option name=\"_new_target\" value=\"&quot;forgotPassword_test.GetPasswordTest.test3_correct_ID_and_password&quot;\" />\r\n      <option name=\"_new_targetType\" value=\"&quot;PYTHON&quot;\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"Python tests in changePasswordLayout_test.py\" type=\"tests\" factoryName=\"Autodetect\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"DRW\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"_new_additionalArguments\" value=\"&quot;&quot;\" />\r\n      <option name=\"_new_target\" value=\"&quot;$PROJECT_DIR$/changePasswordLayout_test.py&quot;\" />\r\n      <option name=\"_new_targetType\" value=\"&quot;PATH&quot;\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Python tests.Python tests in changePasswordLayout_test.py\" />\r\n        <item itemvalue=\"Python.main\" />\r\n        <item itemvalue=\"Python tests.Python tests for forgotPassword_test.GetPasswordTest.test3_correct_ID_and_password\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"2513eb0e-759c-4d70-b843-d072404ad6ca\" name=\"Changes\" comment=\"\" />\r\n      <created>1670852771061</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1670852771061</updated>\r\n    </task>\r\n    <task id=\"LOCAL\u200E-00001\" summary=\"manager login\">\r\n      <created>1670873662163</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL\u200E-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\u200E\" />\r\n      <updated>1670873662163</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"Created a file named changePasswordLayout_test.py\">\r\n      <created>1671014875799</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1671014875799</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"3\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"manager login\" />\r\n    <MESSAGE value=\"Created a file named changePasswordLayout_test.py\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Created a file named changePasswordLayout_test.py\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 90928696452ad6d5517a5e9fd362e27229c43ff8)
++++ b/.idea/workspace.xml	(date 1671031124214)
+@@ -10,6 +10,7 @@
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/changePasswordLayout.py" beforeDir="false" afterPath="$PROJECT_DIR$/changePasswordLayout.py" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/changePasswordLayout_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/changePasswordLayout_test.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/forgotPassword_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/forgotPassword_test.py" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -27,7 +28,6 @@
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+   </component>
+   <component name="HighlightingSettingsPerFile">
+-    <setting file="file://$USER_HOME$/AppData/Local/Programs/Python/Python311/Lib/site-packages/PySimpleGUI/PySimpleGUI.py" root0="SKIP_INSPECTION" />
+     <setting file="file://$USER_HOME$/AppData/Local/Programs/Python/Python311/Lib/tkinter/__init__.py" root0="SKIP_INSPECTION" />
+   </component>
+   <component name="MarkdownSettingsMigration">
+@@ -43,11 +43,11 @@
+   &quot;keyToString&quot;: {
+     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Daniel/Desktop/GitProjects/DRW/DRW&quot;,
++    &quot;last_opened_file_path&quot;: &quot;C:/Users/liora/OneDrive/מסמכים/GitHub/DRW&quot;,
+     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+   }
+ }</component>
+-  <component name="RunManager" selected="Python tests.Python tests in changePasswordLayout_test.py">
++  <component name="RunManager" selected="Python.main">
+     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+       <module name="DRW" />
+       <option name="INTERPRETER_OPTIONS" value="" />
+@@ -99,8 +99,8 @@
+     </configuration>
+     <recent_temporary>
+       <list>
+-        <item itemvalue="Python tests.Python tests in changePasswordLayout_test.py" />
+         <item itemvalue="Python.main" />
++        <item itemvalue="Python tests.Python tests in changePasswordLayout_test.py" />
+         <item itemvalue="Python tests.Python tests for forgotPassword_test.GetPasswordTest.test3_correct_ID_and_password" />
+       </list>
+     </recent_temporary>
+Index: .idea/DRW.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<module type=\"PYTHON_MODULE\" version=\"4\">\r\n  <component name=\"NewModuleRootManager\">\r\n    <content url=\"file://$MODULE_DIR$\" />\r\n    <orderEntry type=\"jdk\" jdkName=\"Python 3.11\" jdkType=\"Python SDK\" />\r\n    <orderEntry type=\"sourceFolder\" forTests=\"false\" />\r\n  </component>\r\n  <component name=\"PyDocumentationSettings\">\r\n    <option name=\"format\" value=\"PLAIN\" />\r\n    <option name=\"myDocStringFormat\" value=\"Plain\" />\r\n  </component>\r\n</module>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/DRW.iml b/.idea/DRW.iml
+--- a/.idea/DRW.iml	(revision 90928696452ad6d5517a5e9fd362e27229c43ff8)
++++ b/.idea/DRW.iml	(date 1671024302236)
+@@ -1,8 +1,10 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <module type="PYTHON_MODULE" version="4">
+   <component name="NewModuleRootManager">
+-    <content url="file://$MODULE_DIR$" />
+-    <orderEntry type="jdk" jdkName="Python 3.11" jdkType="Python SDK" />
++    <content url="file://$MODULE_DIR$">
++      <excludeFolder url="file://$MODULE_DIR$/venv" />
++    </content>
++    <orderEntry type="jdk" jdkName="Python 3.11 (DRW)" jdkType="Python SDK" />
+     <orderEntry type="sourceFolder" forTests="false" />
+   </component>
+   <component name="PyDocumentationSettings">
