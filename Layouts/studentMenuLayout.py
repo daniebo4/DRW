@@ -1,5 +1,11 @@
 import PySimpleGUI as sg
+from database_Personas import DataBase
 import main
+import os
+
+
+def selected_row_event():
+    pass
 
 
 def open_my_items_window(current_student):
@@ -15,7 +21,7 @@ def open_my_items_window(current_student):
                   num_rows=10,
                   key='-TABLE-',
                   row_height=35,
-                  enable_events=True)],
+                  enable_events=True, )],
         [sg.Button('Return', size=(15, 1)),
          sg.Exit(pad=((430, 0), (0, 0)))]
     ]
@@ -24,9 +30,22 @@ def open_my_items_window(current_student):
     while True:
         my_items_event, my_items_values = my_items_window.read()
         if my_items_event == 'Return':
-            if my_items_event  == 'rowselected':
-                data_selected = my_items_values['filestable']
-            main.db.item_dic[ID].status='pending'
+            item_idx = my_items_values['-TABLE-'][0]
+            item_id = student_loaned_items[item_idx][0]
+            main.db.item_dict[item_id].status = 'pending'
+            item_file = main.project_root_dir + '\\Items_data.txt'
+            with open(item_file, 'w') as file:
+                for i in main.db.item_dict.values():
+                    file.write(
+                        f"{i.ID}:{i.name}:{i.description}:{i.rating}:{i.du_date}:{i.aq_date}:{i.owner}:{i.status}\n")
+
+            main.db = DataBase(main.project_root_dir + '\\Students_data.txt',
+                               main.project_root_dir + '\\Workers_data.txt',
+                               main.project_root_dir + '\\Items_data.txt')
+            student_loaned_items = main.db.get_students_loaned_items(current_student)
+            my_items_window.close()
+            open_my_items_window(current_student)
+        # main.db.item_dic[ID].status='pending'
         # call to return item function
         if my_items_event == "Exit" or my_items_event == sg.WIN_CLOSED:
             my_items_window.close()

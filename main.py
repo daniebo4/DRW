@@ -67,11 +67,15 @@ def mainMenu():
 
         if login_event == "Register":
             registerLayout.open_register_window()
-            db = DataBase('Students_data.txt', 'Workers_data.txt')
+            db = DataBase(project_root_dir + '\\Students_data.txt',
+                     project_root_dir + '\\Workers_data.txt',
+                     project_root_dir + '\\Items_data.txt')
 
         if login_event == "Change password":
             changePasswordLayout.open_change_password_window()
-            db = DataBase('Students_data.txt', 'Workers_data.txt')
+            db = DataBase(project_root_dir + '\\Students_data.txt',
+                          project_root_dir + '\\Workers_data.txt',
+                          project_root_dir + '\\Items_data.txt')
 
         if login_event == " Forgot password ":  # There are spaces before and after the string !!!!
             forgotPasswordLayout.open_forgot_password_window()

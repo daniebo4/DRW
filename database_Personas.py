@@ -63,6 +63,8 @@ class DataBase:
             item_list = list(map(lambda x: Item(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7]), item_list))
             self.item_dict = {i.ID: i for i in item_list}
 
+        # methods to update database
+
     def getItemTable(self):
         item_list_to_print = []
         item_table_amount_dict = {}
