@@ -28,15 +28,18 @@ class Manager:
 
 
 class Item:
-    def __init__(self, ID, name, description, rating, du_date=None, aq_date=None, owner=None, status=None):
+
+    def __init__(self, ID=None, name=None, aq_date=None, du_date=None, description=None, rating=0, num_raters=0,
+                 owner=None, status=None):
         self.ID = ID
         self.name = name
+        self.description = description
         self.aq_date = aq_date
         self.du_date = du_date
-        self.description = description
         self.rating = rating
         self.owner = owner
         self.status = status.replace("\n", "")
+        self.num_raters = num_raters
 
 
 class DataBase:
@@ -59,8 +62,8 @@ class DataBase:
         with open(file_dir_item, 'r') as file3:  # Items database
             item_list = file3.readlines()
             item_list = list(map(lambda x: x.split(":"), item_list))
-            # items in database are separated as such - ID:name:date acquired:due date:description:rating
-            item_list = list(map(lambda x: Item(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7]), item_list))
+            # items in database are separated as such-ID:name:date aq:date due:description:rating:num_raters:owner:status
+            item_list = list(map(lambda x: Item(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7], x[8]), item_list))
             self.item_dict = {i.ID: i for i in item_list}
 
         # methods to update database
@@ -69,7 +72,7 @@ class DataBase:
         item_list_to_print = []
         item_table_amount_dict = {}
         for item in self.item_dict.values():
-            if item.owner in (None, ""):
+            if item.owner in (None, "", '0'):
                 if item.name not in item_table_amount_dict:
                     item_table_amount_dict[item.name] = 1
                 else:

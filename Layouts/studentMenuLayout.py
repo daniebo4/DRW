@@ -8,9 +8,11 @@ def selected_row_event():
     pass
 
 
-def rate(current_student, rating):
+def rate(current_student, rating, item_id):
     student_loaned_items = main.db.get_students_loaned_items(current_student)
-    print('1')
+    student_loaned_items[item_id]
+    return ((student_loaned_items[item_id].rating * (student_loaned_items[item_id].num_raters-1))+rating)/(student_loaned_items[item_id].num_raters+1)
+
 
 
 def open_rate_window(current_student):
@@ -25,7 +27,7 @@ def open_rate_window(current_student):
         open_rate_event, open_rate_values = open_rate_window.read()
 
         if open_rate_event == '5':
-            rate(current_student, 5)
+            print(rate(current_student, 5))
             open_rate_window.close()
             break
 
@@ -63,8 +65,9 @@ def open_my_items_window(current_student):
             with open(item_file, 'w') as file:
                 for i in main.db.item_dict.values():
                     file.write(
-                        f"{i.ID}:{i.name}:{i.description}:{i.rating}:{i.du_date}:{i.aq_date}:{i.owner}:{i.status}\n")
+                        f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:{i.rating}:{i.num_raters}:{i.owner}:{i.status}\n")
 
+            #ID:name:date aq:date due:description:rating:num_raters:owner:status
             main.db = DataBase(main.project_root_dir + '\\Students_data.txt',
                                main.project_root_dir + '\\Workers_data.txt',
                                main.project_root_dir + '\\Items_data.txt')
@@ -98,7 +101,7 @@ def open_request_item_window(current_student, item_id):
             with open(item_file, 'w+') as file:
                 for i in main.db.item_dict.values():
                     file.write(
-                        f"{i.ID}:{i.name}:{i.description}:{i.rating}:{i.du_date}:{i.aq_date}:{i.owner}:{i.status}\n")
+                        f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:{i.rating}:{i.num_raters}:{i.owner}:{i.status}\n")
 
             request_item_window.close()
             break
