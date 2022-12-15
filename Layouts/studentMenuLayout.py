@@ -8,33 +8,6 @@ def selected_row_event():
     pass
 
 
-def rate(current_student, rating):
-    student_loaned_items = main.db.get_students_loaned_items(current_student)
-    print('1')
-
-
-
-def open_rate_window(current_student):
-    enable_events = True
-    open_rate_layout = [[sg.Text("Rate Item")],
-                        [sg.Button('1', size=(4, 1)), sg.Button('2', size=(4, 1)), sg.Button('3', size=(4, 1)),
-                         sg.Button('4', size=(4, 1)), sg.Button('5', size=(4, 1))],
-                        ]
-
-    open_rate_window = sg.Window("Rate Menu", open_rate_layout, element_justification='c')
-    while True:
-        open_rate_event, open_rate_values = open_rate_window.read()
-
-        if open_rate_event == '5':
-            rate(current_student, 5)
-            open_rate_window.close()
-            break
-
-        if open_rate_event == sg.WIN_CLOSED:
-            open_rate_window.close()
-            break
-
-
 def open_my_items_window(current_student):
     my_items_headings = ['ID', 'Name', 'Loan Date', 'Due Date', 'Description', 'Rating', 'status']
     student_loaned_items = main.db.get_students_loaned_items(current_student)
@@ -111,7 +84,7 @@ def open_request_item_window(current_student, item_id):
 
 def open_student_window(current_student):
     current_inventory_headings = ['ID', 'Item', 'Quantity', 'Loan Date', 'Due Date', 'Description', 'Rating']
-    current_inventory = main.db.getItemTable()
+    current_inventory = main.db.getAvailableItemTable()
     student_menu_layout = [
         [sg.Table(values=current_inventory,
                   headings=current_inventory_headings,
@@ -124,18 +97,25 @@ def open_student_window(current_student):
                   row_height=35, enable_events=True)],
         [sg.Button('Request Item', size=(15, 1)),
          sg.Button('My Items', size=(15, 1)),
-         sg.Button('Rate', size=(15, 1)),
-         sg.Exit(pad=((430, 0), (0, 0)))]
+         sg.Text(size=(30, 1), key="Error"),
+         sg.Exit(pad=((100, 0), (0, 0)))]
     ]
 
     student_menu_window = sg.Window("Student Menu", student_menu_layout, element_justification='c')
     while True:
         student_menu_event, student_menu_values = student_menu_window.read()
+        student_menu_window["Error"].update("")
 
         if student_menu_event == "Request Item":
-            item_idx = student_menu_values['-TABLE-'][0]
-            item_id = current_inventory[item_idx][0]
-            open_request_item_window(current_student, item_id)
+            if student_menu_values['-TABLE-']:
+                item_idx = student_menu_values['-TABLE-'][0]
+                item_id = current_inventory[item_idx][0]
+                open_request_item_window(current_student, item_id)
+                student_menu_window.close()
+                open_student_window(current_student)
+            else:
+                student_menu_window["Error"].update("No Items Available")
+
 
         if student_menu_event == "My Items":
             open_my_items_window(current_student)
@@ -143,5 +123,3 @@ def open_student_window(current_student):
         if student_menu_event == sg.WIN_CLOSED or student_menu_event == "Exit":
             student_menu_window.close()
             break
-        if student_menu_event == "Rate":
-            open_rate_window(current_student)
