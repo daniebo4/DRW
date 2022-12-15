@@ -1,13 +1,14 @@
 import PySimpleGUI as sg
 
 Info = [
-    ['Eraser', '10', '1914', '1919','Very nice and handy','$$$$'],
-    ['Three Hole Punch', '5', '1965', '2025','Not enough holes','$$$$$'],
-    ['Fine Brush', '2', '1988', '2001','Too Fine','$$'],
-    ['Color Pallete', '5', '2002', '2002','Lots of colors','$$$'],
+    ['Eraser', '10', '1914', '1919', 'Very nice and handy', '$$$$'],
+    ['Three Hole Punch', '5', '1965', '2025', 'Not enough holes', '$$$$$'],
+    ['Fine Brush', '2', '1988', '2001', 'Too Fine', '$$'],
+    ['Color Pallet', '5', '2002', '2002', 'Lots of colors', '$$$'],
 ]
 
-headings = ['Item', 'Quantity', 'Loan Date','Due Date','Description','Rating']
+headings = ['Item', 'Quantity', 'Loan Date', 'Due Date', 'Description', 'Rating']
+
 
 def open_student_window():
     layout = [
@@ -20,9 +21,9 @@ def open_student_window():
                   num_rows=10,
                   key='-TABLE-',
                   row_height=35)],
-        [sg.Button('Request Item',size=(15, 1)),
-        sg.Button('My Items', size=(15, 1)),
-        sg.Exit(pad=((430, 0), (0, 0)))]
+        [sg.Button('Request Item', size=(15, 1)),
+         sg.Button('My Items', size=(15, 1)),
+         sg.Exit(pad=((430, 0), (0, 0)))]
 
     ]
 
@@ -36,5 +37,6 @@ def open_student_window():
             break
         if event == "My Items" or event == sg.WIN_CLOSED:
             break
+
 
 open_student_window()

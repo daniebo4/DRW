@@ -5,32 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2513eb0e-759c-4d70-b843-d072404ad6ca" name="Changes" comment="Created a file named changePasswordLayout_test.py">
-      <change afterPath="$PROJECT_DIR$/Layouts/changePasswordLayout.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Layouts/forgotPasswordLayout.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Layouts/managerMenuLayout.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Layouts/registerLayout.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Layouts/studentMenuLayout.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Layouts/workerMenuLayout.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tests/changePasswordLayout_test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tests/forgotPassword_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/DRW.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DRW.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_14_12_2022_13_56__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_14_12_2022_13_56__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_14_12_2022_14_27__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_14_12_2022_14_27__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Students_data.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Students_data.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Workers_data.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Workers_data.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/changePasswordLayout.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/changePasswordLayout_test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Layouts/StudentMenuItemsLayoutDraft.py" beforeDir="false" afterPath="$PROJECT_DIR$/Layouts/StudentMenuItemsLayoutDraft.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Layouts/studentMenuLayout.py" beforeDir="false" afterPath="$PROJECT_DIR$/Layouts/studentMenuLayout.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/database_Personas.py" beforeDir="false" afterPath="$PROJECT_DIR$/database_Personas.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/forgotPasswordLayout.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/forgotPassword_test.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/managerMenuLayout.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/registerLayout.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/registerLayout_testing.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/registerLayout_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/studentMenuLayout.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/workerMenuLayout.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +48,7 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
 }</component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.main">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="DRW" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -103,7 +84,7 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests in changePasswordLayout_test.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests in C:/Users/liora/OneDrive/מסמכים/GitHub/DRW/changePasswordLayout_test.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="DRW" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -120,7 +101,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
-        <item itemvalue="Python tests.Python tests in changePasswordLayout_test.py" />
+        <item itemvalue="Python tests.Python tests in C:/Users/liora/OneDrive/מסמכים/GitHub/DRW/changePasswordLayout_test.py" />
         <item itemvalue="Python tests.Python tests for forgotPassword_test.GetPasswordTest.test3_correct_ID_and_password" />
       </list>
     </recent_temporary>

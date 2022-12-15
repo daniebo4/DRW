@@ -9,7 +9,9 @@ from Layouts import managerMenuLayout
 from Layouts import registerLayout
 
 project_root_dir = os.path.dirname(os.path.abspath(__file__))  # Finds path to current project folder
-db = DataBase(project_root_dir + '\\Students_data.txt', project_root_dir + '\\Workers_data.txt')  # Gets path to
+db = DataBase(project_root_dir + '\\Students_data.txt',
+              project_root_dir + '\\Workers_data.txt',
+              project_root_dir + '\\Items_data.txt')  # Gets path to
 
 
 # student and worker database

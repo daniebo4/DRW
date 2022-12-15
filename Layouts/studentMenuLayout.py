@@ -1,25 +1,35 @@
 import PySimpleGUI as sg
+import database_Personas
+import main
 
 
 def open_student_window():
-    student_menu_layout = [[sg.Text("Student Menu")],
-                           [sg.Text("Secret Word :", size=(10, 1)),
-                           sg.InputText('', size=(20, 1), key='input_secret_word',)],
-                           [sg.Text(size=(30, 1), key="Error")],
-                           [sg.Submit(button_text="Confirm"),
-                           sg.Exit(pad=((150, 0), (0, 0)))]]
+    headings = ['Item', 'Quantity', 'Loan Date', 'Due Date', 'Description', 'Rating']
+    info = list(main.db.item_dict.values())
+    info = main.db.getItemTable()
+    student_menu_layout = [
+        [sg.Table(values=info,
+                  headings=headings,
+                  max_col_width=35,
+                  auto_size_columns=True,
+                  display_row_numbers=False,
+                  justification='l',
+                  num_rows=10,
+                  key='-TABLE-',
+                  row_height=35)],
+        [sg.Button('Request Item', size=(15, 1)),
+         sg.Button('My Items', size=(15, 1)),
+         sg.Exit(pad=((430, 0), (0, 0)))]
+    ]
 
     student_menu_window = sg.Window("Student Menu", student_menu_layout, element_justification='c')
     while True:
-        forgot_password_event, forgot_password_values = student_menu_window.read()
-        if forgot_password_event == "Confirm":
-            input_username = forgot_password_values['input_username']
-            input_ID = forgot_password_values['input_ID']
-            input_secret_word = forgot_password_values['input_secret_word']
+        student_menu_event, student_menu_values = student_menu_window.read()
+        if student_menu_event == "Request Item" or student_menu_event == sg.WIN_CLOSED:
+            break
+        if student_menu_event == "My Items" or student_menu_event == sg.WIN_CLOSED:
+            break
 
-            if input_username == '' or input_ID == '' or input_secret_word == '':
-                student_menu_window["Error"].update("One or more of the fields not entered")
-
-        if forgot_password_event == sg.WIN_CLOSED or forgot_password_event == "Exit":
+        if student_menu_event == sg.WIN_CLOSED or student_menu_event == "Exit":
             student_menu_window.close()
             break
