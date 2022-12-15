@@ -15,7 +15,7 @@ def open_my_items_window(current_student):
                   num_rows=10,
                   key='-TABLE-',
                   row_height=35,
-                  enable_click_events=True)],
+                  enable_events=True)],
         [sg.Button('Return', size=(15, 1)),
          sg.Exit(pad=((430, 0), (0, 0)))]
     ]
@@ -23,10 +23,10 @@ def open_my_items_window(current_student):
     my_items_window = sg.Window("My Items", my_items_layout)
     while True:
         my_items_event, my_items_values = my_items_window.read()
-        if my_items_event == '_rowselected_':
-            x = (my_items_values[my_items_values['filestable']])
-            if my_items_event == 'Return':
-                main.db.item.status = 'pending'
+        if my_items_event == 'Return':
+            if my_items_event  == 'rowselected':
+                data_selected = my_items_values['filestable']
+            main.db.item_dic[ID].status='pending'
         # call to return item function
         if my_items_event == "Exit" or my_items_event == sg.WIN_CLOSED:
             my_items_window.close()

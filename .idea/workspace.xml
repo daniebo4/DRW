@@ -4,15 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2513eb0e-759c-4d70-b843-d072404ad6ca" name="Changes" comment="Created a file named changePasswordLayout_test.py">
-      <change beforePath="$PROJECT_DIR$/.idea/DRW.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DRW.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="2513eb0e-759c-4d70-b843-d072404ad6ca" name="Changes" comment="update item data base + prtotype for return items func">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Items_data.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Items_data.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Layouts/MyItmesLayout.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Layouts/StudentMenuItemsLayoutDraft.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Layouts/studentMenuLayout.py" beforeDir="false" afterPath="$PROJECT_DIR$/Layouts/studentMenuLayout.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database_Personas.py" beforeDir="false" afterPath="$PROJECT_DIR$/database_Personas.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -192,7 +186,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671116344295</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL‎-00004" summary="update item data base + prtotype for return items func">
+      <created>1671123505951</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL‎-00004" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1671123505951</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -221,7 +222,8 @@
     <MESSAGE value="manager login" />
     <MESSAGE value="Created a file named changePasswordLayout_test.py" />
     <MESSAGE value="small update" />
-    <option name="LAST_COMMIT_MESSAGE" value="small update" />
+    <MESSAGE value="update item data base + prtotype for return items func" />
+    <option name="LAST_COMMIT_MESSAGE" value="update item data base + prtotype for return items func" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -229,7 +231,7 @@
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Layouts/studentMenuLayout.py</url>
           <line>25</line>
-          <option name="timeStamp" value="8" />
+          <option name="timeStamp" value="12" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
