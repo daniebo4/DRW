@@ -35,7 +35,7 @@ class Item:
         self.du_date = du_date
         self.description = description
         self.rating = rating
-        self.owner = owner
+        self.owner = owner.replace("\n", "")
 
 
 class DataBase:
@@ -77,5 +77,13 @@ class DataBase:
                 items_in_table.add(item.name)
                 current_item = [item.name, item_table_amount_dict[item.name],
                                 item.aq_date, item.du_date, item.description, item.rating]
+                item_list_to_print.append(current_item)
+        return item_list_to_print
+
+    def get_students_loaned_items(self, current_student):
+        item_list_to_print = []
+        for item in self.item_dict.values():
+            if item.owner == current_student.ID:
+                current_item = [item.ID, item.name, item.aq_date, item.du_date, item.description, item.rating]
                 item_list_to_print.append(current_item)
         return item_list_to_print

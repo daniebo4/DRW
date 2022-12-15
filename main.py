@@ -51,7 +51,7 @@ def mainMenu():
             else:
                 # checks first if the user is a student
                 if check_login_student(input_ID, input_password):
-                    studentMenuLayout.open_student_window()
+                    studentMenuLayout.open_student_window(db.student_dict[input_ID])
 
                 # else checks if the user is a worker
                 elif check_login_worker(input_ID, input_password) and input_ID != 'admin':
