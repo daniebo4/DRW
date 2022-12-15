@@ -1,4 +1,5 @@
 import PySimpleGUI as sg
+import main
 
 Info = [
     ['Eraser', '10', '1914', '1919','Very nice and handy','$$$$'],
@@ -22,7 +23,7 @@ def MyItems_window():
 
     ]
 
-    window = sg.Window("My Items")
+    window = sg.Window("My Items", layout)
 
     while True:
         event, values = window.read()
