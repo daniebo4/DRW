@@ -1,0 +1,5 @@
+ID:name:date acquired:due date:description:rating
+1:eraser:15.12.22:17.12.22:erases stuff:5
+2:eraser:15.12.22:17.12.22:erases stuff:5
+3:eraser:15.12.22:17.12.22:erases stuff:5
+4:eraser:15.12.22:17.12.22:erases stuff:5
