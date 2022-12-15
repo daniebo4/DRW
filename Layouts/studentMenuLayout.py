@@ -2,13 +2,13 @@ import PySimpleGUI as sg
 import database_Personas
 import main
 
+def get_info():
+    return main.db.getItemTable()
 
 def open_student_window():
     headings = ['Item', 'Quantity', 'Loan Date', 'Due Date', 'Description', 'Rating']
-    info = list(main.db.item_dict.values())
-    info = main.db.getItemTable()
     student_menu_layout = [
-        [sg.Table(values=info,
+        [sg.Table(values=get_info(),
                   headings=headings,
                   max_col_width=35,
                   auto_size_columns=True,
@@ -26,10 +26,58 @@ def open_student_window():
     while True:
         student_menu_event, student_menu_values = student_menu_window.read()
         if student_menu_event == "Request Item" or student_menu_event == sg.WIN_CLOSED:
+            Request_item_Window()
             break
         if student_menu_event == "My Items" or student_menu_event == sg.WIN_CLOSED:
+            My_Items_window()
             break
 
         if student_menu_event == sg.WIN_CLOSED or student_menu_event == "Exit":
             student_menu_window.close()
+            break
+
+def My_Items_window():
+    headings = ['Item', 'Quantity', 'Loan Date', 'Due Date', 'Description', 'Rating']
+    layout = [
+        [sg.Table(values=get_info(),
+                  headings=headings,
+                  max_col_width=25,
+                  auto_size_columns=True,
+                  display_row_numbers=False,
+                  justification='l',
+                  num_rows=10,
+                  key='-TABLE-',
+                  row_height=35)],
+        [sg.Button('Return', size=(15, 1)),
+        sg.Exit(pad=((430, 0), (0, 0)))]
+
+    ]
+
+    window = sg.Window("My Items", layout)
+
+    while True:
+        event, values = window.read()
+        if event == "Return" or event == sg.WIN_CLOSED:
+            break
+        if event == "Exit" or event == sg.WIN_CLOSED:
+            window.close()
+            open_student_window()
+            break
+
+def Request_item_Window():
+    layout = [
+        [sg.Text("Are you Sure?")],
+        [ sg.Button('Yes', ),
+          sg.Button('No', )]
+    ]
+
+    window = sg.Window("Request Item", layout)
+
+    while True:
+        event, values = window.read()
+        if event == "Yes" or event == sg.WIN_CLOSED:
+            break
+        if event == "No" or event == sg.WIN_CLOSED:
+            window.close()
+            open_student_window()
             break
