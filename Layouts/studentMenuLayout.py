@@ -52,7 +52,9 @@ def open_my_items_window(current_student):
             break
 
 
-def open_request_item_window(current_student):
+def open_request_item_window(current_student, item_id):
+    enable_event = True
+    student_loaned_items = main.db.get_students_loaned_items(current_student)
     request_item_layout = [
         [sg.Text("Are you Sure?")],
         [sg.Button('Yes', ),
@@ -64,15 +66,26 @@ def open_request_item_window(current_student):
 
     while True:
         request_item_event, request_item_values = request_item_window.read()
-        if request_item_event == "Yes" or request_item_event == sg.WIN_CLOSED:
+        if request_item_event == "Yes":
+            main.db.item_dict[item_id].owner = current_student.ID
+            item_file = main.project_root_dir + '\\Items_data.txt'
+            with open(item_file, 'w+') as file:
+                for i in main.db.item_dict.values():
+                    file.write(
+                        f"{i.ID}:{i.name}:{i.description}:{i.rating}:{i.du_date}:{i.aq_date}:{i.owner}:{i.status}\n")
+
+
             request_item_window.close()
             break
         if request_item_event == "No" or request_item_event == sg.WIN_CLOSED:
-            pass
+            request_item_window.close()
+            break
+    request_item_window.close()
+
 
 
 def open_student_window(current_student):
-    current_inventory_headings = ['Item', 'Quantity', 'Loan Date', 'Due Date', 'Description', 'Rating']
+    current_inventory_headings = ['ID', 'Item', 'Quantity', 'Loan Date', 'Due Date', 'Description', 'Rating']
     current_inventory = main.db.getItemTable()
     student_menu_layout = [
         [sg.Table(values=current_inventory,
@@ -83,7 +96,7 @@ def open_student_window(current_student):
                   justification='l',
                   num_rows=10,
                   key='-TABLE-',
-                  row_height=35)],
+                  row_height=35, enable_events=True)],
         [sg.Button('Request Item', size=(15, 1)),
          sg.Button('My Items', size=(15, 1)),
          sg.Exit(pad=((430, 0), (0, 0)))]
@@ -93,12 +106,15 @@ def open_student_window(current_student):
     while True:
         student_menu_event, student_menu_values = student_menu_window.read()
 
-        if student_menu_event == "Request Item" or student_menu_event == sg.WIN_CLOSED:
-            open_request_item_window(current_student)
+        if student_menu_event == "Request Item":
+            item_idx = student_menu_values['-TABLE-'][0]
+            item_id = current_inventory[item_idx][0]
+            open_request_item_window(current_student, item_id)
 
-        if student_menu_event == "My Items" or student_menu_event == sg.WIN_CLOSED:
+        if student_menu_event == "My Items":
             open_my_items_window(current_student)
 
         if student_menu_event == sg.WIN_CLOSED or student_menu_event == "Exit":
             student_menu_window.close()
             break
+    student_menu_window.close()

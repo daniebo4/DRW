@@ -36,7 +36,7 @@ class Item:
         self.description = description
         self.rating = rating
         self.owner = owner
-        self.status = status.replace("\n","")
+        self.status = status.replace("\n", "")
 
 
 class DataBase:
@@ -76,11 +76,10 @@ class DataBase:
 
         items_in_table = set()
         for item in self.item_dict.values():
-            if item.name not in items_in_table:
-                items_in_table.add(item.name)
-                current_item = [item.name, item_table_amount_dict[item.name],
-                                item.aq_date, item.du_date, item.description, item.rating]
-                item_list_to_print.append(current_item)
+            items_in_table.add(item.name)
+            current_item = [item.ID, item.name, item_table_amount_dict[item.name],
+                            item.aq_date, item.du_date, item.description, item.rating]
+            item_list_to_print.append(current_item)
         return item_list_to_print
 
     def get_students_loaned_items(self, current_student):
