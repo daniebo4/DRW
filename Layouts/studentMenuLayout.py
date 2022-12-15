@@ -74,7 +74,6 @@ def open_request_item_window(current_student, item_id):
                     file.write(
                         f"{i.ID}:{i.name}:{i.description}:{i.rating}:{i.du_date}:{i.aq_date}:{i.owner}:{i.status}\n")
 
-
             request_item_window.close()
             break
         if request_item_event == "No" or request_item_event == sg.WIN_CLOSED:
@@ -83,10 +82,9 @@ def open_request_item_window(current_student, item_id):
     request_item_window.close()
 
 
-
 def open_student_window(current_student):
     current_inventory_headings = ['ID', 'Item', 'Quantity', 'Loan Date', 'Due Date', 'Description', 'Rating']
-    current_inventory = main.db.getItemTable()
+    current_inventory = main.db.getAvailableItemTable()
     student_menu_layout = [
         [sg.Table(values=current_inventory,
                   headings=current_inventory_headings,
@@ -99,17 +97,25 @@ def open_student_window(current_student):
                   row_height=35, enable_events=True)],
         [sg.Button('Request Item', size=(15, 1)),
          sg.Button('My Items', size=(15, 1)),
-         sg.Exit(pad=((430, 0), (0, 0)))]
+         sg.Text(size=(30, 1), key="Error"),
+         sg.Exit(pad=((100, 0), (0, 0)))]
     ]
 
     student_menu_window = sg.Window("Student Menu", student_menu_layout, element_justification='c')
     while True:
         student_menu_event, student_menu_values = student_menu_window.read()
+        student_menu_window["Error"].update("")
 
         if student_menu_event == "Request Item":
-            item_idx = student_menu_values['-TABLE-'][0]
-            item_id = current_inventory[item_idx][0]
-            open_request_item_window(current_student, item_id)
+            if student_menu_values['-TABLE-']:
+                item_idx = student_menu_values['-TABLE-'][0]
+                item_id = current_inventory[item_idx][0]
+                open_request_item_window(current_student, item_id)
+                student_menu_window.close()
+                open_student_window(current_student)
+            else:
+                student_menu_window["Error"].update("No Items Available")
+
 
         if student_menu_event == "My Items":
             open_my_items_window(current_student)
@@ -117,4 +123,3 @@ def open_student_window(current_student):
         if student_menu_event == sg.WIN_CLOSED or student_menu_event == "Exit":
             student_menu_window.close()
             break
-    student_menu_window.close()

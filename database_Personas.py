@@ -65,21 +65,23 @@ class DataBase:
 
         # methods to update database
 
-    def getItemTable(self):
+    def getAvailableItemTable(self):
         item_list_to_print = []
         item_table_amount_dict = {}
         for item in self.item_dict.values():
-            if item.name not in item_table_amount_dict:
-                item_table_amount_dict[item.name] = 1
-            else:
-                item_table_amount_dict[item.name] += 1
+            if item.owner in (None, ""):
+                if item.name not in item_table_amount_dict:
+                    item_table_amount_dict[item.name] = 1
+                else:
+                    item_table_amount_dict[item.name] += 1
 
         items_in_table = set()
         for item in self.item_dict.values():
-            items_in_table.add(item.name)
-            current_item = [item.ID, item.name, item_table_amount_dict[item.name],
-                            item.aq_date, item.du_date, item.description, item.rating]
-            item_list_to_print.append(current_item)
+            if item.name in item_table_amount_dict:
+                items_in_table.add(item.name)
+                current_item = [item.ID, item.name, item_table_amount_dict[item.name],
+                                item.aq_date, item.du_date, item.description, item.rating]
+                item_list_to_print.append(current_item)
         return item_list_to_print
 
     def get_students_loaned_items(self, current_student):

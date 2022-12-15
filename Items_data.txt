@@ -1,3 +1,5 @@
-ID:name:description:rating:due date:date acquired:owner:no status
-10:eraser:erases stuff:5:17.12.22:15.12.22:1:no status
-11:Camera:swag:5:17.12.22:15.12.22:1:no status
+ID:name:description:rating:due date:date acquired:1:pending
+10:eraser:erases stuff:5:17.12.22:15.12.22:1:pending
+11:Camera:swag:5:17.12.22:15.12.22:1:pending
+12:what:okay:5:17.12.22:15.12.22:1:pending
+13:bicycle:really:5:17.12.22:15.12.22:1:pending
