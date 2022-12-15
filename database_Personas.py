@@ -28,14 +28,15 @@ class Manager:
 
 
 class Item:
-    def __init__(self, ID, name, description, rating, du_date=None, aq_date=None, owner=None):
+    def __init__(self, ID, name, description, rating, du_date=None, aq_date=None, owner=None, status=None):
         self.ID = ID
         self.name = name
         self.aq_date = aq_date
         self.du_date = du_date
         self.description = description
         self.rating = rating
-        self.owner = owner.replace("\n", "")
+        self.owner = owner
+        self.status = status.replace("\n","")
 
 
 class DataBase:
@@ -59,7 +60,7 @@ class DataBase:
             item_list = file3.readlines()
             item_list = list(map(lambda x: x.split(":"), item_list))
             # items in database are separated as such - ID:name:date acquired:due date:description:rating
-            item_list = list(map(lambda x: Item(x[0], x[1], x[2], x[3], x[4], x[5], x[6]), item_list))
+            item_list = list(map(lambda x: Item(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7]), item_list))
             self.item_dict = {i.ID: i for i in item_list}
 
     def getItemTable(self):
@@ -84,6 +85,7 @@ class DataBase:
         item_list_to_print = []
         for item in self.item_dict.values():
             if item.owner == current_student.ID:
-                current_item = [item.ID, item.name, item.aq_date, item.du_date, item.description, item.rating]
+                current_item = [item.ID, item.name, item.aq_date, item.du_date, item.description, item.rating,
+                                item.status]
                 item_list_to_print.append(current_item)
         return item_list_to_print

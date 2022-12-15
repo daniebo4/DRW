@@ -1,5 +1,5 @@
-ID:name:description:rating:due date:date acquired:owner
-10:eraser:erases stuff:5:17.12.22:15.12.22:12346241324
-11:eraser:erases stuff:5:17.12.22:15.12.22:12346241324
-100:eraser:erases stuff:5:17.12.22:15.12.22:12346241324
-101:eraser:erases stuff:5:17.12.22:15.12.22:12346241324
+ID:name:description:rating:due date:date acquired:owner:no status
+10:eraser:erases stuff:5:17.12.22:15.12.22:1:no status
+11:eraser:erases stuff:5:17.12.22:15.12.22:1:no status
+100:eraser:erases stuff:5:17.12.22:15.12.22:1:no status
+101:eraser:erases stuff:5:17.12.22:15.12.22:1:no status
