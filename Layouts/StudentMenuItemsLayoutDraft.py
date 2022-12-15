@@ -67,14 +67,14 @@ def My_Items_window():
         if event == "Return" or event == sg.WIN_CLOSED:
             break
         if event == "Exit" or event == sg.WIN_CLOSED:
-            My_Items_window().close
+            window.close()
             break
 
 def Request_item_Window():
     layout = [
         [sg.Text("Are you Sure?")],
-         sg.Button('Yes', ),
-          sg.Button('No', ),
+        [ sg.Button('Yes', ),
+          sg.Button('No', )]
     ]
 
     window = sg.Window("Request Item", layout)
@@ -84,7 +84,7 @@ def Request_item_Window():
         if event == "Yes" or event == sg.WIN_CLOSED:
             break
         if event == "No" or event == sg.WIN_CLOSED:
-            Request_item_Window.close
+            window.close()
             break
 
 
