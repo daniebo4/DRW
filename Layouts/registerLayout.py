@@ -1,8 +1,8 @@
 import PySimpleGUI as sg
 import main
 
-register_errors = ("One or more of the fields not entered", "ID can only contain numbers",
-                   "Name cant contain numbers", "ID already exist in the system!!!!")
+register_errors = ("One or more fields not provided", "ID can only contain numbers",
+                   "Name can't contain numbers", "ID already exists in system")
 
 
 def check_register(input_ID, input_password, input_name, input_secret_word):

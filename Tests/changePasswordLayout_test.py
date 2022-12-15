@@ -2,7 +2,6 @@ import unittest
 from Layouts import changePasswordLayout
 import main
 
-
 class ChangePasswordTest(unittest.TestCase):
     def test1_fields_not_entered(self):
         # Test if one of fields is empty

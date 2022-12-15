@@ -1,10 +1,10 @@
 import PySimpleGUI as sg
 import main
 
-errors = ("One or more of the fields not entered",
+errors = ("One or more fields not provided",
           "ID can only contain numbers",
-          "ID exists but name or secret word do not",
-          "ID doesn't exists")
+          "ID exists but name or secret word doesn't",
+          "ID doesn't exist")
 
 
 def get_forgot_password(Name, ID, Secret):
