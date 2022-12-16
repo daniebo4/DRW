@@ -13,7 +13,7 @@ def rate(current_student, rating, item_name):
         if item_name == item.name:
             temp_item_num_raters = float(item.num_raters)
             temp_item_num_raters += 1
-            item.rating = str((((float(item.rating) * (temp_item_num_raters - 1)) + rating) / temp_item_num_raters))
+            item.rating = str(round((((float(item.rating) * (temp_item_num_raters - 1)) + rating) / temp_item_num_raters), 2))
             item.num_raters = str(temp_item_num_raters)
             item_file = main.project_root_dir + '\\Items_data.txt'
             with open(item_file, 'w+') as file:
@@ -80,7 +80,7 @@ def open_my_items_window(current_student):
                   row_height=35,
                   enable_events=True, )],
         [sg.Button('Return', size=(15, 1)),
-         sg.Exit(pad=((430, 0), (0, 0)))]
+         sg.Exit(pad=((350, 0), (0, 0)))]
     ]
 
     my_items_window = sg.Window("My Items", my_items_layout)
@@ -156,8 +156,8 @@ def open_student_window(current_student):
         [sg.Button('Request Item', size=(15, 1)),
          sg.Button('My Items', size=(15, 1)),
          sg.Button('Rate', size=(15, 1)),
-         sg.Text(size=(30, 1), key="Error"),
-         sg.Exit(pad=((100, 0), (0, 0)))]
+         sg.Text(size=(15, 1), key="Error"),
+         sg.Exit(pad=((0, 0), (0, 0)))]
     ]
 
     student_menu_window = sg.Window("Student Menu", student_menu_layout, element_justification='c')
