@@ -146,7 +146,7 @@ def open_student_window(current_student):
         [sg.Button('Request Item', size=(15, 1)),
          sg.Button('My Items', size=(15, 1)),
          sg.Button('Rate', size=(15, 1)),
-         sg.Text(size=(15, 1), key="Error"),
+         sg.Text(size=(30, 1), key="Error"),
          sg.Exit(pad=((0, 0), (0, 0)))]
     ]
 
@@ -171,12 +171,14 @@ def open_student_window(current_student):
             open_my_items_window(current_student)
 
         if student_menu_event == "Rate":
-            if student_menu_values['-TABLE-']:
+            if len(student_menu_values['-TABLE-']) == 1:
                 item_idx = student_menu_values['-TABLE-'][0]
                 item_name = current_inventory[item_idx][1]
                 open_rate_window(current_student, item_name)
                 student_menu_window.close()
                 open_student_window(current_student)
+            elif len(student_menu_values['-TABLE-']) > 1:
+                student_menu_window["Error"].update("You can only rate one item at a time")
             else:
                 student_menu_window["Error"].update("choose item to rate!")
 

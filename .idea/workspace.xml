@@ -4,13 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2513eb0e-759c-4d70-b843-d072404ad6ca" name="Changes" comment="rate func + error if dont choose item to rate + update data base">
-      <change beforePath="$PROJECT_DIR$/.idea/DRW.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DRW.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="2513eb0e-759c-4d70-b843-d072404ad6ca" name="Changes" comment="small fixes in: rating system , request system , and my items window .&#10;&#10;user can now select multiple items to return in my items window">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Items_data.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Items_data.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Layouts/studentMenuLayout.py" beforeDir="false" afterPath="$PROJECT_DIR$/Layouts/studentMenuLayout.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database_Personas.py" beforeDir="false" afterPath="$PROJECT_DIR$/database_Personas.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/studentMenuLayoutTest Draft.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/studentMenuLayoutTest Draft.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -216,7 +214,14 @@
       <option name="project" value="LOCAL‎" />
       <updated>1671149847963</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL‎-00007" summary="small fixes in: rating system , request system , and my items window .&#10;&#10;user can now select multiple items to return in my items window">
+      <created>1671178853425</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL‎-00007" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1671178853425</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -247,6 +252,7 @@
     <MESSAGE value="small update" />
     <MESSAGE value="Merged rate update with project" />
     <MESSAGE value="rate func + error if dont choose item to rate + update data base" />
-    <option name="LAST_COMMIT_MESSAGE" value="rate func + error if dont choose item to rate + update data base" />
+    <MESSAGE value="small fixes in: rating system , request system , and my items window .&#10;&#10;user can now select multiple items to return in my items window" />
+    <option name="LAST_COMMIT_MESSAGE" value="small fixes in: rating system , request system , and my items window .&#10;&#10;user can now select multiple items to return in my items window" />
   </component>
 </project>

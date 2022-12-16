@@ -1,10 +1,8 @@
 import unittest
-from Layouts import forgotPasswordLayout
 import main
 
 
 class studentMenuLayout(unittest.TestCase):
-
     def test1_return_item(self):
         # Tests if status of returned item is changed to "pending"
         main.studentMenuLayout.open_my_items_window(main.db.student_dict[2])
