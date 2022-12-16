@@ -5,10 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2513eb0e-759c-4d70-b843-d072404ad6ca" name="Changes" comment="Merged rate update with project">
+      <change beforePath="$PROJECT_DIR$/.idea/DRW.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DRW.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Items_data.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Items_data.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Layouts/studentMenuLayout.py" beforeDir="false" afterPath="$PROJECT_DIR$/Layouts/studentMenuLayout.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database_Personas.py" beforeDir="false" afterPath="$PROJECT_DIR$/database_Personas.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,10 +25,6 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$USER_HOME$/AppData/Local/Programs/Python/Python311/Lib/site-packages/PySimpleGUI/PySimpleGUI.py" root0="SKIP_INSPECTION" />
-    <setting file="file://$USER_HOME$/AppData/Local/Programs/Python/Python311/Lib/tkinter/__init__.py" root0="SKIP_INSPECTION" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -230,5 +227,16 @@
     <MESSAGE value="small update" />
     <MESSAGE value="Merged rate update with project" />
     <option name="LAST_COMMIT_MESSAGE" value="Merged rate update with project" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Layouts/studentMenuLayout.py</url>
+          <line>40</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

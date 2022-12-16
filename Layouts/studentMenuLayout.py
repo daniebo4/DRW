@@ -8,14 +8,26 @@ def selected_row_event():
     pass
 
 
-def rate(current_student, rating, item_id):
-    student_loaned_items = main.db.get_students_loaned_items(current_student)
-    student_loaned_items[item_id]
-    return ((student_loaned_items[item_id].rating * (student_loaned_items[item_id].num_raters-1))+rating)/(student_loaned_items[item_id].num_raters+1)
+def rate(current_student, rating, item_name):
+    for item in main.db.item_dict.values():
+        if item_name == item.name:
+            temp_item_num_raters = float(item.num_raters)
+            temp_item_num_raters += 1
+            item.rating = str((((float(item.rating) * (temp_item_num_raters - 1)) + rating) / temp_item_num_raters))
+            item.num_raters = str(temp_item_num_raters)
+            item_file = main.project_root_dir + '\\Items_data.txt'
+            with open(item_file, 'w+') as file:
+                for i in main.db.item_dict.values():
+                    file.write(
+                        f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:{i.rating}:{i.num_raters}:{i.owner}:{i.status}\n")
+
+                # ID:name:date aq:date due:description:rating:num_raters:owner:status
+            main.db = DataBase(main.project_root_dir + '\\Students_data.txt',
+                               main.project_root_dir + '\\Workers_data.txt',
+                               main.project_root_dir + '\\Items_data.txt')
 
 
-
-def open_rate_window(current_student):
+def open_rate_window(current_student, item_name):
     enable_events = True
     open_rate_layout = [[sg.Text("Rate Item")],
                         [sg.Button('1', size=(4, 1)), sg.Button('2', size=(4, 1)), sg.Button('3', size=(4, 1)),
@@ -27,9 +39,26 @@ def open_rate_window(current_student):
         open_rate_event, open_rate_values = open_rate_window.read()
 
         if open_rate_event == '5':
-            print(rate(current_student, 5))
+            rate(current_student, 5, item_name)
             open_rate_window.close()
             break
+        elif open_rate_event == '4':
+                rate(current_student, 4, item_name)
+                open_rate_window.close()
+                break
+        elif open_rate_event == '3':
+            rate(current_student, 3, item_name)
+            open_rate_window.close()
+            break
+        elif open_rate_event == '2':
+            rate(current_student, 2, item_name)
+            open_rate_window.close()
+            break
+        elif open_rate_event == '1':
+            rate(current_student, 1, item_name)
+            open_rate_window.close()
+            break
+
 
         if open_rate_event == sg.WIN_CLOSED:
             open_rate_window.close()
@@ -67,7 +96,7 @@ def open_my_items_window(current_student):
                     file.write(
                         f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:{i.rating}:{i.num_raters}:{i.owner}:{i.status}\n")
 
-            #ID:name:date aq:date due:description:rating:num_raters:owner:status
+            # ID:name:date aq:date due:description:rating:num_raters:owner:status
             main.db = DataBase(main.project_root_dir + '\\Students_data.txt',
                                main.project_root_dir + '\\Workers_data.txt',
                                main.project_root_dir + '\\Items_data.txt')
@@ -150,7 +179,14 @@ def open_student_window(current_student):
             open_my_items_window(current_student)
 
         if student_menu_event == "Rate":
-            open_rate_window(current_student)
+            if student_menu_values['-TABLE-']:
+              item_idx = student_menu_values['-TABLE-'][0]
+              item_name = current_inventory[item_idx][1]
+              open_rate_window(current_student, item_name)
+              student_menu_window.close()
+              open_student_window(current_student)
+            else:
+                student_menu_window["Error"].update("choose item to rate!")
 
         if student_menu_event == sg.WIN_CLOSED or student_menu_event == "Exit":
             student_menu_window.close()
