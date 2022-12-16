@@ -9,7 +9,9 @@ from Layouts import managerMenuLayout
 from Layouts import registerLayout
 
 project_root_dir = os.path.dirname(os.path.abspath(__file__))  # Finds path to current project folder
-db = DataBase(project_root_dir + '\\Students_data.txt', project_root_dir + '\\Workers_data.txt')  # Gets path to
+db = DataBase(project_root_dir + '\\Students_data.txt',
+              project_root_dir + '\\Workers_data.txt',
+              project_root_dir + '\\Items_data.txt')  # Gets path to
 
 
 # student and worker database
@@ -49,7 +51,7 @@ def mainMenu():
             else:
                 # checks first if the user is a student
                 if check_login_student(input_ID, input_password):
-                    studentMenuLayout.open_student_window()
+                    studentMenuLayout.open_student_window(db.student_dict[input_ID])
 
                 # else checks if the user is a worker
                 elif check_login_worker(input_ID, input_password) and input_ID != 'admin':
@@ -65,11 +67,15 @@ def mainMenu():
 
         if login_event == "Register":
             registerLayout.open_register_window()
-            db = DataBase('Students_data.txt', 'Workers_data.txt')
+            db = DataBase(project_root_dir + '\\Students_data.txt',
+                          project_root_dir + '\\Workers_data.txt',
+                          project_root_dir + '\\Items_data.txt')
 
         if login_event == "Change password":
             changePasswordLayout.open_change_password_window()
-            db = DataBase('Students_data.txt', 'Workers_data.txt')
+            db = DataBase(project_root_dir + '\\Students_data.txt',
+                          project_root_dir + '\\Workers_data.txt',
+                          project_root_dir + '\\Items_data.txt')
 
         if login_event == " Forgot password ":  # There are spaces before and after the string !!!!
             forgotPasswordLayout.open_forgot_password_window()
