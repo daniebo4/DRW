@@ -7,30 +7,32 @@ import os
 # remove current student parameter to rating functions ?
 # make rating not possible after student already rated item
 def rate(rating, item_name):
+    """func to rate an item and update it in the database"""
+
     for item in main.db.item_dict.values():
         if item_name == item.name:
-            temp_item_num_raters = float(item.num_raters)
+            temp_item_num_raters = float(item.num_raters)  # change the string to float for conculataion
             temp_item_num_raters += 1
+            # change the result to str to update the dict data
             item.rating = str(
                 round((((float(item.rating) * (temp_item_num_raters - 1)) + rating) / temp_item_num_raters), 2))
             item.num_raters = str(temp_item_num_raters)
     item_file = main.project_root_dir + '\\Items_data.txt'
     item_rating_temp = ""
-    with open(item_file, 'w+') as file:
+    with open(item_file, 'w+') as file:  # update the database
         for i in main.db.item_dict.values():
-            item_rating_temp=i.rating
+            item_rating_temp = i.rating
             file.write(
                 f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:{i.rating}:"
                 f"{i.num_raters}:{i.owner}:{i.status}\n")
-    return item_rating_temp
-
-
     main.db = DataBase(main.project_root_dir + '\\Students_data.txt',
                        main.project_root_dir + '\\Workers_data.txt',
                        main.project_root_dir + '\\Items_data.txt')
+    return item_rating_temp
 
 
 def open_rate_window(current_student, item_name):
+    """func to create rating window and mange it"""
     rate_layout = [[sg.Text("Rate Item")],
                    [sg.Button('1', size=(4, 1)), sg.Button('2', size=(4, 1)), sg.Button('3', size=(4, 1)),
                     sg.Button('4', size=(4, 1)), sg.Button('5', size=(4, 1))],
@@ -40,7 +42,7 @@ def open_rate_window(current_student, item_name):
     while True:
         rate_event, rate_values = rate_window.read()
 
-        if isinstance(rate_event, str):
+        if isinstance(rate_event, str): # check all the options of rate (1 to 5)
             rate(int(rate_event), item_name)
             rate_window.close()
             break
@@ -51,6 +53,7 @@ def open_rate_window(current_student, item_name):
 
 
 def open_my_items_window(current_student):
+    """func to create and manage loaned item window"""
     my_items_headings = ['ID', 'Name', 'Loan Date', 'Due Date', 'Description', 'Rating', 'status']
     student_loaned_items = main.db.get_students_loaned_items(current_student)
     my_items_layout = [
@@ -72,8 +75,8 @@ def open_my_items_window(current_student):
     my_items_window = sg.Window("My Items", my_items_layout)
     while True:
         my_items_event, my_items_values = my_items_window.read()
-        if my_items_event == 'Return':
-            if len(my_items_values['-TABLE-']) > 0:
+        if my_items_event == 'Return':  # check if student want to return items
+            if len(my_items_values['-TABLE-']) > 0:  # check if the user choose items to return
                 item_idx = my_items_values['-TABLE-']
                 item_id = []
 
@@ -84,6 +87,7 @@ def open_my_items_window(current_student):
                 for ID in item_id:
                     main.db.item_dict[ID].status = 'pending'
 
+                    # update the status of the returning items in the database
                 item_file = main.project_root_dir + '\\Items_data.txt'
                 with open(item_file, 'w') as file:
                     for i in main.db.item_dict.values():
@@ -96,7 +100,7 @@ def open_my_items_window(current_student):
                                    main.project_root_dir + '\\Items_data.txt')
                 my_items_window.close()
                 open_my_items_window(current_student)
-            else:
+            else:  # write warning to the user if he isn't choose items to return
                 my_items_window["Error"].update("No item selected !")
         if my_items_event == "Exit" or my_items_event == sg.WIN_CLOSED:
             my_items_window.close()
