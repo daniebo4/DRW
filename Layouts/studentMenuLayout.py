@@ -6,7 +6,7 @@ import os
 
 # remove current student parameter to rating functions ?
 # make rating not possible after student already rated item
-def rate(current_student, rating, item_name):
+def rate(rating, item_name):
     for item in main.db.item_dict.values():
         if item_name == item.name:
             temp_item_num_raters = float(item.num_raters)
@@ -15,11 +15,15 @@ def rate(current_student, rating, item_name):
                 round((((float(item.rating) * (temp_item_num_raters - 1)) + rating) / temp_item_num_raters), 2))
             item.num_raters = str(temp_item_num_raters)
     item_file = main.project_root_dir + '\\Items_data.txt'
+    item_rating_temp = ""
     with open(item_file, 'w+') as file:
         for i in main.db.item_dict.values():
+            item_rating_temp=i.rating
             file.write(
                 f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:{i.rating}:"
                 f"{i.num_raters}:{i.owner}:{i.status}\n")
+    return item_rating_temp
+
 
     main.db = DataBase(main.project_root_dir + '\\Students_data.txt',
                        main.project_root_dir + '\\Workers_data.txt',
@@ -37,7 +41,7 @@ def open_rate_window(current_student, item_name):
         rate_event, rate_values = rate_window.read()
 
         if isinstance(rate_event, str):
-            rate(current_student, int(rate_event), item_name)
+            rate(int(rate_event), item_name)
             rate_window.close()
             break
 
