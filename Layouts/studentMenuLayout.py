@@ -102,10 +102,10 @@ def open_my_items_window(current_student):
         if my_items_event == 'Return':  # check if student want to return items
             user_selection = my_items_values['-TABLE-']
             output = return_item(user_selection, student_loaned_items)
-            if output:
+            if output:  # refresh to the window to show changes
                 my_items_window.close()
                 open_my_items_window(current_student)
-            else:
+            else:  # warning if the user not choose item to return
                 my_items_window["Error"].update("No Items Selected !")
         if my_items_event == "Exit" or my_items_event == sg.WIN_CLOSED:
             my_items_window.close()
@@ -113,11 +113,13 @@ def open_my_items_window(current_student):
 
 
 def request_item(current_student, item_id):
-    if item_id in main.db.item_dict:
+    """func to request item to loan"""
+    if item_id in main.db.item_dict:  # check if the item is exist in the database
         main.db.item_dict[item_id].owner = current_student.ID
     else:
         return False
 
+    # update the owner of the item in the database
     item_file = main.project_root_dir + '\\Items_data.txt'
     with open(item_file, 'w+') as file:
         for i in main.db.item_dict.values():
@@ -131,6 +133,7 @@ def request_item(current_student, item_id):
 
 
 def open_request_item_window(current_student, item_id):
+    """create and manage request to loan item window"""
     # make function work with multiple items
     request_item_layout = [
         [sg.Text("Are you sure you want to loan ?")],
@@ -142,6 +145,7 @@ def open_request_item_window(current_student, item_id):
     request_item_window = sg.Window("Request Item", request_item_layout)
 
     while True:
+        # check if the user is sure if he want to lan the item that he was choose
         request_item_event, request_item_values = request_item_window.read()
         if request_item_event == "Yes":
             request_item(current_student, item_id)
@@ -154,6 +158,7 @@ def open_request_item_window(current_student, item_id):
 
 
 def open_student_window(current_student):
+    """func to create and manage the menu of the persona user type student"""
     current_inventory_headings = ['ID', 'Item', 'Quantity', 'Loan Date', 'Due Date', 'Description', 'Rating']
     current_inventory = main.db.getAvailableItemTable()
     student_menu_layout = [
@@ -187,22 +192,24 @@ def open_student_window(current_student):
                     open_request_item_window(current_student, item_id)
                 student_menu_window.close()
                 open_student_window(current_student)
-            else:
+            else:  # warning to the user if he isn't choose item
                 student_menu_window["Error"].update("No Items selected")
 
         if student_menu_event == "My Items":
             open_my_items_window(current_student)
 
         if student_menu_event == "Rate":
+            # check if the user choose item before pressing on rate button
             if len(student_menu_values['-TABLE-']) == 1:
                 item_idx = student_menu_values['-TABLE-'][0]
                 item_name = current_inventory[item_idx][1]
                 open_rate_window(current_student, item_name)
                 student_menu_window.close()
                 open_student_window(current_student)
+                # warning to the user if he chose more than one item to rate in the same time
             elif len(student_menu_values['-TABLE-']) > 1:
                 student_menu_window["Error"].update("You can only rate one item at a time")
-            else:
+            else: # warning to the user if he isn't choose item before pressing on rate button
                 student_menu_window["Error"].update("choose item to rate!")
 
         if student_menu_event == sg.WIN_CLOSED or student_menu_event == "Exit":
