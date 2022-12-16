@@ -1,5 +1,5 @@
 ID:name:date aq:date due:description:rating0.2f:num_raters:owner:status
-10:Camera:16:14:hello:3.8:5.0:0:no status
-11:Brush:16:14:bob ross:5.0:1.0:0:no status
-12:Camera:16:14:hello:3.8:5.0:0:no status
+10:Camera:16:14:hello:3.8:5.0:1:pending
+11:Brush:16:14:bob ross:5.0:1.0:1:pending
+12:Camera:16:14:hello:3.8:5.0:1:no status
 13:Item test:16:14:meant for testing:0:0:0:no status

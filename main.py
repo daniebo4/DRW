@@ -68,8 +68,8 @@ def mainMenu():
         if login_event == "Register":
             registerLayout.open_register_window()
             db = DataBase(project_root_dir + '\\Students_data.txt',
-                     project_root_dir + '\\Workers_data.txt',
-                     project_root_dir + '\\Items_data.txt')
+                          project_root_dir + '\\Workers_data.txt',
+                          project_root_dir + '\\Items_data.txt')
 
         if login_event == "Change password":
             changePasswordLayout.open_change_password_window()

@@ -8,7 +8,6 @@ import os
 # make rating not possible after student already rated item
 def rate(rating, item_name):
     """func to rate an item and update it in the database"""
-
     for item in main.db.item_dict.values():
         if item_name == item.name:
             temp_item_num_raters = float(item.num_raters)  # change the string to float for conculataion
@@ -42,7 +41,7 @@ def open_rate_window(current_student, item_name):
     while True:
         rate_event, rate_values = rate_window.read()
 
-        if isinstance(rate_event, str): # check all the options of rate (1 to 5)
+        if isinstance(rate_event, str):  # check all the options of rate (1 to 5)
             rate(int(rate_event), item_name)
             rate_window.close()
             break
@@ -50,6 +49,31 @@ def open_rate_window(current_student, item_name):
         if rate_event == sg.WIN_CLOSED:
             rate_window.close()
             break
+
+
+def return_item(user_selection, student_loaned_items):
+    if len(user_selection) > 0:  # check if the user choose items to return
+        item_id = []
+        for index, item in enumerate(student_loaned_items):
+            if index in user_selection:
+                item_id.append(item[0])
+
+        for ID in item_id:
+            main.db.item_dict[ID].status = 'pending'  # update the status of the returned items in the database
+
+        item_file = main.project_root_dir + '\\Items_data.txt'
+        with open(item_file, 'w') as file:
+            for i in main.db.item_dict.values():
+                file.write(
+                    f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:{i.rating}:"
+                    f"{i.num_raters}:{i.owner}:{i.status}\n")
+
+        main.db = DataBase(main.project_root_dir + '\\Students_data.txt',
+                           main.project_root_dir + '\\Workers_data.txt',
+                           main.project_root_dir + '\\Items_data.txt')
+        return True
+    else:  # write error to the user if he didn't choose items to return
+        return False
 
 
 def open_my_items_window(current_student):
@@ -76,40 +100,38 @@ def open_my_items_window(current_student):
     while True:
         my_items_event, my_items_values = my_items_window.read()
         if my_items_event == 'Return':  # check if student want to return items
-            if len(my_items_values['-TABLE-']) > 0:  # check if the user choose items to return
-                item_idx = my_items_values['-TABLE-']
-                item_id = []
-
-                for index, item in enumerate(student_loaned_items):
-                    if index in item_idx:
-                        item_id.append(item[0])
-
-                for ID in item_id:
-                    main.db.item_dict[ID].status = 'pending'
-
-                    # update the status of the returning items in the database
-                item_file = main.project_root_dir + '\\Items_data.txt'
-                with open(item_file, 'w') as file:
-                    for i in main.db.item_dict.values():
-                        file.write(
-                            f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:{i.rating}:"
-                            f"{i.num_raters}:{i.owner}:{i.status}\n")
-
-                main.db = DataBase(main.project_root_dir + '\\Students_data.txt',
-                                   main.project_root_dir + '\\Workers_data.txt',
-                                   main.project_root_dir + '\\Items_data.txt')
+            user_selection = my_items_values['-TABLE-']
+            output = return_item(user_selection, student_loaned_items)
+            if output:
                 my_items_window.close()
                 open_my_items_window(current_student)
-            else:  # write warning to the user if he isn't choose items to return
-                my_items_window["Error"].update("No item selected !")
+            else:
+                my_items_window["Error"].update("No Items Selected !")
         if my_items_event == "Exit" or my_items_event == sg.WIN_CLOSED:
             my_items_window.close()
             break
 
 
+def request_item(current_student, item_id):
+    if item_id in main.db.item_dict:
+        main.db.item_dict[item_id].owner = current_student.ID
+    else:
+        return False
+
+    item_file = main.project_root_dir + '\\Items_data.txt'
+    with open(item_file, 'w+') as file:
+        for i in main.db.item_dict.values():
+            file.write(
+                f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:"
+                f"{i.rating}:{i.num_raters}:{i.owner}:{i.status}\n")
+    main.db = DataBase(main.project_root_dir + '\\Students_data.txt',
+                       main.project_root_dir + '\\Workers_data.txt',
+                       main.project_root_dir + '\\Items_data.txt')
+    return True
+
+
 def open_request_item_window(current_student, item_id):
     # make function work with multiple items
-    student_loaned_items = main.db.get_students_loaned_items(current_student)
     request_item_layout = [
         [sg.Text("Are you sure you want to loan ?")],
         [sg.Button('Yes', ),
@@ -122,14 +144,7 @@ def open_request_item_window(current_student, item_id):
     while True:
         request_item_event, request_item_values = request_item_window.read()
         if request_item_event == "Yes":
-            main.db.item_dict[item_id].owner = current_student.ID
-            item_file = main.project_root_dir + '\\Items_data.txt'
-            with open(item_file, 'w+') as file:
-                for i in main.db.item_dict.values():
-                    file.write(
-                        f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:"
-                        f"{i.rating}:{i.num_raters}:{i.owner}:{i.status}\n")
-
+            request_item(current_student, item_id)
             request_item_window.close()
             break
         if request_item_event == "No" or request_item_event == sg.WIN_CLOSED:
