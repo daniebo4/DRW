@@ -103,7 +103,7 @@ def open_request_item_window(current_student, item_id):
     # make function work with multiple items
     student_loaned_items = main.db.get_students_loaned_items(current_student)
     request_item_layout = [
-        [sg.Text("Are you sure you want to loan {}?")],
+        [sg.Text("Are you sure you want to loan ?")],
         [sg.Button('Yes', ),
          sg.Button('No', )]
         # add return date please
