@@ -55,11 +55,11 @@ def mainMenu():
 
                 # else checks if the user is a worker
                 elif check_login_worker(input_ID, input_password) and input_ID != 'admin':
-                    workerMenuLayout.open_worker_window()
+                    workerMenuLayout.open_worker_window(db.worker_dict[input_ID])
 
                 # else check if the user is the admin
                 elif check_login_worker(input_ID, input_password):
-                    managerMenuLayout.open_manager_window()
+                    managerMenuLayout.open_manager_window(db.worker_dict[input_ID])
 
                 # conclude that user is not registered / details incorrect
                 else:
