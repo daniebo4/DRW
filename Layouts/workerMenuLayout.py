@@ -161,6 +161,54 @@ def open_request_item_window(current_worker, item_id):
     request_item_window.close()
 
 
+def open_add(current_worker):
+    current_add_items = main.db.getAvailableItemTable()
+    add_items_layout = [
+        [sg.Text('Item Name')],
+        [sg.InputText('', size=(20, 1), key='<item_name>')],
+        [sg.Text('Item Quantity')],
+        [sg.InputText('', size=(20, 1), key='<item_quantity>')],
+        [sg.Text('Item Description')],
+        [sg.InputText('', size=(20, 1), key='<item_Description>>')],
+        [sg.Text(size=(10, 0), key="Error"), ],
+        [sg.Button('Confirm', size=(10, 1)),
+         sg.Button('Exit', size=(10, 1)),
+         sg.Exit(pad=((50, 0), (50, 0)))]]
+    add_items_layout_window = sg.Window("Add", add_items_layout, element_justification='c', size=(200, 250))
+    while True:
+        add_items_layout_event, add_items_layout_values = add_items_layout_window.read()
+        if add_items_layout_event == sg.WIN_CLOSED or add_items_layout_event == "Exit":
+            break
+
+    add_items_layout_window.close()
+
+
+def open_edit_items(current_worker):
+    current_edit_items = main.db.getAvailableItemTable()
+    edit_items_layout = [
+        [sg.Text('Item Name')],
+        [sg.InputText('', size=(20, 1), key='<item_name>')],
+        [sg.Text('Item Quantity')],
+        [sg.InputText('', size=(20, 1), key='<item_quantity>')],
+        [sg.Text('Item Description')],
+        [sg.InputText('', size=(20, 1), key='<item_Description>>')],
+        [sg.Text('Due Date')],
+        [sg.InputText('', size=(20, 1), key='<item_Date>>')],
+        [sg.Text('Due Acquired')],
+        [sg.InputText('', size=(20, 1), key='<item_Acquired>>')],
+        [sg.Text(size=(10, 0), key="Error"), ],
+        [sg.Button('Confirm', size=(10, 1)),
+         sg.Button('Exit', size=(10, 1)),
+         sg.Exit(pad=((50, 0), (50, 0)))]]
+    edit_items_layout_window = sg.Window("Edit Items", edit_items_layout, element_justification='c', size=(200, 350))
+    while True:
+        add_items_layout_event, edit_items_layout_values = edit_items_layout_window.read()
+        if add_items_layout_event == sg.WIN_CLOSED or add_items_layout_event == "Exit":
+            break
+
+    edit_items_layout_window.close()
+
+
 def open_worker_window(current_worker):
     """func to create and manage the menu of the persona user type worker"""
     current_inventory_headings = ['ID', 'Item', 'Quantity', 'Loan Date', 'Due Date', 'Description', 'Rating']
@@ -183,7 +231,6 @@ def open_worker_window(current_worker):
          sg.Button('Returns', size=(15, 1)),
          sg.Exit(pad=((0, 0), (0, 0)))]
     ]
-
 
     worker_menu_window = sg.Window("worker Menu", worker_menu_layout, element_justification='c')
     while True:
@@ -216,10 +263,14 @@ def open_worker_window(current_worker):
                 # warning to the user if he chose more than one item to rate in the same time
             elif len(worker_menu_values['-TABLE-']) > 1:
                 worker_menu_window["Error"].update("You can only rate one item at a time")
-            else: # warning to the user if he isn't choose item before pressing on rate button
+            else:  # warning to the user if he isn't choose item before pressing on rate button
                 worker_menu_window["Error"].update("choose item to rate!")
+
+        if worker_menu_event == "Add":
+            open_add(current_worker)
+        if worker_menu_event == "Edit":
+            open_edit_items(current_worker)
 
         if worker_menu_event == sg.WIN_CLOSED or worker_menu_event == "Exit":
             worker_menu_window.close()
             break
-
