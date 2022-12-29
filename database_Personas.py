@@ -95,3 +95,12 @@ class DataBase:
                                 item.status]
                 item_list_to_print.append(current_item)
         return item_list_to_print
+
+    def get_pending_items(self):
+        item_list_to_print = []
+        for item in self.item_dict.values():
+            if item.status == 'pending':
+                current_item = [item.ID, item.name, item.aq_date, item.du_date, item.description, item.rating,
+                                item.status]
+                item_list_to_print.append(current_item)
+        return item_list_to_print

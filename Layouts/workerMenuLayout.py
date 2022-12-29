@@ -1,6 +1,8 @@
 import PySimpleGUI as sg
 
 import PySimpleGUI as sg
+
+from Layouts.studentMenuLayout import open_my_items_window
 from database_Personas import DataBase
 import main
 import os
@@ -61,7 +63,8 @@ def return_item(user_selection, worker_loaned_items):
                 item_id.append(item[0])
 
         for ID in item_id:
-            main.db.item_dict[ID].status = 'pending'  # update the status of the returned items in the database
+            main.db.item_dict[ID].status = 'no status'  # update the status of the returned items in the database
+            main.db.item_dict[ID].owner = '0'           # remove previous owner of the returned item
 
         item_file = main.project_root_dir + '\\Items_data.txt'
         with open(item_file, 'w') as file:
@@ -209,6 +212,42 @@ def open_edit_items(current_worker):
     edit_items_layout_window.close()
 
 
+def open_return_item(current_worker):
+    """func to create and manage return item window"""
+    loan_items_headings = ['ID', 'Name', 'Loan Date', 'Due Date', 'Description', 'Rating', 'status']
+    worker_loaned_items = main.db.get_pending_items()
+    loan_items_layout = [
+        [sg.Table(values=worker_loaned_items,
+                  headings=loan_items_headings,
+                  max_col_width=25,
+                  auto_size_columns=True,
+                  display_row_numbers=False,
+                  justification='l',
+                  num_rows=10,
+                  key='-TABLE-',
+                  row_height=35,
+                  enable_events=True, )],
+        [sg.Button('Return', size=(15, 1)),
+         sg.Text(size=(15, 1), key="Error"),
+         sg.Exit(pad=((300, 0), (0, 0)))]
+    ]
+
+    loan_items_window = sg.Window("loan Items", loan_items_layout)
+    while True:
+        loan_items_event, loan_items_values = loan_items_window.read()
+        if loan_items_event == 'Return':  # check if worker want to accept the request return items
+            user_selection = loan_items_values['-TABLE-']
+            output = return_item(user_selection, worker_loaned_items)
+            if output:  # refresh to the window to show changes
+                loan_items_window.close()
+                open_return_item(current_worker)
+            else:  # warning if the user not choose item to return
+                loan_items_window["Error"].update("No Items Selected !")
+        if loan_items_event == "Exit" or loan_items_event == sg.WIN_CLOSED:
+            loan_items_window.close()
+            break
+
+
 def open_worker_window(current_worker):
     """func to create and manage the menu of the persona user type worker"""
     current_inventory_headings = ['ID', 'Item', 'Quantity', 'Loan Date', 'Due Date', 'Description', 'Rating']
@@ -270,6 +309,10 @@ def open_worker_window(current_worker):
             open_add(current_worker)
         if worker_menu_event == "Edit":
             open_edit_items(current_worker)
+        if worker_menu_event == "Returns":
+            open_return_item(current_worker)
+            worker_menu_window.close()
+            open_worker_window(current_worker)
 
         if worker_menu_event == sg.WIN_CLOSED or worker_menu_event == "Exit":
             worker_menu_window.close()

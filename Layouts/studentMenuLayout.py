@@ -145,7 +145,7 @@ def open_request_item_window(current_student, item_id):
     request_item_window = sg.Window("Request Item", request_item_layout)
 
     while True:
-        # check if the user is sure if he want to lan the item that he was choose
+        # check if the user is sure if he wants to lan the item that he was chosen
         request_item_event, request_item_values = request_item_window.read()
         if request_item_event == "Yes":
             request_item(current_student, item_id)
