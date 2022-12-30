@@ -132,6 +132,7 @@ def open_add_window(current_worker):
             add_items_window.close()
             break
 
+
 def open_edit_window(current_worker):
     """This window gives access to a worker to edit an items Name/Quantity/Description """
     edit_items_layout = [
@@ -222,7 +223,14 @@ def open_returns_window(current_worker):
 
 
 def open_worker_window(current_worker):
-    """func to create and manage the menu of the persona user type worker"""
+    """
+    This is the main window of the worker where he can choose what action to performe :
+    Add - adds an item to the system by calling open_add_window
+    Remove - choose to remove an item from the system by calling
+    Edit - edits an item from the system by calling
+    requests - opens a window to manage all the request mad by students for items
+    returns - opens a window to manage the returns of all studends
+    """
     current_inventory_headings = ['ID', 'Item', 'Quantity', 'Loan Date', 'Due Date', 'Description', 'Rating']
     current_inventory = main.db.getAvailableItemTable()
     worker_menu_layout = [

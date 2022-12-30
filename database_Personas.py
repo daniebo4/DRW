@@ -74,6 +74,7 @@ class DataBase:
         item_table_amount_dict = {}
         # calculate quantity of items to be displayed
         for item in self.item_dict.values():
+            # '0' means that currently the item has no owner
             if item.owner in (None, "", '0'):
                 if item.name not in item_table_amount_dict:
                     item_table_amount_dict[item.name] = 1

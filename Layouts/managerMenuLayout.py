@@ -6,50 +6,47 @@ import main
 import os
 
 
-# remove current manager parameter to rating functions ?
-# make rating not possible after manager already rated item
-def rate(rating, item_name):
-    """func to rate an item and update it in the database"""
-    for item in main.db.item_dict.values():
-        if item_name == item.name:
-            temp_item_num_raters = float(item.num_raters)  # change the string to float for conculataion
-            temp_item_num_raters += 1
-            # change the result to str to update the dict data
-            item.rating = str(
-                round((((float(item.rating) * (temp_item_num_raters - 1)) + rating) / temp_item_num_raters), 2))
-            item.num_raters = str(temp_item_num_raters)
-    item_file = main.project_root_dir + '\\Items_data.txt'
-    item_rating_temp = ""
-    with open(item_file, 'w+') as file:  # update the database
-        for i in main.db.item_dict.values():
-            item_rating_temp = i.rating
-            file.write(
-                f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:{i.rating}:"
-                f"{i.num_raters}:{i.owner}:{i.status}\n")
-    main.db = DataBase(main.project_root_dir + '\\managers_data.txt',
-                       main.project_root_dir + '\\managers_data.txt',
-                       main.project_root_dir + '\\Items_data.txt')
-    return item_rating_temp
 
+# manager method ?
+def open_manage_workers(current_worker):
+    """
+    A window to manage the workers with the following funcs:
+    Add New Worker - can add new workers with the permissions
+    Remove worker - can remove a worker
+    """
+    my_items_headings = ['Name', 'ID']
+    worker_loaned_items = main.db.get_workers_loaned_items(current_worker)
+    manage_workers_layout = [
+        [sg.Table(values=worker_loaned_items,
+                  headings=my_items_headings,
+                  max_col_width=25,
+                  auto_size_columns=True,
+                  display_row_numbers=False,
+                  justification='l',
+                  num_rows=10,
+                  key='-TABLE-',
+                  row_height=35,
+                  enable_events=True, )],
+        [sg.Text(size=(15, 1), key="Error")],
+        [sg.Button('Add New Worker', size=(15, 1)),
+         sg.Button('Remove Worker', size=(15, 1)),
+         sg.Button('Return', size=(15, 1)),
+         sg.Exit(pad=((300, 0), (0, 0)))]
+    ]
 
-def open_rate_window(current_manager, item_name):
-    """func to create rating window and mange it"""
-    rate_layout = [[sg.Text("Rate Item")],
-                   [sg.Button('1', size=(4, 1)), sg.Button('2', size=(4, 1)), sg.Button('3', size=(4, 1)),
-                    sg.Button('4', size=(4, 1)), sg.Button('5', size=(4, 1))],
-                   ]
-
-    rate_window = sg.Window("Rate Menu", rate_layout, element_justification='c')
+    my_items_window = sg.Window("My Items", my_items_layout)
     while True:
-        rate_event, rate_values = rate_window.read()
-
-        if isinstance(rate_event, str):  # check all the options of rate (1 to 5)
-            rate(int(rate_event), item_name)
-            rate_window.close()
-            break
-
-        if rate_event == sg.WIN_CLOSED:
-            rate_window.close()
+        my_items_event, my_items_values = my_items_window.read()
+        if my_items_event == 'Return':  # check if worker want to return items
+            user_selection = my_items_values['-TABLE-']
+            output = return_item(user_selection, worker_loaned_items)
+            if output:  # refresh to the window to show changes
+                my_items_window.close()
+                open_my_items_window(current_worker)
+            else:  # warning if the user not choose item to return
+                my_items_window["Error"].update("No Items Selected !")
+        if my_items_event == "Exit" or my_items_event == sg.WIN_CLOSED:
+            my_items_window.close()
             break
 
 
@@ -99,25 +96,6 @@ def open_manage_workers():
          sg.Button('Return', size=(15, 1)),
          sg.Exit(pad=((300, 0), (0, 0)))]
     ]
-
-def request_item(current_manager, item_id):
-    """func to request item to loan"""
-    if item_id in main.db.item_dict:  # check if the item is exist in the database
-        main.db.item_dict[item_id].owner = current_manager.ID
-    else:
-        return False
-
-    # update the owner of the item in the database
-    item_file = main.project_root_dir + '\\Items_data.txt'
-    with open(item_file, 'w+') as file:
-        for i in main.db.item_dict.values():
-            file.write(
-                f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:"
-                f"{i.rating}:{i.num_raters}:{i.owner}:{i.status}\n")
-    main.db = DataBase(main.project_root_dir + '\\managers_data.txt',
-                       main.project_root_dir + '\\managers_data.txt',
-                       main.project_root_dir + '\\Items_data.txt')
-    return True
 
 
 def open_request_item_window(current_manager, item_id):
@@ -194,7 +172,6 @@ def open_manager_window(current_manager):
             if len(manager_menu_values['-TABLE-']) == 1:
                 item_idx = manager_menu_values['-TABLE-'][0]
                 item_name = current_inventory[item_idx][1]
-                open_rate_window(current_manager, item_name)
                 manager_menu_window.close()
                 open_manager_window(current_manager)
                 # warning to the user if he chose more than one item to rate in the same time
