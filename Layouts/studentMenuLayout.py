@@ -59,7 +59,7 @@ def return_item(user_selection, student_loaned_items):
                 item_id.append(item[0])
 
         for ID in item_id:
-            main.db.item_dict[ID].status = 'pending'  # update the status of the returned items in the database
+            main.db.item_dict[ID].status = 'return requested'  # update the status of the returned items in the database
 
         item_file = main.project_root_dir + '\\Items_data.txt'
         with open(item_file, 'w') as file:
@@ -114,8 +114,10 @@ def open_my_items_window(current_student):
 
 def request_item(current_student, item_id):
     """func to request item to loan"""
-    if item_id in main.db.item_dict:  # check if the item is exist in the database
+    if item_id in main.db.item_dict:  # check if the item exists in the database
         main.db.item_dict[item_id].owner = current_student.ID
+        main.db.item_dict[item_id].status = 'loan requested'
+
     else:
         return False
 
@@ -190,6 +192,7 @@ def open_student_window(current_student):
                     item_idx = student_menu_values['-TABLE-'][0]
                     item_id = current_inventory[item_idx][0]
                     open_request_item_window(current_student, item_id)
+                    # check if open_request_item_window returns false !
                 student_menu_window.close()
                 open_student_window(current_student)
             else:  # warning to the user if he isn't choose item

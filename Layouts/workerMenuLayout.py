@@ -1,70 +1,21 @@
 import PySimpleGUI as sg
 
-import PySimpleGUI as sg
-
 from Layouts.studentMenuLayout import open_my_items_window
 from database_Personas import DataBase
 import main
 import os
 
 
-# remove current worker parameter to rating functions ?
-# make rating not possible after worker already rated item
-def rate(rating, item_name):
-    """func to rate an item and update it in the database"""
-    for item in main.db.item_dict.values():
-        if item_name == item.name:
-            temp_item_num_raters = float(item.num_raters)  # change the string to float for conculataion
-            temp_item_num_raters += 1
-            # change the result to str to update the dict data
-            item.rating = str(
-                round((((float(item.rating) * (temp_item_num_raters - 1)) + rating) / temp_item_num_raters), 2))
-            item.num_raters = str(temp_item_num_raters)
-    item_file = main.project_root_dir + '\\Items_data.txt'
-    item_rating_temp = ""
-    with open(item_file, 'w+') as file:  # update the database
-        for i in main.db.item_dict.values():
-            item_rating_temp = i.rating
-            file.write(
-                f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:{i.rating}:"
-                f"{i.num_raters}:{i.owner}:{i.status}\n")
-    main.db = DataBase(main.project_root_dir + '\\workers_data.txt',
-                       main.project_root_dir + '\\Workers_data.txt',
-                       main.project_root_dir + '\\Items_data.txt')
-    return item_rating_temp
-
-
-def open_rate_window(current_worker, item_name):
-    """func to create rating window and mange it"""
-    rate_layout = [[sg.Text("Rate Item")],
-                   [sg.Button('1', size=(4, 1)), sg.Button('2', size=(4, 1)), sg.Button('3', size=(4, 1)),
-                    sg.Button('4', size=(4, 1)), sg.Button('5', size=(4, 1))],
-                   ]
-
-    rate_window = sg.Window("Rate Menu", rate_layout, element_justification='c')
-    while True:
-        rate_event, rate_values = rate_window.read()
-
-        if isinstance(rate_event, str):  # check all the options of rate (1 to 5)
-            rate(int(rate_event), item_name)
-            rate_window.close()
-            break
-
-        if rate_event == sg.WIN_CLOSED:
-            rate_window.close()
-            break
-
-
-def return_item(user_selection, worker_loaned_items):
+def confirm_request_item(user_selection, worker_requested_items):
+    """This is a function that updates the data of an item owner to be the student's ID """
     if len(user_selection) > 0:  # check if the user choose items to return
         item_id = []
-        for index, item in enumerate(worker_loaned_items):
+        for index, item in enumerate(worker_requested_items):
             if index in user_selection:
                 item_id.append(item[0])
 
         for ID in item_id:
-            main.db.item_dict[ID].status = 'no status'  # update the status of the returned items in the database
-            main.db.item_dict[ID].owner = '0'           # remove previous owner of the returned item
+            main.db.item_dict[ID].status = 'loan accepted'  # update the status of the returned items in the database
 
         item_file = main.project_root_dir + '\\Items_data.txt'
         with open(item_file, 'w') as file:
@@ -81,13 +32,15 @@ def return_item(user_selection, worker_loaned_items):
         return False
 
 
-def open_manage_workers(current_worker):
-    """Managing workers window"""
-    my_items_headings = ['Name', 'ID']
-    worker_loaned_items = main.db.get_workers_loaned_items(current_worker)
-    my_items_layout = [
-        [sg.Table(values=worker_loaned_items,
-                  headings=my_items_headings,
+def open_requests_window(current_worker):
+    """This is a window that opens when a manager wants to handle the requests
+    of items that student requested"""
+    # make function work with multiple items
+    requested_items_headings = ['ID', 'Name', 'Description', 'Rating', 'Status', "Student's ID", "Student's Name"]
+    worker_requested_items = main.db.get_loan_requested_items()
+    loan_items_layout = [
+        [sg.Table(values=worker_requested_items,
+                  headings=requested_items_headings,
                   max_col_width=25,
                   auto_size_columns=True,
                   display_row_numbers=False,
@@ -96,35 +49,25 @@ def open_manage_workers(current_worker):
                   key='-TABLE-',
                   row_height=35,
                   enable_events=True, )],
-        [sg.Text(size=(15, 1), key="Error")],
-        [sg.Button('Add New Worker', size=(15, 1)),
-         sg.Button('Remove Worker', size=(15, 1)),
-         sg.Button('Return', size=(15, 1)),
-         sg.Exit(pad=((300, 0), (0, 0)))]
+        [sg.Button('Accept', size=(15, 1)),
+         sg.Text(size=(15, 1), key="Error"),
+         sg.Exit(pad=((125, 0), (0, 0)))]
     ]
 
-    my_items_window = sg.Window("My Items", my_items_layout)
+    requested_items_window = sg.Window("Requested Items", loan_items_layout)
     while True:
-        my_items_event, my_items_values = my_items_window.read()
-        if my_items_event == 'Return':  # check if worker want to return items
-            user_selection = my_items_values['-TABLE-']
-            output = return_item(user_selection, worker_loaned_items)
+        requested_items_event, requested_items_values = requested_items_window.read()
+        if requested_items_event == 'Accept':
+            user_selection = requested_items_values['-TABLE-']
+            output = confirm_request_item(user_selection, worker_requested_items)
             if output:  # refresh to the window to show changes
-                my_items_window.close()
-                open_my_items_window(current_worker)
+                requested_items_window.close()
+                open_requests_window(current_worker)
             else:  # warning if the user not choose item to return
-                my_items_window["Error"].update("No Items Selected !")
-        if my_items_event == "Exit" or my_items_event == sg.WIN_CLOSED:
-            my_items_window.close()
+                requested_items_window["Error"].update("No Items Selected !")
+        if requested_items_event == "Exit" or requested_items_event == sg.WIN_CLOSED:
+            requested_items_window.close()
             break
-
-
-def request_item(current_worker, item_id):
-    """func to request item to loan"""
-    if item_id in main.db.item_dict:  # check if the item is exist in the database
-        main.db.item_dict[item_id].owner = current_worker.ID
-    else:
-        return False
 
     # update the owner of the item in the database
     item_file = main.project_root_dir + '\\Items_data.txt'
@@ -139,55 +82,58 @@ def request_item(current_worker, item_id):
     return True
 
 
-def open_request_item_window(current_worker, item_id):
-    """create and manage request to loan item window"""
-    # make function work with multiple items
-    request_item_layout = [
-        [sg.Text("Are you sure you want to loan ?")],
-        [sg.Button('Yes', ),
-         sg.Button('No', )]
-        # add return date please
-    ]
-
-    request_item_window = sg.Window("Request Item", request_item_layout)
-
-    while True:
-        # check if the user is sure if he want to lan the item that he was choose
-        request_item_event, request_item_values = request_item_window.read()
-        if request_item_event == "Yes":
-            request_item(current_worker, item_id)
-            request_item_window.close()
-            break
-        if request_item_event == "No" or request_item_event == sg.WIN_CLOSED:
-            request_item_window.close()
-            break
-    request_item_window.close()
+# add conditions
+def add_item_check(input_name, input_quantity, input_description):
+    return True
 
 
-def open_add(current_worker):
-    current_add_items = main.db.getAvailableItemTable()
+def open_add_window(current_worker):
+    """This window is the way that a worker can add a new item to a list with entering its Name/Description """
     add_items_layout = [
         [sg.Text('Item Name')],
-        [sg.InputText('', size=(20, 1), key='<item_name>')],
+        [sg.InputText('', size=(20, 1), key='input_name')],
         [sg.Text('Item Quantity')],
-        [sg.InputText('', size=(20, 1), key='<item_quantity>')],
+        [sg.InputText('', size=(20, 1), key='input_quantity')],
         [sg.Text('Item Description')],
-        [sg.InputText('', size=(20, 1), key='<item_Description>>')],
-        [sg.Text(size=(10, 0), key="Error"), ],
-        [sg.Button('Confirm', size=(10, 1)),
+        [sg.InputText('', size=(20, 1), key='input_description')],
+        [sg.Text(size=(10, 0), key="Error")],
+        [sg.Button('Add', size=(10, 1)),
          sg.Button('Exit', size=(10, 1)),
          sg.Exit(pad=((50, 0), (50, 0)))]]
-    add_items_layout_window = sg.Window("Add", add_items_layout, element_justification='c', size=(200, 250))
+    add_items_window = sg.Window("Add Items", add_items_layout, element_justification='c', size=(200, 250))
     while True:
-        add_items_layout_event, add_items_layout_values = add_items_layout_window.read()
-        if add_items_layout_event == sg.WIN_CLOSED or add_items_layout_event == "Exit":
+        add_item_check_res = False
+        add_items_event, add_items_values = add_items_window.read()
+        if add_items_event == 'Add':
+            input_name = add_items_values['input_name']
+            input_quantity = int(add_items_values['input_quantity'])
+            input_description = add_items_values['input_description']
+            add_item_check_res = add_item_check(input_name, input_quantity, input_description)
+            if add_item_check_res:
+                input_ID = max([int(ID) for ID in main.db.item_dict.keys()]) + 1  # gets maximum Id in item list
+                with open('Items_data.txt', 'a') as file:
+                    file.write(f"{input_ID}:{input_name}:::"
+                               f"{input_description}::::available\n")
+                input_quantity -= 1
+                while input_quantity > 0:
+                    input_ID += 1
+                    with open('Items_data.txt', 'a') as file:
+                        file.write(f"{input_ID}:{input_name}:::"
+                                   f"{input_description}::::available\n")
+                    input_quantity -= 1
+                main.db = DataBase(main.project_root_dir + '\\Students_data.txt',
+                                   main.project_root_dir + '\\Workers_data.txt',
+                                   main.project_root_dir + '\\Items_data.txt')
+            else:
+                add_items_window["Error"].update("One or more of the fields are invalid")
+
+        if add_items_event == sg.WIN_CLOSED or add_items_event == "Exit" or (
+                add_items_event == "Add" and add_item_check_res):
+            add_items_window.close()
             break
 
-    add_items_layout_window.close()
-
-
-def open_edit_items(current_worker):
-    current_edit_items = main.db.getAvailableItemTable()
+def open_edit_window(current_worker):
+    """This window gives access to a worker to edit an items Name/Quantity/Description """
     edit_items_layout = [
         [sg.Text('Item Name')],
         [sg.InputText('', size=(20, 1), key='<item_name>')],
@@ -212,10 +158,37 @@ def open_edit_items(current_worker):
     edit_items_layout_window.close()
 
 
-def open_return_item(current_worker):
-    """func to create and manage return item window"""
+def confirm_return_item(user_selection, worker_loaned_items):
+    """This is a function that removes the data of an item owner to be available"""
+    if len(user_selection) > 0:  # check if the user choose items to return
+        item_id = []
+        for index, item in enumerate(worker_loaned_items):
+            if index in user_selection:
+                item_id.append(item[0])
+
+        for ID in item_id:
+            main.db.item_dict[ID].status = 'available'  # update the status of the returned items in the database
+            main.db.item_dict[ID].owner = '0'  # remove previous owner of the returned item
+
+        item_file = main.project_root_dir + '\\Items_data.txt'
+        with open(item_file, 'w') as file:
+            for i in main.db.item_dict.values():
+                file.write(
+                    f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:{i.rating}:"
+                    f"{i.num_raters}:{i.owner}:{i.status}\n")
+
+        main.db = DataBase(main.project_root_dir + '\\workers_data.txt',
+                           main.project_root_dir + '\\Workers_data.txt',
+                           main.project_root_dir + '\\Items_data.txt')
+        return True
+    else:  # write error to the user if he didn't choose items to return
+        return False
+
+
+def open_returns_window(current_worker):
+    """A window to show the worker what items have been requested to return by all the students"""
     loan_items_headings = ['ID', 'Name', 'Loan Date', 'Due Date', 'Description', 'Rating', 'status']
-    worker_loaned_items = main.db.get_pending_items()
+    worker_loaned_items = main.db.get_return_requested_items()
     loan_items_layout = [
         [sg.Table(values=worker_loaned_items,
                   headings=loan_items_headings,
@@ -227,20 +200,20 @@ def open_return_item(current_worker):
                   key='-TABLE-',
                   row_height=35,
                   enable_events=True, )],
-        [sg.Button('Return', size=(15, 1)),
+        [sg.Button('Accept', size=(15, 1)),
          sg.Text(size=(15, 1), key="Error"),
          sg.Exit(pad=((300, 0), (0, 0)))]
     ]
 
-    loan_items_window = sg.Window("loan Items", loan_items_layout)
+    loan_items_window = sg.Window("Returned Items", loan_items_layout)
     while True:
         loan_items_event, loan_items_values = loan_items_window.read()
-        if loan_items_event == 'Return':  # check if worker want to accept the request return items
+        if loan_items_event == 'Accept':  # check if worker want to accept the request return items
             user_selection = loan_items_values['-TABLE-']
-            output = return_item(user_selection, worker_loaned_items)
+            output = confirm_return_item(user_selection, worker_loaned_items)
             if output:  # refresh to the window to show changes
                 loan_items_window.close()
-                open_return_item(current_worker)
+                open_returns_window(current_worker)
             else:  # warning if the user not choose item to return
                 loan_items_window["Error"].update("No Items Selected !")
         if loan_items_event == "Exit" or loan_items_event == sg.WIN_CLOSED:
@@ -276,41 +249,19 @@ def open_worker_window(current_worker):
         worker_menu_event, worker_menu_values = worker_menu_window.read()
         worker_menu_window["Error"].update("")
 
-        if worker_menu_event == "Request Item":
-            if worker_menu_values['-TABLE-']:
-                # insert if condition multiple item selection
-                if len(worker_menu_values['-TABLE-']) == 1:
-                    item_idx = worker_menu_values['-TABLE-'][0]
-                    item_id = current_inventory[item_idx][0]
-                    open_request_item_window(current_worker, item_id)
-                worker_menu_window.close()
-                open_worker_window(current_worker)
-            else:  # warning to the user if he isn't choose item
-                worker_menu_window["Error"].update("No Items selected")
-
-        if worker_menu_event == "Manage Workers":
-            open_manage_workers(current_worker)
-
-        if worker_menu_event == "Rate":
-            # check if the user choose item before pressing on rate button
-            if len(worker_menu_values['-TABLE-']) == 1:
-                item_idx = worker_menu_values['-TABLE-'][0]
-                item_name = current_inventory[item_idx][1]
-                open_rate_window(current_worker, item_name)
-                worker_menu_window.close()
-                open_worker_window(current_worker)
-                # warning to the user if he chose more than one item to rate in the same time
-            elif len(worker_menu_values['-TABLE-']) > 1:
-                worker_menu_window["Error"].update("You can only rate one item at a time")
-            else:  # warning to the user if he isn't choose item before pressing on rate button
-                worker_menu_window["Error"].update("choose item to rate!")
+        if worker_menu_event == "Requests":
+            open_requests_window(current_worker)
 
         if worker_menu_event == "Add":
-            open_add(current_worker)
+            open_add_window(current_worker)
+            worker_menu_window.close()
+            open_worker_window(current_worker)
+
         if worker_menu_event == "Edit":
-            open_edit_items(current_worker)
+            open_edit_window(current_worker)
+
         if worker_menu_event == "Returns":
-            open_return_item(current_worker)
+            open_returns_window(current_worker)
             worker_menu_window.close()
             open_worker_window(current_worker)
 

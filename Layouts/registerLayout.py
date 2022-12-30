@@ -42,7 +42,7 @@ def open_register_window():
             input_name = register_values['input_name']
             input_secret_word = register_values['input_secret_word']
             register_check_res = check_register(input_ID, input_password, input_name, input_secret_word)
-            if register_check_res is True:
+            if register_check_res:
                 with open('Students_data.txt', 'a') as file:
                     file.write(f"{input_ID}:{input_password}:{input_name}:{input_secret_word}\n")
             else:

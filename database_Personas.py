@@ -62,7 +62,8 @@ class DataBase:
         with open(file_dir_item, 'r') as file3:  # Items database
             item_list = file3.readlines()
             item_list = list(map(lambda x: x.split(":"), item_list))
-            # items in database are separated as such-ID:name:date aq:date due:description:rating:num_raters:owner:status
+            # items in database are separated as such-ID:name:date aq:date due:
+            # description:rating:num_raters:owner:status
             item_list = list(map(lambda x: Item(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7], x[8]), item_list))
             self.item_dict = {i.ID: i for i in item_list}
 
@@ -71,6 +72,7 @@ class DataBase:
     def getAvailableItemTable(self):
         item_list_to_print = []
         item_table_amount_dict = {}
+        # calculate quantity of items to be displayed
         for item in self.item_dict.values():
             if item.owner in (None, "", '0'):
                 if item.name not in item_table_amount_dict:
@@ -78,6 +80,7 @@ class DataBase:
                 else:
                     item_table_amount_dict[item.name] += 1
 
+        # creates table of items to be displayed
         items_in_table = set()
         for item in self.item_dict.values():
             if item.name in item_table_amount_dict and item.owner in (None, "", '0'):
@@ -96,11 +99,21 @@ class DataBase:
                 item_list_to_print.append(current_item)
         return item_list_to_print
 
-    def get_pending_items(self):
+    # for worker menu :
+    def get_loan_requested_items(self):
         item_list_to_print = []
         for item in self.item_dict.values():
-            if item.status == 'pending':
-                current_item = [item.ID, item.name, item.aq_date, item.du_date, item.description, item.rating,
-                                item.status]
+            if item.status == 'loan requested':
+                current_item = [item.ID, item.name, item.description, item.rating,
+                                item.status, item.owner, self.student_dict[item.owner].name]
+                item_list_to_print.append(current_item)
+        return item_list_to_print
+
+    def get_return_requested_items(self):
+        item_list_to_print = []
+        for item in self.item_dict.values():
+            if item.status == 'return requested':
+                current_item = [item.ID, item.name, item.description, item.rating,
+                                item.status, item.owner, self.student_dict[item.owner].name]
                 item_list_to_print.append(current_item)
         return item_list_to_print
