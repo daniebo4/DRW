@@ -9,7 +9,6 @@ class Student:
         self.name = name
         self.secret_word = secret_word.replace("\n", "")
 
-
 class Worker:
     def __init__(self, ID, password, name, secret_word):
         self.ID = ID

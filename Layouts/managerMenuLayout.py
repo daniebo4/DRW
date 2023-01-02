@@ -21,11 +21,9 @@ def open_add_window(current_worker):
         [sg.InputText('', size=(20, 1), key='input_quantity')],
         [sg.Text('Item Description')],
         [sg.InputText('', size=(20, 1), key='input_description')],
-        [sg.Text(size=(10, 0), key="Error")],
         [sg.Button('Add', size=(20, 1)),
-         sg.Button('Exit', size=(20, 1)),
          sg.Exit(pad=((50, 0), (50, 0)))]]
-    add_items_window = sg.Window("Add Items", add_items_layout, element_justification='c', size=(400, 300))
+    add_items_window = sg.Window("Add Items", add_items_layout, element_justification='c', size=(200, 200))
     while True:
         add_item_check_res = False
         add_items_event, add_items_values = add_items_window.read()
@@ -131,7 +129,7 @@ def return_item(user_selection, manager_loaned_items):
 
 def open_manage_workers():
     """Managing workers window"""
-    manage_workers_headings = ['Name', 'ID', 'Last login']
+    manage_workers_headings = ['Name', 'ID']
 
     backlog_file = main.project_root_dir + '\\BackLogDatabaseStudents.txt'
     with open(backlog_file, 'r') as file:  # Students database
@@ -154,7 +152,7 @@ def open_manage_workers():
         [sg.Text(size=(15, 1), key="Error")],
         [sg.Button('Add New Worker', size=(15, 1)),
          sg.Button('Remove Worker', size=(15, 1)),
-         sg.Exit(pad=((550, 0), (0, 0)))]
+         sg.Exit(pad=((100, 0), (0, 0)))]
     ]
     manage_workers_window = sg.Window("Manage Workers", manage_workers_layout)
     while True:
@@ -208,7 +206,7 @@ def remove_worker():
             break
 
 
-def open_backlog(input_event_personas = 'StudentsLog'):
+def open_backlog(input_event_personas='StudentsLog'):
     open_backlog_headings = ['ID', 'Name', 'Login dates:']
 
     if input_event_personas == "StudentsLog":
@@ -217,7 +215,6 @@ def open_backlog(input_event_personas = 'StudentsLog'):
             """opens the file of the student to read and create a list from"""
             backlog_list = file.readlines()
             backlog_list = list(map(lambda x: x.split(":"), backlog_list))
-
 
     elif input_event_personas == "WorkersLog":
         backlog_file = main.project_root_dir + '\\BackLogDatabaseWorkers.txt'
@@ -240,7 +237,7 @@ def open_backlog(input_event_personas = 'StudentsLog'):
                            [sg.Button('Students Log', size=(10, 1), key='students_log'),
                             sg.Button('Workers Log', size=(10, 1), key='workers_log'),
                             sg.Exit(pad=((800, 0), (0, 0)))]]
-    open_backlog_window = sg.Window("Backlog", open_backlog_layout, element_justification='c', size=(700,500))
+    open_backlog_window = sg.Window("Backlog", open_backlog_layout, element_justification='c', size=(700, 500))
 
     while True:
         open_backlog_event, open_backlog_values = open_backlog_window.read()
@@ -252,7 +249,6 @@ def open_backlog(input_event_personas = 'StudentsLog'):
         elif open_backlog_event == 'workers_log':
             open_backlog_window.close()
             open_backlog("WorkersLog")
-
 
         if open_backlog_event == sg.WIN_CLOSED or open_backlog_event == "Exit":
             open_backlog_window.close()
@@ -379,3 +375,4 @@ def open_manager_window(current_worker):
         if open_manager_event == sg.WIN_CLOSED or open_manager_event == "Exit":
             open_manager_window.close()
             break
+
