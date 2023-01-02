@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import PySimpleGUI as sg
 
 import PySimpleGUI as sg
@@ -9,7 +11,7 @@ def add_item_check(input_name, input_quantity, input_description):
     return True
 
 def open_add_window(current_worker):
-    """This window is the way that a worker can add a new item to a list with entering its Name/Description """
+    #This window is the way that a worker can add a new item to a list with entering its Name/Description
     add_items_layout = [
         [sg.Text('Item Name')],
         [sg.InputText('', size=(20, 1), key='input_name')],
@@ -18,10 +20,10 @@ def open_add_window(current_worker):
         [sg.Text('Item Description')],
         [sg.InputText('', size=(20, 1), key='input_description')],
         [sg.Text(size=(10, 0), key="Error")],
-        [sg.Button('Add', size=(10, 1)),
-         sg.Button('Exit', size=(10, 1)),
+        [sg.Button('Add', size=(20, 1)),
+         sg.Button('Exit', size=(20, 1)),
          sg.Exit(pad=((50, 0), (50, 0)))]]
-    add_items_window = sg.Window("Add Items", add_items_layout, element_justification='c', size=(200, 250))
+    add_items_window = sg.Window("Add Items", add_items_layout, element_justification='c', size=(400, 300))
     while True:
         add_item_check_res = False
         add_items_event, add_items_values = add_items_window.read()
@@ -53,13 +55,14 @@ def open_add_window(current_worker):
             add_items_window.close()
             break
 
+"""
 # manager method ?
 def open_manage_workers(current_worker):
-    """
-    A window to manage the workers with the following funcs:
-    Add New Worker - can add new workers with the permissions
-    Remove worker - can remove a worker
-    """
+    
+   #A window to manage the workers with the following funcs:
+    #Add New Worker - can add new workers with the permissions
+    #Remove worker - can remove a worker
+
     my_items_headings = ['Name', 'ID']
     worker_loaned_items = main.db.get_workers_loaned_items(current_worker)
     manage_workers_layout = [
@@ -79,7 +82,7 @@ def open_manage_workers(current_worker):
          sg.Button('Return', size=(15, 1)),
          sg.Exit(pad=((300, 0), (0, 0)))]
     ]
-
+    
     my_items_window = sg.Window("My Items", my_items_layout)
     while True:
         my_items_event, my_items_values = my_items_window.read()
@@ -95,7 +98,8 @@ def open_manage_workers(current_worker):
             my_items_window.close()
             break
 
-
+"""
+"""
 def return_item(user_selection, manager_loaned_items):
     if len(user_selection) > 0:  # check if the user choose items to return
         item_id = []
@@ -119,33 +123,123 @@ def return_item(user_selection, manager_loaned_items):
         return True
     else:  # write error to the user if he didn't choose items to return
         return False
-
-
+"""
 def open_manage_workers():
     """Managing workers window"""
     manage_workers_headings = ['Name', 'ID']
-    workers_values = ['Daniel', '42069']
-    my_items_layout = [
-        [sg.Table(values=workers_values,
+    manage_workers_values = [['Daniel', '42069'], ['Shlomo', '00000001']]
+    manage_workers_layout = [
+        [sg.Table(values=manage_workers_values,
                   headings=manage_workers_headings,
-                  max_col_width=25,
-                  auto_size_columns=True,
+                  auto_size_columns=False,
                   display_row_numbers=False,
-                  justification='l',
+                  justification='c',
                   num_rows=10,
                   key='-TABLE-',
                   row_height=35,
-                  enable_events=True, )],
+                  def_col_width=35,
+         enable_events=True, )],
         [sg.Text(size=(15, 1), key="Error")],
         [sg.Button('Add New Worker', size=(15, 1)),
          sg.Button('Remove Worker', size=(15, 1)),
-         sg.Button('Return', size=(15, 1)),
-         sg.Exit(pad=((300, 0), (0, 0)))]
+         sg.Exit(pad=((550, 0), (0, 0)))]
     ]
+    manage_workers_window = sg.Window("Manage Workers", manage_workers_layout)
+    while True:
+        manage_workers_event, my_items_values = manage_workers_window.read()
+        if manage_workers_event == "Add New Worker":
+            if manage_workers_event == "Add New Worker":  # check if student want to return items
+                #user_selection = manage_workers_values['-TABLE-']
+                #output = add_worker()
+                  #  manage_workers_window.close()
+                add_new_worker()
+            else:  # warning if the user not choose item to return
+                manage_workers_window["Error"].update("No Items Selected !")
+        if manage_workers_event == "Remove Worker":
+            remove_worker()
+        elif manage_workers_event == "Exit" or manage_workers_event == sg.WIN_CLOSED:
+            manage_workers_window.close()
+            break
 
+def add_new_worker():
+    add_new_worker_layout = [[sg.Text("Add a New Worker:")],
+                       [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID')],
+                       [sg.Text("Password :", size=(10, 1)),
+                        sg.InputText('', size=(20, 1), key='input_password', password_char='●')],
+                       [sg.Text("Name :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_name')],
+                       [sg.Text("Secret Word :", size=(10, 1)),
+                        sg.InputText('', size=(20, 1), key='input_secret_word')],
+                       [sg.Text(size=(30, 1), key="Error")],
+                       [sg.Submit(button_text="Add"),
+                        sg.Exit(pad=((90, 0), (0, 0)))]]
 
+    add_new_worker_window = sg.Window("Add New Worker", add_new_worker_layout, element_justification='c')
+
+    while True:
+        add_new_worker_event, add_new_worker_values = add_new_worker_window.read()
+        if add_new_worker_event == sg.WIN_CLOSED or add_new_worker_event == "Exit":
+            add_new_worker_window.close()
+            break
+
+def remove_worker():
+    remove_worker_layout = [[sg.Text("Are you super duper sure you want to remove this worker?\nThink twice it's alright :")],
+                            [sg.Button(button_text="Yes"),
+                            sg.Button(button_text="No"),]]
+    remove_worker_window = sg.Window("Remove Worker", remove_worker_layout, element_justification='c')
+    while True:
+        remove_worker_event, remove_worker_values = remove_worker_window.read()
+        if remove_worker_event == sg.WIN_CLOSED or remove_worker_event == "Yes" or remove_worker_event == "No":
+            remove_worker_window.close()
+            break
+def open_backlog():
+    open_backlog_headings = ['Name', 'ID', 'Logins:']
+    open_backlog_values = [['Daniel', '42069','420'], ['Shlomo', '00000001','-5']]
+    open_backlog_layout =   [[sg.Table(values=open_backlog_values,
+                              headings=open_backlog_headings,
+                              auto_size_columns=False,
+                              display_row_numbers=False,
+                              justification='c',
+                              num_rows=10,
+                              key='-TABLE-',
+                              row_height=35,
+                              col_widths=[20,20,35],
+                              enable_events=True, )],
+                              [sg.Exit(pad=((800, 0), (0, 0)))]]
+    open_backlog_window = sg.Window("Backlog", open_backlog_layout, element_justification='c')
+
+    while True:
+        open_backlog_event, open_backlog_values = open_backlog_window.read()
+        if open_backlog_event == sg.WIN_CLOSED or open_backlog_event == "Exit":
+            open_backlog_window.close()
+            break
+def open_edit_window(current_worker):
+    """This window gives access to a worker to edit an items Name/Quantity/Description """
+    edit_items_layout = [
+        [sg.Text('Item Name')],
+        [sg.InputText('', size=(20, 1), key='<item_name>')],
+        [sg.Text('Item Quantity')],
+        [sg.InputText('', size=(20, 1), key='<item_quantity>')],
+        [sg.Text('Item Description')],
+        [sg.InputText('', size=(20, 1), key='<item_Description>>')],
+        [sg.Text('Due Date')],
+        [sg.InputText('', size=(20, 1), key='<item_Date>>')],
+        [sg.Text('Due Acquired')],
+        [sg.InputText('', size=(20, 1), key='<item_Acquired>>')],
+        [sg.Text(size=(10, 0), key="Error"), ],
+        [sg.Button('Confirm', size=(10, 1)),
+         sg.Button('Exit', size=(10, 1)),
+         sg.Exit(pad=((50, 0), (50, 0)))]]
+    edit_items_layout_window = sg.Window("Edit Items", edit_items_layout, element_justification='c', size=(200, 350))
+    while True:
+        add_items_layout_event, edit_items_layout_values = edit_items_layout_window.read()
+        if add_items_layout_event == sg.WIN_CLOSED or add_items_layout_event == "Exit":
+            break
+
+    edit_items_layout_window.close()
+
+"""
 def open_request_item_window(current_manager, item_id):
-    """create and manage request to loan item window"""
+    #create and manage request to loan item window
     # make function work with multiple items
     request_item_layout = [
         [sg.Text("Are you sure you want to loan ?")],
@@ -167,13 +261,13 @@ def open_request_item_window(current_manager, item_id):
             request_item_window.close()
             break
     request_item_window.close()
+"""
 
-
-def open_manager_window(current_manager):
+def open_manager_window(current_worker):
     """func to create and manage the menu of the persona user type manager"""
     current_inventory_headings = ['ID', 'Item', 'Quantity', 'Loan Date', 'Due Date', 'Description', 'Rating']
     current_inventory = main.db.getAvailableItemTable()
-    manager_menu_layout = [
+    open_manager_layout = [
         [sg.Table(values=current_inventory,
                   headings=current_inventory_headings,
                   max_col_width=35,
@@ -192,41 +286,48 @@ def open_manager_window(current_manager):
          sg.Exit(pad=((0, 0), (0, 0)))]
     ]
 
-
-    manager_menu_window = sg.Window("manager Menu", manager_menu_layout, element_justification='c')
+    open_manager_window = sg.Window("manager Menu", open_manager_layout, element_justification='c')
     while True:
-        manager_menu_event, manager_menu_values = manager_menu_window.read()
-        manager_menu_window["Error"].update("")
+        open_manager_event, open_manager_values = open_manager_window.read()
+        open_manager_window["Error"].update("")
 
-        if manager_menu_event == "Request Item":
-            if manager_menu_values['-TABLE-']:
+        if open_manager_event == "Backlog":
+            open_backlog()
+        if open_manager_event == "Add":
+            open_add_window(current_worker)
+            open_manager_window.close()
+        if open_manager_event == "Edit":
+            open_edit_window(current_worker)
+        """
+        if add_new_worker_event == "Request Item":
+            if add_new_worker_values['-TABLE-']:
                 # insert if condition multiple item selection
-                if len(manager_menu_values['-TABLE-']) == 1:
-                    item_idx = manager_menu_values['-TABLE-'][0]
+                if len(add_new_worker_values['-TABLE-']) == 1:
+                    item_idx = add_new_worker_values['-TABLE-'][0]
                     item_id = current_inventory[item_idx][0]
                     open_request_item_window(current_manager, item_id)
-                manager_menu_window.close()
+                add_new_worker_window.close()
                 open_manager_window(current_manager)
             else:  # warning to the user if he isn't choose item
-                manager_menu_window["Error"].update("No Items selected")
-
-        if manager_menu_event == "Manage Workers":
+                add_new_worker_window["Error"].update("No Items selected")
+"""
+        if open_manager_event == "Manage Workers":
             open_manage_workers()
-
-        if manager_menu_event == "Rate":
+        """
+        if add_new_worker_event == "Rate":
             # check if the user choose item before pressing on rate button
-            if len(manager_menu_values['-TABLE-']) == 1:
-                item_idx = manager_menu_values['-TABLE-'][0]
+            if len(add_new_worker_values['-TABLE-']) == 1:
+                item_idx = add_new_worker_values['-TABLE-'][0]
                 item_name = current_inventory[item_idx][1]
-                manager_menu_window.close()
+                add_new_worker_window.close()
                 open_manager_window(current_manager)
                 # warning to the user if he chose more than one item to rate in the same time
-            elif len(manager_menu_values['-TABLE-']) > 1:
-                manager_menu_window["Error"].update("You can only rate one item at a time")
+            elif len(add_new_worker_values['-TABLE-']) > 1:
+                add_new_worker_window["Error"].update("You can only rate one item at a time")
             else: # warning to the user if he isn't choose item before pressing on rate button
-                manager_menu_window["Error"].update("choose item to rate!")
-
-        if manager_menu_event == sg.WIN_CLOSED or manager_menu_event == "Exit":
-            manager_menu_window.close()
+                add_new_worker_window["Error"].update("choose item to rate!")
+"""
+        if open_manager_event == sg.WIN_CLOSED or open_manager_event == "Exit":
+            open_manager_window.close()
             break
 
