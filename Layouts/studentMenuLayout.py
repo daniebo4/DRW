@@ -8,9 +8,12 @@ import os
 # make rating not possible after student already rated item
 def rate(rating, item_name):
     """func to rate an item and update it in the database"""
+
     for item in main.db.item_dict.values():
         if item_name == item.name:
-            temp_item_num_raters = float(item.num_raters)  # change the string to float for conculataion
+            if item.rating == '':
+                item.rating = 0
+            temp_item_num_raters = float(item.num_raters)  # change the string to float for calculation
             temp_item_num_raters += 1
             # change the result to str to update the dict data
             item.rating = str(
@@ -23,7 +26,7 @@ def rate(rating, item_name):
             item_rating_temp = i.rating
             file.write(
                 f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:{i.rating}:"
-                f"{i.num_raters}:{i.owner}:{i.status}\n")
+                f"{i.num_raters}:{i.owner}:{i.status}:{i.loan_period}\n")
     main.db = DataBase(main.project_root_dir + '\\Students_data.txt',
                        main.project_root_dir + '\\Workers_data.txt',
                        main.project_root_dir + '\\Items_data.txt')
@@ -66,7 +69,7 @@ def return_item(user_selection, student_loaned_items):
             for i in main.db.item_dict.values():
                 file.write(
                     f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:{i.rating}:"
-                    f"{i.num_raters}:{i.owner}:{i.status}\n")
+                    f"{i.num_raters}:{i.owner}:{i.status}:{i.loan_period}\n")
 
         main.db = DataBase(main.project_root_dir + '\\Students_data.txt',
                            main.project_root_dir + '\\Workers_data.txt',
@@ -127,7 +130,7 @@ def request_item(current_student, item_id):
         for i in main.db.item_dict.values():
             file.write(
                 f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:"
-                f"{i.rating}:{i.num_raters}:{i.owner}:{i.status}\n")
+                f"{i.rating}:{i.num_raters}:{i.owner}:{i.status}:{i.loan_period}\n")
     main.db = DataBase(main.project_root_dir + '\\Students_data.txt',
                        main.project_root_dir + '\\Workers_data.txt',
                        main.project_root_dir + '\\Items_data.txt')
@@ -161,8 +164,8 @@ def open_request_item_window(current_student, item_id):
 
 def open_student_window(current_student):
     """func to create and manage the menu of the persona user type student"""
-    current_inventory_headings = ['ID', 'Item', 'Quantity', 'Loan Date', 'Due Date', 'Description', 'Rating']
-    current_inventory = main.db.getAvailableItemTable()
+    current_inventory_headings = ['ID', 'Item', 'Quantity', 'Loan Date', 'Loan Period', 'Description', 'Rating']
+    current_inventory = main.db.getAvailableItemTable_forMenu()
     student_menu_layout = [
         [sg.Table(values=current_inventory,
                   headings=current_inventory_headings,
@@ -212,7 +215,7 @@ def open_student_window(current_student):
                 # warning to the user if he chose more than one item to rate in the same time
             elif len(student_menu_values['-TABLE-']) > 1:
                 student_menu_window["Error"].update("You can only rate one item at a time")
-            else: # warning to the user if he isn't choose item before pressing on rate button
+            else:  # warning to the user if he isn't choose item before pressing on rate button
                 student_menu_window["Error"].update("choose item to rate!")
 
         if student_menu_event == sg.WIN_CLOSED or student_menu_event == "Exit":

@@ -114,18 +114,23 @@ def open_add_window(current_worker):
             input_name = add_items_values['input_name']
             input_quantity = int(add_items_values['input_quantity'])
             input_description = add_items_values['input_description']
+            input_loan_time_period = add_items_values['input_time_period']
             add_item_check_res = add_item_check(input_name, input_quantity, input_description)
             if add_item_check_res:
-                input_ID = max([int(ID) for ID in main.db.item_dict.keys()]) + 1  # gets maximum Id in item list
+                if len(main.db.item_dict.keys()) == 0:
+                    input_ID = 1
+                else:
+                    input_ID = max([int(ID) for ID in main.db.item_dict.keys()]) + 1  # gets maximum Id in item list
+
                 with open('Items_data.txt', 'a') as file:
                     file.write(f"{input_ID}:{input_name}:{datetime.date.today()}::"
-                               f"{input_description}::::available\n")
+                               f"{input_description}::{0}::available:{input_loan_time_period}\n")
                 input_quantity -= 1
                 while input_quantity > 0:
                     input_ID += 1
                     with open('Items_data.txt', 'a') as file:
-                        file.write(f"{input_ID}:{input_name}:::"
-                                   f"{input_description}::::available\n")
+                        file.write(f"{input_ID}:{input_name}:{datetime.date.today()}::"
+                                   f"{input_description}::::available:{input_loan_time_period}\n")
                     input_quantity -= 1
                 main.db = DataBase(main.project_root_dir + '\\Students_data.txt',
                                    main.project_root_dir + '\\Workers_data.txt',
@@ -230,15 +235,16 @@ def open_returns_window(current_worker):
 
 def open_worker_window(current_worker):
     """
-    This is the main window of the worker where he can choose what action to performe :
+    This is the main window of the worker where he can choose what action to perform :
     Add - adds an item to the system by calling open_add_window
     Remove - choose to remove an item from the system by calling
     Edit - edits an item from the system by calling
     requests - opens a window to manage all the request mad by students for items
-    returns - opens a window to manage the returns of all studends
+    returns - opens a window to manage the returns of all students
     """
-    current_inventory_headings = ['ID', 'Item', 'Quantity', 'Arrival Date', 'Loan Period (months)', 'Description', 'Rating']
-    current_inventory = main.db.getAvailableItemTable()
+    current_inventory_headings = ['ID', 'Item', 'Quantity', 'Arrival Date', 'Loan Period (months)', 'Description',
+                                  'Rating']
+    current_inventory = main.db.getAvailableItemTable_forMenu()
     worker_menu_layout = [
         [sg.Table(values=current_inventory,
                   headings=current_inventory_headings,
