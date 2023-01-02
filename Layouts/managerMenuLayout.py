@@ -1,7 +1,6 @@
 import PySimpleGUI as sg
 
 import PySimpleGUI as sg
-from database_Personas import DataBase
 import main
 import os
 

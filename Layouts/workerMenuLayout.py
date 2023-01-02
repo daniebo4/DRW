@@ -1,8 +1,6 @@
 import PySimpleGUI as sg
 import datetime
-
 from Layouts.studentMenuLayout import open_my_items_window
-from database_Personas import DataBase
 import main
 import os
 

@@ -1,16 +1,14 @@
-import PySimpleGUI as sg
-from database_Personas import DataBase
-import main
 import datetime
-import os
+import PySimpleGUI as sg
+import DataBase
+import main
 
 
 # remove current student parameter to rating functions ?
 # make rating not possible after student already rated item
 def rate(rating, item_name):
     """func to rate an item and update it in the database"""
-
-    for item in main.db.item_dict.values():
+    for item in DataBase.db.item_dict.values():
         if item_name == item.name:
             if item.rating == '':
                 item.rating = 0
@@ -166,7 +164,7 @@ def open_request_item_window(current_student, item_id):
 def open_student_window(current_student):
     """func to create and manage the menu of the persona user type student"""
     current_inventory_headings = ['ID', 'Item', 'Quantity', 'Loan Date', 'Loan Period', 'Description', 'Rating']
-    current_inventory = main.db.getAvailableItemTable_forMenu()
+    current_inventory = DataBase.db.getAvailableItemTable_forMenu()
     student_menu_layout = [
         [sg.Table(values=current_inventory,
                   headings=current_inventory_headings,

@@ -1,24 +1,16 @@
 import os
 import PySimpleGUI as sg
-from database_Personas import DataBase
+import database_Personas
 from Layouts import forgotPasswordLayout
 from Layouts import changePasswordLayout
 from Layouts import workerMenuLayout
 from Layouts import studentMenuLayout
 from Layouts import managerMenuLayout
 from Layouts import registerLayout
-
-project_root_dir = os.path.dirname(os.path.abspath(__file__))  # Finds path to current project folder
-db = DataBase(project_root_dir + '\\Students_data.txt',
-              project_root_dir + '\\Workers_data.txt',
-              project_root_dir + '\\Items_data.txt')  # Gets path to
-
-
-# student and worker database
+import DataBase
 
 
 def mainMenu():
-    global db
     # Main event loop
     login_layout = [[sg.Text("Welcome to the design department\n inventory management system !")],
                     [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID'),
@@ -51,15 +43,15 @@ def mainMenu():
             else:
                 # checks first if the user is a student
                 if check_login_student(input_ID, input_password):
-                    studentMenuLayout.open_student_window(db.student_dict[input_ID])
+                    studentMenuLayout.open_student_window(DataBase.db.student_dict[input_ID])
 
                 # else checks if the user is a worker
                 elif check_login_worker(input_ID, input_password) and input_ID != 'admin':
-                    workerMenuLayout.open_worker_window(db.worker_dict[input_ID])
+                    workerMenuLayout.open_worker_window(DataBase.db.worker_dict[input_ID])
 
                 # else check if the user is the admin
                 elif check_login_worker(input_ID, input_password):
-                    managerMenuLayout.open_manager_window(db.worker_dict[input_ID])
+                    managerMenuLayout.open_manager_window(DataBase.db.worker_dict[input_ID])
 
                 # conclude that user is not registered / details incorrect
                 else:
@@ -67,15 +59,10 @@ def mainMenu():
 
         if login_event == "Register":
             registerLayout.open_register_window()
-            db = DataBase(project_root_dir + '\\Students_data.txt',
-                          project_root_dir + '\\Workers_data.txt',
-                          project_root_dir + '\\Items_data.txt')
 
         if login_event == "Change password":
             changePasswordLayout.open_change_password_window()
-            db = DataBase(project_root_dir + '\\Students_data.txt',
-                          project_root_dir + '\\Workers_data.txt',
-                          project_root_dir + '\\Items_data.txt')
+
 
         if login_event == " Forgot password ":  # There are spaces before and after the string !!!!
             forgotPasswordLayout.open_forgot_password_window()
@@ -96,7 +83,7 @@ def mainMenu():
 
 def check_login_student(ID, Password):
     """a function that checks if student`s ID and password are matching"""
-    return ID in db.student_dict and db.student_dict[ID].password == Password
+    return ID in DataBase.db.student_dict and DataBase.db.student_dict[ID].password == Password
 
 
 def check_login_worker(ID, Password):
