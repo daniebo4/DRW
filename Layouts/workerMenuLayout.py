@@ -1,4 +1,5 @@
 import PySimpleGUI as sg
+import datetime
 
 from Layouts.studentMenuLayout import open_my_items_window
 from database_Personas import DataBase
@@ -20,6 +21,10 @@ def confirm_request_item(user_selection, worker_requested_items):
         item_file = main.project_root_dir + '\\Items_data.txt'
         with open(item_file, 'w') as file:
             for i in main.db.item_dict.values():
+                """
+                for every item in items dict writes to a text file all of its keys this way we can track
+                our items in the system
+                """
                 file.write(
                     f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:{i.rating}:"
                     f"{i.num_raters}:{i.owner}:{i.status}\n")
@@ -112,7 +117,7 @@ def open_add_window(current_worker):
             if add_item_check_res:
                 input_ID = max([int(ID) for ID in main.db.item_dict.keys()]) + 1  # gets maximum Id in item list
                 with open('Items_data.txt', 'a') as file:
-                    file.write(f"{input_ID}:{input_name}:::"
+                    file.write(f"{input_ID}:{input_name}:{datetime.date.today()}::"
                                f"{input_description}::::available\n")
                 input_quantity -= 1
                 while input_quantity > 0:
@@ -231,7 +236,7 @@ def open_worker_window(current_worker):
     requests - opens a window to manage all the request mad by students for items
     returns - opens a window to manage the returns of all studends
     """
-    current_inventory_headings = ['ID', 'Item', 'Quantity', 'Loan Date', 'Due Date', 'Description', 'Rating']
+    current_inventory_headings = ['ID', 'Item', 'Quantity', 'Arrival Date', 'Loan Period', 'Description', 'Rating']
     current_inventory = main.db.getAvailableItemTable()
     worker_menu_layout = [
         [sg.Table(values=current_inventory,
@@ -239,7 +244,7 @@ def open_worker_window(current_worker):
                   max_col_width=35,
                   auto_size_columns=True,
                   display_row_numbers=False,
-                  justification='l',
+                  justification='c',
                   num_rows=10,
                   key='-TABLE-',
                   row_height=35, enable_events=True)],

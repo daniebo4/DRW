@@ -5,7 +5,53 @@ from database_Personas import DataBase
 import main
 import os
 
+def add_item_check(input_name, input_quantity, input_description):
+    return True
 
+def open_add_window(current_worker):
+    """This window is the way that a worker can add a new item to a list with entering its Name/Description """
+    add_items_layout = [
+        [sg.Text('Item Name')],
+        [sg.InputText('', size=(20, 1), key='input_name')],
+        [sg.Text('Item Quantity')],
+        [sg.InputText('', size=(20, 1), key='input_quantity')],
+        [sg.Text('Item Description')],
+        [sg.InputText('', size=(20, 1), key='input_description')],
+        [sg.Text(size=(10, 0), key="Error")],
+        [sg.Button('Add', size=(10, 1)),
+         sg.Button('Exit', size=(10, 1)),
+         sg.Exit(pad=((50, 0), (50, 0)))]]
+    add_items_window = sg.Window("Add Items", add_items_layout, element_justification='c', size=(200, 250))
+    while True:
+        add_item_check_res = False
+        add_items_event, add_items_values = add_items_window.read()
+        if add_items_event == 'Add':
+            input_name = add_items_values['input_name']
+            input_quantity = int(add_items_values['input_quantity'])
+            input_description = add_items_values['input_description']
+            add_item_check_res = add_item_check(input_name, input_quantity, input_description)
+            if add_item_check_res:
+                input_ID = max([int(ID) for ID in main.db.item_dict.keys()]) + 1  # gets maximum Id in item list
+                with open('Items_data.txt', 'a') as file:
+                    file.write(f"{input_ID}:{input_name}:{datetime.date.today()}::"
+                               f"{input_description}::::available\n")
+                input_quantity -= 1
+                while input_quantity > 0:
+                    input_ID += 1
+                    with open('Items_data.txt', 'a') as file:
+                        file.write(f"{input_ID}:{input_name}:::"
+                                   f"{input_description}::::available\n")
+                    input_quantity -= 1
+                main.db = DataBase(main.project_root_dir + '\\Students_data.txt',
+                                   main.project_root_dir + '\\Workers_data.txt',
+                                   main.project_root_dir + '\\Items_data.txt')
+            else:
+                add_items_window["Error"].update("One or more of the fields are invalid")
+
+        if add_items_event == sg.WIN_CLOSED or add_items_event == "Exit" or (
+                add_items_event == "Add" and add_item_check_res):
+            add_items_window.close()
+            break
 
 # manager method ?
 def open_manage_workers(current_worker):
@@ -22,7 +68,7 @@ def open_manage_workers(current_worker):
                   max_col_width=25,
                   auto_size_columns=True,
                   display_row_numbers=False,
-                  justification='l',
+                  justification='c',
                   num_rows=10,
                   key='-TABLE-',
                   row_height=35,

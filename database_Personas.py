@@ -43,9 +43,13 @@ class Item:
 
 
 class DataBase:
-    # Databases are text files , following lines translate the data to dictionaries for easier access and manipulation
+    """
+    Creates a new class database of work which contains the personas of the system.
+    Databases are text files , following lines translate the data to dictionaries for easier access and manipulation.
+    """
     def __init__(self, file_dir_student=None, file_dir_worker=None, file_dir_item=None):
         with open(file_dir_student, 'r') as file:  # Students database
+            """opens the file of the student to read and create a list from"""
             student_list = file.readlines()
             student_list = list(map(lambda x: x.split(":"), student_list))
             student_list = list(map(lambda x: Student(x[0], x[1], x[2], x[3]), student_list))
