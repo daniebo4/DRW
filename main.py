@@ -7,6 +7,7 @@ from Layouts import workerMenuLayout
 from Layouts import studentMenuLayout
 from Layouts import managerMenuLayout
 from Layouts import registerLayout
+import datetime
 
 project_root_dir = os.path.dirname(os.path.abspath(__file__))  # Finds path to current project folder
 db = DataBase(project_root_dir + '\\Students_data.txt',
@@ -15,6 +16,7 @@ db = DataBase(project_root_dir + '\\Students_data.txt',
 
 
 # student and worker database
+
 
 
 def mainMenu():
@@ -53,9 +55,20 @@ def mainMenu():
                 if check_login_student(input_ID, input_password):
                     studentMenuLayout.open_student_window(db.student_dict[input_ID])
 
+                    item_file = project_root_dir + '\\BackLogDatabaseStudents.txt'
+                    with open(item_file, 'a') as file:
+                        for i in db.student_dict.values():
+                            file.write(
+                                f"{i.ID}:{i.name}:{datetime.date.today()}\n")
+
                 # else checks if the user is a worker
                 elif check_login_worker(input_ID, input_password) and input_ID != 'admin':
                     workerMenuLayout.open_worker_window(db.worker_dict[input_ID])
+                    item_file = project_root_dir + '\\BackLogDatabaseWorkers.txt'
+                    with open(item_file, 'a') as file:
+                        for i in db.worker_dict.values():
+                            file.write(
+                                f"{i.ID}:{i.name}:{datetime.date.today()}\n")
 
                 # else check if the user is the admin
                 elif check_login_worker(input_ID, input_password):

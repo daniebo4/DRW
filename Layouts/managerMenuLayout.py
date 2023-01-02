@@ -7,11 +7,13 @@ from database_Personas import DataBase
 import main
 import os
 
+
 def add_item_check(input_name, input_quantity, input_description):
     return True
 
+
 def open_add_window(current_worker):
-    #This window is the way that a worker can add a new item to a list with entering its Name/Description
+    # This window is the way that a worker can add a new item to a list with entering its Name/Description
     add_items_layout = [
         [sg.Text('Item Name')],
         [sg.InputText('', size=(20, 1), key='input_name')],
@@ -54,6 +56,7 @@ def open_add_window(current_worker):
                 add_items_event == "Add" and add_item_check_res):
             add_items_window.close()
             break
+
 
 """
 # manager method ?
@@ -124,10 +127,19 @@ def return_item(user_selection, manager_loaned_items):
     else:  # write error to the user if he didn't choose items to return
         return False
 """
+
+
 def open_manage_workers():
     """Managing workers window"""
-    manage_workers_headings = ['Name', 'ID']
-    manage_workers_values = [['Daniel', '42069'], ['Shlomo', '00000001']]
+    manage_workers_headings = ['Name', 'ID', 'Last login']
+
+    backlog_file = main.project_root_dir + '\\BackLogDatabaseStudents.txt'
+    with open(backlog_file, 'r') as file:  # Students database
+        """opens the file of the student to read and create a list from"""
+        backlog_list = file.readlines()
+        backlog_list = list(map(lambda x: x.split(":"), backlog_list))
+
+    manage_workers_values = backlog_list
     manage_workers_layout = [
         [sg.Table(values=manage_workers_values,
                   headings=manage_workers_headings,
@@ -138,7 +150,7 @@ def open_manage_workers():
                   key='-TABLE-',
                   row_height=35,
                   def_col_width=35,
-         enable_events=True, )],
+                  enable_events=True, )],
         [sg.Text(size=(15, 1), key="Error")],
         [sg.Button('Add New Worker', size=(15, 1)),
          sg.Button('Remove Worker', size=(15, 1)),
@@ -149,9 +161,9 @@ def open_manage_workers():
         manage_workers_event, my_items_values = manage_workers_window.read()
         if manage_workers_event == "Add New Worker":
             if manage_workers_event == "Add New Worker":  # check if student want to return items
-                #user_selection = manage_workers_values['-TABLE-']
-                #output = add_worker()
-                  #  manage_workers_window.close()
+                # user_selection = manage_workers_values['-TABLE-']
+                # output = add_worker()
+                #  manage_workers_window.close()
                 add_new_worker()
             else:  # warning if the user not choose item to return
                 manage_workers_window["Error"].update("No Items Selected !")
@@ -161,17 +173,18 @@ def open_manage_workers():
             manage_workers_window.close()
             break
 
+
 def add_new_worker():
     add_new_worker_layout = [[sg.Text("Add a New Worker:")],
-                       [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID')],
-                       [sg.Text("Password :", size=(10, 1)),
-                        sg.InputText('', size=(20, 1), key='input_password', password_char='●')],
-                       [sg.Text("Name :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_name')],
-                       [sg.Text("Secret Word :", size=(10, 1)),
-                        sg.InputText('', size=(20, 1), key='input_secret_word')],
-                       [sg.Text(size=(30, 1), key="Error")],
-                       [sg.Submit(button_text="Add"),
-                        sg.Exit(pad=((90, 0), (0, 0)))]]
+                             [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID')],
+                             [sg.Text("Password :", size=(10, 1)),
+                              sg.InputText('', size=(20, 1), key='input_password', password_char='●')],
+                             [sg.Text("Name :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_name')],
+                             [sg.Text("Secret Word :", size=(10, 1)),
+                              sg.InputText('', size=(20, 1), key='input_secret_word')],
+                             [sg.Text(size=(30, 1), key="Error")],
+                             [sg.Submit(button_text="Add"),
+                              sg.Exit(pad=((90, 0), (0, 0)))]]
 
     add_new_worker_window = sg.Window("Add New Worker", add_new_worker_layout, element_justification='c')
 
@@ -181,37 +194,71 @@ def add_new_worker():
             add_new_worker_window.close()
             break
 
+
 def remove_worker():
-    remove_worker_layout = [[sg.Text("Are you super duper sure you want to remove this worker?\nThink twice it's alright :")],
-                            [sg.Button(button_text="Yes"),
-                            sg.Button(button_text="No"),]]
+    remove_worker_layout = [
+        [sg.Text("Are you super duper sure you want to remove this worker?\nThink twice it's alright :")],
+        [sg.Button(button_text="Yes"),
+         sg.Button(button_text="No"), ]]
     remove_worker_window = sg.Window("Remove Worker", remove_worker_layout, element_justification='c')
     while True:
         remove_worker_event, remove_worker_values = remove_worker_window.read()
         if remove_worker_event == sg.WIN_CLOSED or remove_worker_event == "Yes" or remove_worker_event == "No":
             remove_worker_window.close()
             break
-def open_backlog():
-    open_backlog_headings = ['Name', 'ID', 'Logins:']
-    open_backlog_values = [['Daniel', '42069','420'], ['Shlomo', '00000001','-5']]
-    open_backlog_layout =   [[sg.Table(values=open_backlog_values,
-                              headings=open_backlog_headings,
-                              auto_size_columns=False,
-                              display_row_numbers=False,
-                              justification='c',
-                              num_rows=10,
-                              key='-TABLE-',
-                              row_height=35,
-                              col_widths=[20,20,35],
-                              enable_events=True, )],
-                              [sg.Exit(pad=((800, 0), (0, 0)))]]
-    open_backlog_window = sg.Window("Backlog", open_backlog_layout, element_justification='c')
+
+
+def open_backlog(input_event_personas = 'StudentsLog'):
+    open_backlog_headings = ['ID', 'Name', 'Login dates:']
+
+    if input_event_personas == "StudentsLog":
+        backlog_file = main.project_root_dir + '\\BackLogDatabaseStudents.txt'
+        with open(backlog_file, 'r') as file:  # Students database
+            """opens the file of the student to read and create a list from"""
+            backlog_list = file.readlines()
+            backlog_list = list(map(lambda x: x.split(":"), backlog_list))
+
+
+    elif input_event_personas == "WorkersLog":
+        backlog_file = main.project_root_dir + '\\BackLogDatabaseWorkers.txt'
+        with open(backlog_file, 'r') as file:  # Students database
+            """opens the file of the student to read and create a list from"""
+            backlog_list = file.readlines()
+            backlog_list = list(map(lambda x: x.split(":"), backlog_list))
+
+    open_backlog_values = backlog_list
+    open_backlog_layout = [[sg.Table(values=open_backlog_values,
+                                     headings=open_backlog_headings,
+                                     auto_size_columns=False,
+                                     display_row_numbers=False,
+                                     justification='c',
+                                     num_rows=10,
+                                     key='-TABLE-',
+                                     row_height=35,
+                                     col_widths=[20, 20, 35],
+                                     enable_events=True, )],
+                           [sg.Button('Students Log', size=(10, 1), key='students_log'),
+                            sg.Button('Workers Log', size=(10, 1), key='workers_log'),
+                            sg.Exit(pad=((800, 0), (0, 0)))]]
+    open_backlog_window = sg.Window("Backlog", open_backlog_layout, element_justification='c', size=(700,500))
 
     while True:
         open_backlog_event, open_backlog_values = open_backlog_window.read()
+        if open_backlog_event == 'students_log':
+            open_backlog_window.close()
+            open_backlog('StudentsLog')
+
+
+        elif open_backlog_event == 'workers_log':
+            open_backlog_window.close()
+            open_backlog("WorkersLog")
+
+
         if open_backlog_event == sg.WIN_CLOSED or open_backlog_event == "Exit":
             open_backlog_window.close()
             break
+
+
 def open_edit_window(current_worker):
     """This window gives access to a worker to edit an items Name/Quantity/Description """
     edit_items_layout = [
@@ -236,6 +283,7 @@ def open_edit_window(current_worker):
             break
 
     edit_items_layout_window.close()
+
 
 """
 def open_request_item_window(current_manager, item_id):
@@ -262,6 +310,7 @@ def open_request_item_window(current_manager, item_id):
             break
     request_item_window.close()
 """
+
 
 def open_manager_window(current_worker):
     """func to create and manage the menu of the persona user type manager"""
@@ -330,4 +379,3 @@ def open_manager_window(current_worker):
         if open_manager_event == sg.WIN_CLOSED or open_manager_event == "Exit":
             open_manager_window.close()
             break
-
