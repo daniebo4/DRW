@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2513eb0e-759c-4d70-b843-d072404ad6ca" name="Changes" comment="write comments">
-      <change beforePath="$PROJECT_DIR$/.idea/DRW.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DRW.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="2513eb0e-759c-4d70-b843-d072404ad6ca" name="Changes" comment="centering and comments">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Items_data.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Items_data.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Layouts/managerMenuLayout.py" beforeDir="false" afterPath="$PROJECT_DIR$/Layouts/managerMenuLayout.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Layouts/studentMenuLayout.py" beforeDir="false" afterPath="$PROJECT_DIR$/Layouts/studentMenuLayout.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Layouts/workerMenuLayout.py" beforeDir="false" afterPath="$PROJECT_DIR$/Layouts/workerMenuLayout.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/database_Personas.py" beforeDir="false" afterPath="$PROJECT_DIR$/database_Personas.py" afterDir="false" />
     </list>
@@ -219,7 +215,14 @@
       <option name="project" value="LOCAL‎" />
       <updated>1671178853425</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="centering and comments">
+      <created>1672668709181</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1672668709181</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -251,6 +254,7 @@
     <MESSAGE value="Merged rate update with project" />
     <MESSAGE value="rate func + error if dont choose item to rate + update data base" />
     <MESSAGE value="small fixes in: rating system , request system , and my items window .&#10;&#10;user can now select multiple items to return in my items window" />
-    <option name="LAST_COMMIT_MESSAGE" value="small fixes in: rating system , request system , and my items window .&#10;&#10;user can now select multiple items to return in my items window" />
+    <MESSAGE value="centering and comments" />
+    <option name="LAST_COMMIT_MESSAGE" value="centering and comments" />
   </component>
 </project>

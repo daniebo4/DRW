@@ -28,9 +28,11 @@ class Manager:
 
 
 class Item:
-
+    """
+    A class for the items that the storage has which has different parameters representing the item
+    """
     def __init__(self, ID=None, name=None, aq_date=None, du_date=None, description=None, rating=0, num_raters=0,
-                 owner=None, status=None):
+                 owner=None, status=None, loan_period = None):
         self.ID = ID
         self.name = name
         self.description = description
@@ -40,6 +42,7 @@ class Item:
         self.owner = owner
         self.status = status.replace("\n", "")
         self.num_raters = num_raters
+        self.loan_period = loan_period
 
 
 class DataBase:
@@ -95,6 +98,27 @@ class DataBase:
                 item_list_to_print.append(current_item)
         return item_list_to_print
 
+    def getAvailableItemTable(self):
+        item_list_to_print = []
+        item_table_amount_dict = {}
+        # calculate quantity of items to be displayed
+        for item in self.item_dict.values():
+            # '0' means that currently the item has no owner
+            if item.owner in (None, "", '0'):
+                if item.name not in item_table_amount_dict:
+                    item_table_amount_dict[item.name] = 1
+                else:
+                    item_table_amount_dict[item.name] += 1
+
+        # creates table of items to be displayed
+        items_in_table = set()
+        for item in self.item_dict.values():
+            if item.name in item_table_amount_dict and item.owner in (None, "", '0'):
+                items_in_table.add(item.name)
+                current_item = [item.ID, item.name, item_table_amount_dict[item.name],
+                                item.aq_date, item.du_date, item.description, item.rating]
+                item_list_to_print.append(current_item)
+        return item_list_to_print
     def get_students_loaned_items(self, current_student):
         item_list_to_print = []
         for item in self.item_dict.values():

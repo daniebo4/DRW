@@ -101,11 +101,12 @@ def open_add_window(current_worker):
         [sg.InputText('', size=(20, 1), key='input_quantity')],
         [sg.Text('Item Description')],
         [sg.InputText('', size=(20, 1), key='input_description')],
+        [sg.Text('Loan period (months)')],
+        [sg.InputText('', size=(20, 1), key='input_time_period')],
         [sg.Text(size=(10, 0), key="Error")],
         [sg.Button('Add', size=(10, 1)),
-         sg.Button('Exit', size=(10, 1)),
-         sg.Exit(pad=((50, 0), (50, 0)))]]
-    add_items_window = sg.Window("Add Items", add_items_layout, element_justification='c', size=(200, 250))
+         sg.Button('Exit', size=(10, 1))]]
+    add_items_window = sg.Window("Add Items", add_items_layout, element_justification='c', size=(200, 300))
     while True:
         add_item_check_res = False
         add_items_event, add_items_values = add_items_window.read()
@@ -236,7 +237,7 @@ def open_worker_window(current_worker):
     requests - opens a window to manage all the request mad by students for items
     returns - opens a window to manage the returns of all studends
     """
-    current_inventory_headings = ['ID', 'Item', 'Quantity', 'Arrival Date', 'Loan Period', 'Description', 'Rating']
+    current_inventory_headings = ['ID', 'Item', 'Quantity', 'Arrival Date', 'Loan Period (months)', 'Description', 'Rating']
     current_inventory = main.db.getAvailableItemTable()
     worker_menu_layout = [
         [sg.Table(values=current_inventory,
