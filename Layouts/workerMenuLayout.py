@@ -27,7 +27,7 @@ def confirm_request_item(user_selection, worker_requested_items):
                 """
                 file.write(
                     f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:{i.rating}:"
-                    f"{i.num_raters}:{i.owner}:{i.status}\n")
+                    f"{i.num_raters}:{i.owner}:{i.status}:{i.loan_period}\n")
 
         main.db = DataBase(main.project_root_dir + '\\workers_data.txt',
                            main.project_root_dir + '\\Workers_data.txt',
@@ -80,7 +80,7 @@ def open_requests_window(current_worker):
         for i in main.db.item_dict.values():
             file.write(
                 f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:"
-                f"{i.rating}:{i.num_raters}:{i.owner}:{i.status}\n")
+                f"{i.rating}:{i.num_raters}:{i.owner}:{i.status}:{i.loan_period}\n")
     main.db = DataBase(main.project_root_dir + '\\workers_data.txt',
                        main.project_root_dir + '\\Workers_data.txt',
                        main.project_root_dir + '\\Items_data.txt')
@@ -187,7 +187,7 @@ def confirm_return_item(user_selection, worker_loaned_items):
             for i in main.db.item_dict.values():
                 file.write(
                     f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:{i.rating}:"
-                    f"{i.num_raters}:{i.owner}:{i.status}\n")
+                    f"{i.num_raters}:{i.owner}:{i.status}:{i.loan_period}\n")
 
         main.db = DataBase(main.project_root_dir + '\\workers_data.txt',
                            main.project_root_dir + '\\Workers_data.txt',

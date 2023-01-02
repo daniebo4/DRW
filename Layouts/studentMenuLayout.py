@@ -1,6 +1,7 @@
 import PySimpleGUI as sg
 from database_Personas import DataBase
 import main
+import datetime
 import os
 
 
@@ -129,7 +130,7 @@ def request_item(current_student, item_id):
     with open(item_file, 'w+') as file:
         for i in main.db.item_dict.values():
             file.write(
-                f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:"
+                f"{i.ID}:{i.name}:{i.aq_date}:{i.aq_date+datetime.timedelta(weeks=int(i.loan_period))}:{i.description}:"
                 f"{i.rating}:{i.num_raters}:{i.owner}:{i.status}:{i.loan_period}\n")
     main.db = DataBase(main.project_root_dir + '\\Students_data.txt',
                        main.project_root_dir + '\\Workers_data.txt',

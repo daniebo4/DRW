@@ -1,2 +1,1 @@
-1:Camera:2023-01-02:2023-01-02:swag::0:1:loan requested:1
-2:swag:2023-01-02::21:2.0:2.0::available:1
+ 1:ca:2023-01-02:2023-01-16:rr::0:0:available:2

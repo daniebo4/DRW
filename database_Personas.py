@@ -154,7 +154,7 @@ class DataBase:
         for item in self.item_dict.values():
             if item.status == 'loan requested':
                 current_item = [item.ID, item.name, item.description, item.rating,
-                                item.status, item.owner, self.student_dict[item.owner].name]
+                                item.status, item.owner, self.student_dict[item.owner].ID]
                 item_list_to_print.append(current_item)
         return item_list_to_print
 
@@ -163,6 +163,6 @@ class DataBase:
         for item in self.item_dict.values():
             if item.status == 'return requested':
                 current_item = [item.ID, item.name, item.description, item.rating,
-                                item.status, item.owner, self.student_dict[item.owner].name]
+                                item.status, item.owner, self.student_dict[item.owner].ID]
                 item_list_to_print.append(current_item)
         return item_list_to_print
