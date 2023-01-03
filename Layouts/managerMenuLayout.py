@@ -8,7 +8,7 @@ def add_item_check(input_name, input_quantity, input_description):
     return True
 
 
-def open_add_window(current_worker):
+def open_add_window_manger(current_worker):
     """This window is the way that a worker can add a new item to a list with entering its Name/Description """
     add_items_layout = [
         [sg.Text('Item Name')],
@@ -134,7 +134,6 @@ def open_backlog(input_event_personas='StudentsLog'):
     open_backlog_headings = ['ID', 'Name', 'Login dates:']
 
     if input_event_personas == "StudentsLog":
-
         with open(db.file_dir_student_backlog, 'r') as file:  # Students database
             """opens the file of the student to read and create a list from"""
             backlog_list = file.readlines()
@@ -167,7 +166,6 @@ def open_backlog(input_event_personas='StudentsLog'):
         if open_backlog_event == 'students_log':
             open_backlog_window.close()
             open_backlog('StudentsLog')
-
 
         elif open_backlog_event == 'workers_log':
             open_backlog_window.close()
@@ -227,18 +225,17 @@ def open_manager_window(current_worker):
          sg.Exit(pad=((0, 0), (0, 0)))]
     ]
 
-    open_manager_window = sg.Window("manager Menu", open_manager_layout, element_justification='c')
+    manager_window = sg.Window("manager Menu", open_manager_layout, element_justification='c')
     while True:
-        open_manager_event, open_manager_values = open_manager_window.read()
-        open_manager_window["Error"].update("")
+        open_manager_event, open_manager_values = manager_window.read()
+        manager_window["Error"].update("")
 
         if open_manager_event == "Backlog":
             open_backlog()
         if open_manager_event == "Add":
-            open_add_window(current_worker)
-            open_manager_window.close()
+            open_add_window_manger(current_worker)
+            manager_window.close()
             open_manager_window(current_worker)
-
 
         if open_manager_event == "Edit":
             open_edit_window(current_worker)
@@ -247,6 +244,6 @@ def open_manager_window(current_worker):
             open_manage_workers()
 
         if open_manager_event == sg.WIN_CLOSED or open_manager_event == "Exit":
-            open_manager_window.close()
+            manager_window.close()
             break
 

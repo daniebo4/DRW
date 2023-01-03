@@ -154,5 +154,5 @@ db = DataBase(project_root_dir + '\\Students_data.txt',
               project_root_dir + '\\Workers_data.txt',
               project_root_dir + '\\Items_data.txt',
               project_root_dir + '\\BackLogDatabaseStudents.txt',
-              project_root_dir + '\\BackLogDatabaseStudents.txt',
+              project_root_dir + '\\BackLogDatabaseWorkers.txt',
               )

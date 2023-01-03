@@ -2,6 +2,7 @@ import PySimpleGUI as sg
 from Layouts import forgotPasswordLayout, changePasswordLayout, workerMenuLayout, studentMenuLayout, registerLayout, \
     managerMenuLayout
 from DataBase import db
+import datetime
 
 
 def mainMenu():
@@ -38,12 +39,20 @@ def mainMenu():
                 # checks first if the user is a student
                 if db.check_login_student(input_ID, input_password):
                     studentMenuLayout.open_student_window(db.student_dict[input_ID])
+                    item_file = db.file_dir_student_backlog
+
+                    with open(item_file, 'a') as file:
+                        file.write(
+                            f"{db.student_dict[input_ID].ID}:{db.student_dict[input_ID].name}:{datetime.date.today()}\n")
 
                 # else checks if the user is a worker
                 elif db.check_login_worker(input_ID, input_password) and input_ID != 'admin':
                     workerMenuLayout.open_worker_window(db.worker_dict[input_ID])
+                    item_file = db.file_dir_worker_backlog
+                    with open(item_file, 'a') as file:
+                        file.write(
+                            f"{db.worker_dict[input_ID].ID}:{db.worker_dict[input_ID].name}:{datetime.date.today()}\n")
 
-                # else check if the user is the admin
                 elif db.check_login_worker(input_ID, input_password):
                     managerMenuLayout.open_manager_window(db.worker_dict[input_ID])
 
