@@ -1,5 +1,5 @@
 import os
-from database_Personas import Student, Worker, Item
+from Personas import Student, Worker, Item
 
 
 class DataBase:
@@ -7,7 +7,6 @@ class DataBase:
     Creates a new class database of work which contains the personas of the system.
     Databases are text files , following lines translate the data to dictionaries for easier access and manipulation.
     """
-
     def __init__(self, file_dir_student=None, file_dir_worker=None, file_dir_item=None):
         self.file_dir_student = file_dir_student
         self.file_dir_worker = file_dir_worker
@@ -118,6 +117,33 @@ class DataBase:
         with open(self.file_dir_student, 'a') as file:
             file.write(f"{student_obj.ID}:{student_obj.password}:{student_obj.name}:{student_obj.secret_word}\n")
         db.student_dict[student_obj.ID] = student_obj
+
+    def updateStudents(self):
+        with open(self.file_dir_student, 'w') as file:
+            for s in self.student_dict.values():
+                file.write(f"{s.ID}:{s.password}:{s.name}:{s.secret_word}\n")
+
+    def addItem(self, item_obj):
+        with open(self.file_dir_item, 'a') as file:
+            file.write(f"{item_obj.ID}:{item_obj.name}:{item_obj.aq_date}:{item_obj.du_date}:"
+                       f"{item_obj.description}:{item_obj.rating}:{item_obj.num_raters}:{item_obj.owner}"
+                       f":{item_obj.status}:{item_obj.loan_period}\n")
+        db.item_dict[item_obj.ID] = item_obj
+
+    def updateItems(self):
+        with open(self.file_dir_item, 'w') as file:
+            for i in db.item_dict.values():
+                file.write(
+                    f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:{i.rating}:"
+                    f"{i.num_raters}:{i.owner}:{i.status}:{i.loan_period}\n")
+
+    def check_login_student(self, input_ID, input_password):
+        """a function that checks if student`s ID and password are matching"""
+        return input_ID in self.student_dict and self.student_dict[input_ID].password == input_password
+
+    def check_login_worker(self, input_ID, input_password):
+        """a function that checks if worker`s ID and password are matching"""
+        return input_ID in self.worker_dict and self.worker_dict[input_ID].password == input_password
 
 
 project_root_dir = os.path.dirname(os.path.abspath(__file__))  # Finds path to current project folder

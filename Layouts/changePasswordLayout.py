@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-import main
+from DataBase import db
 
 change_errors = ("One or more of the fields not entered", "ID can only contain numbers", "ID doesnt exist",
                  "Current password not correct", "New passwords don't match")
@@ -13,17 +13,15 @@ def attempt_to_change(input_ID, input_current_password, input_new_password, inpu
     if not input_ID.isdigit():
         return change_errors[1]
     else:
-        if input_ID not in main.db.student_dict:
+        if input_ID not in db.student_dict:
             return change_errors[2]
-        elif main.db.student_dict[input_ID].password != input_current_password:
+        elif db.student_dict[input_ID].password != input_current_password:
             return change_errors[3]
         elif input_new_password != input_repeat_new_password:
             return change_errors[4]
         else:
-            main.db.student_dict[input_ID].password = input_new_password
-            with open('Students_data.txt', 'w') as file:
-                for s in main.db.student_dict.values():
-                    file.write(f"{s.ID}:{s.password}:{s.name}:{s.secret_word}\n")
+            db.student_dict[input_ID].password = input_new_password
+            db.updateStudents()
             return True
 
 
@@ -49,7 +47,7 @@ def open_change_password_window():
             input_current_password = change_password_values['input_current_password']
             input_new_password = change_password_values['input_new_password']
             input_repeat_new_password = change_password_values['input_repeat_new_password']
-            # The system calls the function below to try to register with the input it got from the GUI
+            # The system calls the function below to check input from user
             change_check_res = attempt_to_change(input_ID, input_current_password, input_new_password,
                                                  input_repeat_new_password)
             if change_check_res is not True:

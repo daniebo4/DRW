@@ -1,13 +1,7 @@
-import os
 import PySimpleGUI as sg
-import database_Personas
-from Layouts import forgotPasswordLayout
-from Layouts import changePasswordLayout
-from Layouts import workerMenuLayout
-from Layouts import studentMenuLayout
-from Layouts import managerMenuLayout
-from Layouts import registerLayout
-import DataBase
+from Layouts import forgotPasswordLayout, changePasswordLayout, workerMenuLayout, studentMenuLayout, registerLayout, \
+    managerMenuLayout
+from DataBase import db
 
 
 def mainMenu():
@@ -42,16 +36,16 @@ def mainMenu():
 
             else:
                 # checks first if the user is a student
-                if check_login_student(input_ID, input_password):
-                    studentMenuLayout.open_student_window(DataBase.db.student_dict[input_ID])
+                if db.check_login_student(input_ID, input_password):
+                    studentMenuLayout.open_student_window(db.student_dict[input_ID])
 
                 # else checks if the user is a worker
-                elif check_login_worker(input_ID, input_password) and input_ID != 'admin':
-                    workerMenuLayout.open_worker_window(DataBase.db.worker_dict[input_ID])
+                elif db.check_login_worker(input_ID, input_password) and input_ID != 'admin':
+                    workerMenuLayout.open_worker_window(db.worker_dict[input_ID])
 
                 # else check if the user is the admin
-                elif check_login_worker(input_ID, input_password):
-                    managerMenuLayout.open_manager_window(DataBase.db.worker_dict[input_ID])
+                elif db.check_login_worker(input_ID, input_password):
+                    managerMenuLayout.open_manager_window(db.worker_dict[input_ID])
 
                 # conclude that user is not registered / details incorrect
                 else:
@@ -63,7 +57,6 @@ def mainMenu():
         if login_event == "Change password":
             changePasswordLayout.open_change_password_window()
 
-
         if login_event == " Forgot password ":  # There are spaces before and after the string !!!!
             forgotPasswordLayout.open_forgot_password_window()
 
@@ -71,24 +64,6 @@ def mainMenu():
             break
 
     login_window.close()
-
-
-'''def append_to_data_base(input_obj):
-    global db
-    if isinstance(input_obj, Student):
-        db.student_dict[input_obj.ID] = input_obj
-    elif isinstance(input_obj, Worker):
-        db.worker_dict[input_obj.ID] = input_obj'''  # back up function in case database management system is changed
-
-
-def check_login_student(ID, Password):
-    """a function that checks if student`s ID and password are matching"""
-    return ID in DataBase.db.student_dict and DataBase.db.student_dict[ID].password == Password
-
-
-def check_login_worker(ID, Password):
-    """a function that checks if worker`s ID and password are matching"""
-    return ID in db.worker_dict and db.worker_dict[ID].password == Password
 
 
 if __name__ == "__main__":

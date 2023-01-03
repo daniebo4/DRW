@@ -1,8 +1,7 @@
 import PySimpleGUI as sg
 import datetime
-from Layouts.studentMenuLayout import open_my_items_window
-import main
-import os
+from DataBase import db
+from Personas import Item
 
 
 def confirm_request_item(user_selection, worker_requested_items):
@@ -14,22 +13,8 @@ def confirm_request_item(user_selection, worker_requested_items):
                 item_id.append(item[0])
 
         for ID in item_id:
-            main.db.item_dict[ID].status = 'loan accepted'  # update the status of the returned items in the database
-
-        item_file = main.project_root_dir + '\\Items_data.txt'
-        with open(item_file, 'w') as file:
-            for i in main.db.item_dict.values():
-                """
-                for every item in items dict writes to a text file all of its keys this way we can track
-                our items in the system
-                """
-                file.write(
-                    f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:{i.rating}:"
-                    f"{i.num_raters}:{i.owner}:{i.status}:{i.loan_period}\n")
-
-        main.db = DataBase(main.project_root_dir + '\\workers_data.txt',
-                           main.project_root_dir + '\\Workers_data.txt',
-                           main.project_root_dir + '\\Items_data.txt')
+            db.item_dict[ID].status = 'loan accepted'  # update the status of the returned items in the database
+        db.updateItems()
         return True
     else:  # write error to the user if he didn't choose items to return
         return False
@@ -40,7 +25,7 @@ def open_requests_window(current_worker):
     of items that student requested"""
     # make function work with multiple items
     requested_items_headings = ['ID', 'Name', 'Description', 'Rating', 'Status', "Student's ID", "Student's Name"]
-    worker_requested_items = main.db.get_loan_requested_items()
+    worker_requested_items = db.get_loan_requested_items()
     loan_items_layout = [
         [sg.Table(values=worker_requested_items,
                   headings=requested_items_headings,
@@ -71,21 +56,10 @@ def open_requests_window(current_worker):
         if requested_items_event == "Exit" or requested_items_event == sg.WIN_CLOSED:
             requested_items_window.close()
             break
-
-    # update the owner of the item in the database
-    item_file = main.project_root_dir + '\\Items_data.txt'
-    with open(item_file, 'w+') as file:
-        for i in main.db.item_dict.values():
-            file.write(
-                f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:"
-                f"{i.rating}:{i.num_raters}:{i.owner}:{i.status}:{i.loan_period}\n")
-    main.db = DataBase(main.project_root_dir + '\\workers_data.txt',
-                       main.project_root_dir + '\\Workers_data.txt',
-                       main.project_root_dir + '\\Items_data.txt')
     return True
 
 
-# add conditions
+# add conditions!!!
 def add_item_check(input_name, input_quantity, input_description):
     return True
 
@@ -99,7 +73,7 @@ def open_add_window(current_worker):
         [sg.InputText('', size=(20, 1), key='input_quantity')],
         [sg.Text('Item Description')],
         [sg.InputText('', size=(20, 1), key='input_description')],
-        [sg.Text('Loan period (months)')],
+        [sg.Text('Loan period (weeks)')],
         [sg.InputText('', size=(20, 1), key='input_time_period')],
         [sg.Text(size=(10, 0), key="Error")],
         [sg.Button('Add', size=(10, 1)),
@@ -115,24 +89,16 @@ def open_add_window(current_worker):
             input_loan_time_period = add_items_values['input_time_period']
             add_item_check_res = add_item_check(input_name, input_quantity, input_description)
             if add_item_check_res:
-                if len(main.db.item_dict.keys()) == 0:
+                if len(db.item_dict.keys()) == 0:
                     input_ID = 1
                 else:
-                    input_ID = max([int(ID) for ID in main.db.item_dict.keys()]) + 1  # gets maximum Id in item list
+                    input_ID = max([int(ID) for ID in db.item_dict.keys()]) + 1  # gets maximum Id in item list
 
-                with open('Items_data.txt', 'a') as file:
-                    file.write(f"{input_ID}:{input_name}:{datetime.date.today()}::"
-                               f"{input_description}::{0}::available:{input_loan_time_period}\n")
-                input_quantity -= 1
                 while input_quantity > 0:
+                    db.addItem(Item(str(input_ID), input_name, "", "", input_description, '0', '0', '0', "available",
+                                    input_loan_time_period))
                     input_ID += 1
-                    with open('Items_data.txt', 'a') as file:
-                        file.write(f"{input_ID}:{input_name}:{datetime.date.today()}::"
-                                   f"{input_description}::::available:{input_loan_time_period}\n")
                     input_quantity -= 1
-                main.db = DataBase(main.project_root_dir + '\\Students_data.txt',
-                                   main.project_root_dir + '\\Workers_data.txt',
-                                   main.project_root_dir + '\\Items_data.txt')
             else:
                 add_items_window["Error"].update("One or more of the fields are invalid")
 
@@ -177,19 +143,10 @@ def confirm_return_item(user_selection, worker_loaned_items):
                 item_id.append(item[0])
 
         for ID in item_id:
-            main.db.item_dict[ID].status = 'available'  # update the status of the returned items in the database
-            main.db.item_dict[ID].owner = '0'  # remove previous owner of the returned item
+            db.item_dict[ID].status = 'available'  # update the status of the returned items in the database
+            db.item_dict[ID].owner = '0'  # remove previous owner of the returned item
+        db.updateItems()
 
-        item_file = main.project_root_dir + '\\Items_data.txt'
-        with open(item_file, 'w') as file:
-            for i in main.db.item_dict.values():
-                file.write(
-                    f"{i.ID}:{i.name}:{i.aq_date}:{i.du_date}:{i.description}:{i.rating}:"
-                    f"{i.num_raters}:{i.owner}:{i.status}:{i.loan_period}\n")
-
-        main.db = DataBase(main.project_root_dir + '\\workers_data.txt',
-                           main.project_root_dir + '\\Workers_data.txt',
-                           main.project_root_dir + '\\Items_data.txt')
         return True
     else:  # write error to the user if he didn't choose items to return
         return False
@@ -198,7 +155,7 @@ def confirm_return_item(user_selection, worker_loaned_items):
 def open_returns_window(current_worker):
     """A window to show the worker what items have been requested to return by all the students"""
     loan_items_headings = ['ID', 'Name', 'Loan Date', 'Due Date', 'Description', 'Rating', 'status']
-    worker_loaned_items = main.db.get_return_requested_items()
+    worker_loaned_items = db.get_return_requested_items()
     loan_items_layout = [
         [sg.Table(values=worker_loaned_items,
                   headings=loan_items_headings,
@@ -242,7 +199,7 @@ def open_worker_window(current_worker):
     """
     current_inventory_headings = ['ID', 'Item', 'Quantity', 'Arrival Date', 'Loan Period (months)', 'Description',
                                   'Rating']
-    current_inventory = main.db.getAvailableItemTable_forMenu()
+    current_inventory = db.getAvailableItemTable_forMenu()
     worker_menu_layout = [
         [sg.Table(values=current_inventory,
                   headings=current_inventory_headings,

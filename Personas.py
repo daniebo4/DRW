@@ -32,7 +32,6 @@ class Item:
     """
     A class for the items that the storage has which has different parameters representing the item
     """
-
     def __init__(self, ID=None, name=None, aq_date=None, du_date=None, description=None, rating=0, num_raters=0,
                  owner=None, status=None, loan_period=None):
         self.ID = ID
