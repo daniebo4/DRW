@@ -7,7 +7,10 @@ class DataBase:
     Creates a new class database of work which contains the personas of the system.
     Databases are text files , following lines translate the data to dictionaries for easier access and manipulation.
     """
-    def __init__(self, file_dir_student=None, file_dir_worker=None, file_dir_item=None):
+    def __init__(self, file_dir_student=None, file_dir_worker=None, file_dir_item=None,
+                 file_dir_student_backlog=None, file_dir_worker_backlog=None):
+        self.file_dir_student_backlog = file_dir_student_backlog
+        self.file_dir_worker_backlog = file_dir_worker_backlog
         self.file_dir_student = file_dir_student
         self.file_dir_worker = file_dir_worker
         self.file_dir_item = file_dir_item
@@ -149,4 +152,7 @@ class DataBase:
 project_root_dir = os.path.dirname(os.path.abspath(__file__))  # Finds path to current project folder
 db = DataBase(project_root_dir + '\\Students_data.txt',
               project_root_dir + '\\Workers_data.txt',
-              project_root_dir + '\\Items_data.txt')
+              project_root_dir + '\\Items_data.txt',
+              project_root_dir + '\\BackLogDatabaseStudents.txt',
+              project_root_dir + '\\BackLogDatabaseStudents.txt',
+              )
