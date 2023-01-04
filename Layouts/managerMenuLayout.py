@@ -5,10 +5,12 @@ import main
 import os
 
 def add_item_check(input_name, input_quantity, input_description):
+
     return True
 
 def open_add_window(current_worker):
-    """This window is the way that a worker can add a new item to a list with entering its Name/Description """
+    """ Using this functionality the manager can add items to the system,with the following info:Name,Quantity,Description"""
+    # Window Layout:
     add_items_layout = [
         [sg.Text('Item Name')],
         [sg.InputText('', size=(20, 1), key='input_name')],
@@ -21,6 +23,7 @@ def open_add_window(current_worker):
          sg.Button('Exit', size=(10, 1)),
          sg.Exit(pad=((50, 0), (50, 0)))]]
     add_items_window = sg.Window("Add Items", add_items_layout, element_justification='c', size=(200, 250))
+    # different actions to perform according to what button user click on
     while True:
         add_item_check_res = False
         add_items_event, add_items_values = add_items_window.read()
@@ -55,12 +58,11 @@ def open_add_window(current_worker):
 # manager method ?
 def open_manage_workers(current_worker):
     """
-    A window to manage the workers with the following funcs:
-    Add New Worker - can add new workers with the permissions
-    Remove worker - can remove a worker
+    Using this functionality a manager can view a list of all the workers,add or remove them
     """
     my_items_headings = ['Name', 'ID']
     worker_loaned_items = main.db.get_workers_loaned_items(current_worker)
+    # Window Layout:
     manage_workers_layout = [
         [sg.Table(values=worker_loaned_items,
                   headings=my_items_headings,
@@ -80,6 +82,7 @@ def open_manage_workers(current_worker):
     ]
 
     my_items_window = sg.Window("My Items", my_items_layout)
+    # different actions to perform according to what button user click on
     while True:
         my_items_event, my_items_values = my_items_window.read()
         if my_items_event == 'Return':  # check if worker want to return items
@@ -169,9 +172,15 @@ def open_request_item_window(current_manager, item_id):
 
 
 def open_manager_window(current_manager):
-    """func to create and manage the menu of the persona user type manager"""
+    """Manager's window in the system,features:
+    Viewing all items in storage
+    Adding & removing and editing items
+    Viewing workers data, adding and removing their users from thes system
+    Viewing a log of the system's events
+    """
     current_inventory_headings = ['ID', 'Item', 'Quantity', 'Loan Date', 'Due Date', 'Description', 'Rating']
     current_inventory = main.db.getAvailableItemTable()
+    # Window Layout:
     manager_menu_layout = [
         [sg.Table(values=current_inventory,
                   headings=current_inventory_headings,
@@ -191,8 +200,8 @@ def open_manager_window(current_manager):
          sg.Exit(pad=((0, 0), (0, 0)))]
     ]
 
-
     manager_menu_window = sg.Window("manager Menu", manager_menu_layout, element_justification='c')
+    # different actions to perform according to what button user click on
     while True:
         manager_menu_event, manager_menu_values = manager_menu_window.read()
         manager_menu_window["Error"].update("")
