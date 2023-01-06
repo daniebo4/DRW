@@ -148,6 +148,11 @@ class DataBase:
         """a function that checks if worker`s ID and password are matching"""
         return input_ID in self.worker_dict and self.worker_dict[input_ID].password == input_password
 
+    def updateWorkers(self):
+        with open(self.file_dir_worker, 'w') as file:
+            for s in self.worker_dict.values():
+                file.write(f"{s.ID}:{s.password}:{s.name}:{s.secret_word}\n")
+
 
 project_root_dir = os.path.dirname(os.path.abspath(__file__))  # Finds path to current project folder
 db = DataBase(project_root_dir + '\\Students_data.txt',

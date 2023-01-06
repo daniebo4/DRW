@@ -10,19 +10,29 @@ def attempt_to_change(input_ID, input_current_password, input_new_password, inpu
     account and returns a string based on what happened """
     if input_ID == '' or input_current_password == '' or input_new_password == '' or input_repeat_new_password == '':
         return change_errors[0]
-    if not input_ID.isdigit():
+    if not input_ID.isdigit() and not 'admin':
         return change_errors[1]
     else:
-        if input_ID not in db.student_dict:
-            return change_errors[2]
-        elif db.student_dict[input_ID].password != input_current_password:
-            return change_errors[3]
-        elif input_new_password != input_repeat_new_password:
-            return change_errors[4]
+        if input_ID not in db.worker_dict:
+            if input_ID not in db.student_dict:
+                return change_errors[2]
+            elif db.student_dict[input_ID].password != input_current_password:
+                return change_errors[3]
+            elif input_new_password != input_repeat_new_password:
+                return change_errors[4]
+            else:
+                db.student_dict[input_ID].password = input_new_password
+                db.updateStudents()
+                return True
         else:
-            db.student_dict[input_ID].password = input_new_password
-            db.updateStudents()
-            return True
+            if db.worker_dict[input_ID].password != input_current_password:
+                return change_errors[3]
+            elif input_new_password != input_repeat_new_password:
+                return change_errors[4]
+            else:
+                db.worker_dict[input_ID].password = input_new_password
+                db.updateWorkers()
+                return True
 
 
 def open_change_password_window():

@@ -11,11 +11,14 @@ def get_forgot_password(Name, ID, Secret):
     """function that returns current password"""
     if Name == '' or ID == '' or Secret == '':
         return errors[0]
-    if not ID.isdigit():
+    if not ID.isdigit() and not 'admin':
         return errors[1]
     if ID in db.student_dict:
         if db.student_dict[ID].name == Name and db.student_dict[ID].secret_word == Secret:
             return db.student_dict[ID].password
+    elif ID in db.worker_dict:
+        if ID in db.worker_dict[ID].name == Name and db.worker_dict[ID].secret_word == Secret:
+            return db.worker_dict[ID].password
         else:
             return errors[2]
     else:
