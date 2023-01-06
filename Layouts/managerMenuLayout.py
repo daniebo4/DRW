@@ -1,7 +1,7 @@
 from datetime import datetime
 import PySimpleGUI as sg
 from DataBase import db
-from Personas import Item
+from Personas import Item,Worker
 
 
 def add_item_check(input_name, input_quantity, input_description):
@@ -122,8 +122,20 @@ def add_new_worker():
     add_new_worker_window = sg.Window("Add New Worker", add_new_worker_layout, element_justification='c')
     # Window Layout Conditions,according to button clicked by user:
     while True:
+        add_new_worker_event_check=True
         add_new_worker_event, add_new_worker_values = add_new_worker_window.read()
-        if add_new_worker_event == sg.WIN_CLOSED or add_new_worker_event == "Exit":
+        if add_new_worker_event == 'Add':
+            input_ID = add_new_worker_values['input_ID']
+            input_password = add_new_worker_values['input_password']
+            input_name = add_new_worker_values['input_name']
+            input_secret_word = add_new_worker_values['input_secret_word']
+            if input_ID in db.worker_dict:
+                add_new_worker_window["Error"].update("ID already exist")
+                add_new_worker_event_check=False
+            else:
+                db.addWorker(Worker(str(input_ID), str(input_password), input_name, input_secret_word))
+        if add_new_worker_event == sg.WIN_CLOSED or add_new_worker_event == "Exit" or (
+                add_new_worker_event == "Add" and add_new_worker_event_check):
             add_new_worker_window.close()
             break
 
@@ -273,4 +285,3 @@ def open_manager_window(current_worker):
         if open_manager_event == sg.WIN_CLOSED or open_manager_event == "Exit":
             manager_window.close()
             break
-
