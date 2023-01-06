@@ -9,20 +9,24 @@ def add_item_check(input_name, input_quantity, input_description):
 
 
 def open_add_window_manger(current_worker):
-    """This window is the way that a worker can add a new item to a list with entering its Name/Description """
+    """
+    Using this functionality the manager can add items to the system,with the following info:Name,Quantity,Description
+    """
+    # Window Layout:
     add_items_layout = [
-        [sg.Text('Item Name')],
+        [sg.Text('Item Name:')],
         [sg.InputText('', size=(20, 1), key='input_name')],
-        [sg.Text('Item Quantity')],
+        [sg.Text('Item Quantity:')],
         [sg.InputText('', size=(20, 1), key='input_quantity')],
-        [sg.Text('Item Description')],
+        [sg.Text('Item Description:')],
         [sg.InputText('', size=(20, 1), key='input_description')],
-        [sg.Text('Loan period (weeks)')],
+        [sg.Text('Loan period (Weeks):')],
         [sg.InputText('', size=(20, 1), key='input_time_period')],
         [sg.Text(size=(10, 0), key="Error")],
         [sg.Button('Add', size=(10, 1)),
          sg.Button('Exit', size=(10, 1))]]
-    add_items_window = sg.Window("Add Items", add_items_layout, element_justification='c', size=(200, 300))
+    add_items_window = sg.Window("Add Items", add_items_layout, element_justification='c', size=(250, 350))
+    # Window Layout Conditions,according to button clicked by user:
     while True:
         add_item_check_res = False
         add_items_event, add_items_values = add_items_window.read()
@@ -53,9 +57,11 @@ def open_add_window_manger(current_worker):
 
 
 def open_manage_workers():
-    """Managing workers window"""
+    """
+    Using this functionality the manager can View a list of all the workers in the system and add or remove workers
+    """
+    # Window Layout:
     manage_workers_headings = ['Name', 'ID']
-
     with open(db.file_dir_student_backlog, 'r') as file:  # Students database
         """opens the file of the student to read and create a list from"""
         backlog_list = file.readlines()
@@ -71,14 +77,15 @@ def open_manage_workers():
                   num_rows=10,
                   key='-TABLE-',
                   row_height=35,
-                  def_col_width=35,
+                  def_col_width=25,
                   enable_events=True, )],
         [sg.Text(size=(15, 1), key="Error")],
         [sg.Button('Add New Worker', size=(15, 1)),
          sg.Button('Remove Worker', size=(15, 1)),
-         sg.Exit(pad=((100, 0), (0, 0)))]
+         sg.Exit(pad=((280, 0), (0, 0)))]
     ]
     manage_workers_window = sg.Window("Manage Workers", manage_workers_layout)
+    # Window Layout Conditions,according to button clicked by user:
     while True:
         manage_workers_event, my_items_values = manage_workers_window.read()
         if manage_workers_event == "Add New Worker":
@@ -97,6 +104,10 @@ def open_manage_workers():
 
 
 def add_new_worker():
+    """
+    In this window the manager can provide the details of the worker,ID,password,Name,Secret word
+    """
+    # Window Layout:
     add_new_worker_layout = [[sg.Text("Add a New Worker:")],
                              [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID')],
                              [sg.Text("Password :", size=(10, 1)),
@@ -109,7 +120,7 @@ def add_new_worker():
                               sg.Exit(pad=((90, 0), (0, 0)))]]
 
     add_new_worker_window = sg.Window("Add New Worker", add_new_worker_layout, element_justification='c')
-
+    # Window Layout Conditions,according to button clicked by user:
     while True:
         add_new_worker_event, add_new_worker_values = add_new_worker_window.read()
         if add_new_worker_event == sg.WIN_CLOSED or add_new_worker_event == "Exit":
@@ -118,11 +129,14 @@ def add_new_worker():
 
 
 def remove_worker():
+    """Function for removing a workers from the system"""
+    # Window Layout:
     remove_worker_layout = [
-        [sg.Text("Are you super duper sure you want to remove this worker?\nThink twice it's alright :")],
+        [sg.Text("Are you sure you want to remove this worker?")],
         [sg.Button(button_text="Yes"),
          sg.Button(button_text="No"), ]]
     remove_worker_window = sg.Window("Remove Worker", remove_worker_layout, element_justification='c')
+    # Window Layout Conditions,according to button clicked by user:
     while True:
         remove_worker_event, remove_worker_values = remove_worker_window.read()
         if remove_worker_event == sg.WIN_CLOSED or remove_worker_event == "Yes" or remove_worker_event == "No":
@@ -131,8 +145,11 @@ def remove_worker():
 
 
 def open_backlog(input_event_personas='StudentsLog'):
+    """
+    Using this functionality the manager can view a log of logins into the system by different users
+    """
+    # Window Layout:
     open_backlog_headings = ['ID', 'Name', 'Login dates:']
-
     if input_event_personas == "StudentsLog":
         with open(db.file_dir_student_backlog, 'r') as file:  # Students database
             """opens the file of the student to read and create a list from"""
@@ -154,13 +171,14 @@ def open_backlog(input_event_personas='StudentsLog'):
                                      num_rows=10,
                                      key='-TABLE-',
                                      row_height=35,
-                                     col_widths=[20, 20, 35],
+                                     col_widths=[15, 15, 25],
                                      enable_events=True, )],
+                           [sg.Text(size=(30, 1), key="Error")],
                            [sg.Button('Students Log', size=(10, 1), key='students_log'),
                             sg.Button('Workers Log', size=(10, 1), key='workers_log'),
-                            sg.Exit(pad=((800, 0), (0, 0)))]]
-    open_backlog_window = sg.Window("Backlog", open_backlog_layout, element_justification='c', size=(700, 500))
-
+                            sg.Exit(pad=((380, 0), (0, 0)))]]
+    open_backlog_window = sg.Window("Backlog", open_backlog_layout, element_justification='c', size=(700, 470))
+    # Window Layout Conditions,according to button clicked by user:
     while True:
         open_backlog_event, open_backlog_values = open_backlog_window.read()
         if open_backlog_event == 'students_log':
@@ -177,23 +195,25 @@ def open_backlog(input_event_personas='StudentsLog'):
 
 
 def open_edit_window(current_worker):
-    """This window gives access to a worker to edit an items Name/Quantity/Description """
+    """Using this functioality the manager can edit item details,such like:Name,Quantity,Description,Due Date,Due Acquired"""
+    # Window Layout:
     edit_items_layout = [
-        [sg.Text('Item Name')],
+        [sg.Text('Item Name:')],
         [sg.InputText('', size=(20, 1), key='<item_name>')],
-        [sg.Text('Item Quantity')],
+        [sg.Text('Item Quantity:')],
         [sg.InputText('', size=(20, 1), key='<item_quantity>')],
-        [sg.Text('Item Description')],
+        [sg.Text('Item Description:')],
         [sg.InputText('', size=(20, 1), key='<item_Description>>')],
-        [sg.Text('Due Date')],
+        [sg.Text('Due Date:')],
         [sg.InputText('', size=(20, 1), key='<item_Date>>')],
-        [sg.Text('Due Acquired')],
+        [sg.Text('Loan Date:')],
         [sg.InputText('', size=(20, 1), key='<item_Acquired>>')],
         [sg.Text(size=(10, 0), key="Error"), ],
         [sg.Button('Confirm', size=(10, 1)),
          sg.Button('Exit', size=(10, 1)),
          sg.Exit(pad=((50, 0), (50, 0)))]]
-    edit_items_layout_window = sg.Window("Edit Items", edit_items_layout, element_justification='c', size=(200, 350))
+    edit_items_layout_window = sg.Window("Edit Items", edit_items_layout, element_justification='c', size=(250, 450))
+    # Window Layout Conditions,according to button clicked by user:
     while True:
         add_items_layout_event, edit_items_layout_values = edit_items_layout_window.read()
         if add_items_layout_event == sg.WIN_CLOSED or add_items_layout_event == "Exit":
@@ -203,7 +223,13 @@ def open_edit_window(current_worker):
 
 
 def open_manager_window(current_worker):
-    """func to create and manage the menu of the persona user type manager"""
+    """The main manager window in the system,allows him the following:
+    Adding and removing items
+    Editing item details
+    Managing workers,adding new ones and removing existing ones
+    Viewing a backlog of user logins into the system
+    """
+    # Window Layout:
     current_inventory_headings = ['ID', 'Item', 'Quantity', 'Loan Date', 'Due Date', 'Description', 'Rating']
     current_inventory = db.getAvailableItemTable()
     open_manager_layout = [
@@ -226,6 +252,7 @@ def open_manager_window(current_worker):
     ]
 
     manager_window = sg.Window("manager Menu", open_manager_layout, element_justification='c')
+    # Window Layout Conditions,according to button clicked by user:
     while True:
         open_manager_event, open_manager_values = manager_window.read()
         manager_window["Error"].update("")
