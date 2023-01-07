@@ -153,6 +153,11 @@ class DataBase:
             for s in self.worker_dict.values():
                 file.write(f"{s.ID}:{s.password}:{s.name}:{s.secret_word}\n")
 
+    def addWorker(self, worker_obj):
+        with open(self.file_dir_worker, 'a') as file:
+            file.write(f"{worker_obj.ID}:{worker_obj.password}:{worker_obj.name}:{worker_obj.secret_word}\n")
+        db.worker_dict[worker_obj.ID] = worker_obj
+
 
 project_root_dir = os.path.dirname(os.path.abspath(__file__))  # Finds path to current project folder
 db = DataBase(project_root_dir + '\\Students_data.txt',
