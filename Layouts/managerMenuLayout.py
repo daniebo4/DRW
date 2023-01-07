@@ -250,7 +250,7 @@ def open_manager_window(current_worker):
                   max_col_width=35,
                   auto_size_columns=True,
                   display_row_numbers=False,
-                  justification='l',
+                  justification='c',
                   num_rows=10,
                   key='-TABLE-',
                   row_height=35, enable_events=True)],

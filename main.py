@@ -18,11 +18,13 @@ def mainMenu():
                      sg.Submit(button_text="Register"),
                      sg.Exit(pad=((210, 0), (0, 0)))]]
 
-    login_window = sg.Window("Inventory Management System ", login_layout, element_justification='c')
+    login_window = sg.Window("Inventory Management System ", login_layout, element_justification='c',finalize=True)
+    login_window['input_ID'].bind("<Return>", "_Enter")
+    login_window['input_password'].bind("<Return>", "_Enter")
     while True:
         login_event, login_values = login_window.read()
 
-        if login_event == "Log in":
+        if login_event == "Log in" or login_event == "input_ID" + "_Enter" or login_event == "input_password" + "_Enter":
             input_ID = login_values['input_ID']
             input_password = login_values['input_password']
 
