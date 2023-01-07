@@ -1,5 +1,25 @@
-ID:name:date aq:date due:description:rating0.2f:num_raters:owner:status
-10:Camera:16:14:hello:3.8:5.0:1:pending
-11:Brush:16:14:bob ross:5.0:1.0:1:pending
-12:Camera:16:14:hello:3.8:5.0:1:no status
-13:Item test:16:14:meant for testing:5.0:1.0:1:no status
+3:item:2023-01-03:2023-01-17:itemitem:4.33:3.0:0:available:2
+4:1:::1:0:0:0:available:1
+5:2:::2:0:0:0:available:2
+6:2:::2:0:0:0:available:2
+7:test:::test:0:0:0:available:1
+8:test:::test:0:0:0:available:1
+9:test:::test:0:0:0:available:1
+10:1:::1:0:0:0:available:1
+11:1:::1:0:0:0:available:1
+12:1:::1:0:0:0:available:1
+13:1:::1:0:0:0:available:1
+14:1:::1:0:0:0:available:1
+15:1:::1:0:0:0:available:1
+16:1:::1:0:0:0:available:1
+17:1:::1:0:0:0:available:1
+18:2:::2:0:0:0:available:2
+19:2:::2:0:0:0:available:2
+20:1:::1:0:0:0:available:1
+21:1:::1:0:0:0:available:1
+22:1:::1:0:0:0:available:1
+23:1:::1:0:0:0:available:1
+24:1:::1:0:0:0:available:1
+25:1:::1:0:0:0:available:1
+26:1:::1:0:0:0:available:1
+27:1:::1:0:0:0:available:1

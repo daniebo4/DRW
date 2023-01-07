@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-import main
+from DataBase import db
 
 errors = ("One or more fields not provided",
           "ID can only contain numbers",
@@ -11,11 +11,14 @@ def get_forgot_password(Name, ID, Secret):
     """function that returns current password"""
     if Name == '' or ID == '' or Secret == '':
         return errors[0]
-    if not ID.isdigit():
+    if not ID.isdigit() and not 'admin':
         return errors[1]
-    if ID in main.db.student_dict:
-        if main.db.student_dict[ID].name == Name and main.db.student_dict[ID].secret_word == Secret:
-            return main.db.student_dict[ID].password
+    if ID in db.student_dict:
+        if db.student_dict[ID].name == Name and db.student_dict[ID].secret_word == Secret:
+            return db.student_dict[ID].password
+    elif ID in db.worker_dict:
+        if ID in db.worker_dict[ID].name == Name and db.worker_dict[ID].secret_word == Secret:
+            return db.worker_dict[ID].password
         else:
             return errors[2]
     else:
@@ -37,7 +40,6 @@ def open_forgot_password_window():
     while True:
         forgot_password_event, forgot_password_values = forgot_password_window.read()
         if forgot_password_event == "Confirm":
-
             input_name = forgot_password_values['input_name']
             input_ID = forgot_password_values['input_ID']
             input_secret_word = forgot_password_values['input_secret_word']

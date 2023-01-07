@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
-import main
+from DataBase import db
+from Personas import Student
 
 register_errors = ("One or more fields not provided", "ID can only contain numbers",
                    "Name can't contain numbers", "ID already exists in system")
@@ -12,7 +13,7 @@ def check_register(input_ID, input_password, input_name, input_secret_word):
         return register_errors[1]
     elif any(char.isdigit() for char in input_name):
         return register_errors[2]
-    elif input_ID in main.db.student_dict:
+    elif input_ID in db.student_dict:
         return register_errors[3]
     else:
         return True
@@ -43,8 +44,7 @@ def open_register_window():
             input_secret_word = register_values['input_secret_word']
             register_check_res = check_register(input_ID, input_password, input_name, input_secret_word)
             if register_check_res is True:
-                with open('Students_data.txt', 'a') as file:
-                    file.write(f"{input_ID}:{input_password}:{input_name}:{input_secret_word}\n")
+                db.addStudent(Student(input_ID, input_password, input_name, input_secret_word))
             else:
                 register_window["Error"].update(register_check_res)
 
