@@ -155,6 +155,20 @@ def remove_worker():
             remove_worker_window.close()
             break
 
+def remove_item():
+    """This function allows the manager to remove items from the system"""
+    # Window Layout:
+    remove_worker_layout = [
+        [sg.Text("Are you sure you want to remove this item?")],
+        [sg.Button(button_text="Yes"),
+         sg.Button(button_text="No"), ]]
+    remove_worker_window = sg.Window("Remove Item", remove_worker_layout, element_justification='c')
+    # Window Layout Conditions,according to button clicked by user:
+    while True:
+        remove_worker_event, remove_worker_values = remove_worker_window.read()
+        if remove_worker_event == sg.WIN_CLOSED or remove_worker_event == "Yes" or remove_worker_event == "No":
+            remove_worker_window.close()
+            break
 
 def open_backlog(input_event_personas='StudentsLog'):
     """
@@ -281,6 +295,9 @@ def open_manager_window(current_worker):
 
         if open_manager_event == "Manage Workers":
             open_manage_workers()
+
+        if open_manager_event == "Remove":
+           remove_item()
 
         if open_manager_event == sg.WIN_CLOSED or open_manager_event == "Exit":
             manager_window.close()

@@ -16,7 +16,7 @@ def mainMenu():
                     [sg.Text(size=(30, 1), key="Error")],
                     [sg.Submit(button_text="Log in"),
                      sg.Submit(button_text="Register"),
-                     sg.Exit(pad=((210, 0), (0, 0)))]]
+                     sg.Exit(pad=((315, 0), (0, 0)))]]
 
     login_window = sg.Window("Inventory Management System ", login_layout, element_justification='c',finalize=True)
     login_window['input_ID'].bind("<Return>", "_Enter")
