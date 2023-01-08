@@ -3,14 +3,18 @@ from DataBase import db
 from Personas import Student
 
 register_errors = ("One or more fields not provided", "ID can only contain numbers",
-                   "Name can't contain numbers", "ID already exists in system")
+                   "Name can't contain numbers", "ID already exists in system",
+                   "ID is not in the department database")
 
 
+# to do : add test for student not in design department
 def check_register(input_ID, input_password, input_name, input_secret_word):
     if input_ID == '' or input_password == '' or input_name == '' or input_secret_word == '':
         return register_errors[0]
     elif not input_ID.isdigit():
         return register_errors[1]
+    elif input_ID not in db.design_students_list:
+        return register_errors[4]
     elif any(char.isdigit() for char in input_name):
         return register_errors[2]
     elif input_ID in db.student_dict:
