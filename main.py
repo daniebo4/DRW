@@ -41,19 +41,12 @@ def mainMenu():
                 # checks first if the user is a student
                 if db.check_login_student(input_ID, input_password):
                     studentMenuLayout.open_student_window(db.student_dict[input_ID])
-                    item_file = db.file_dir_student_backlog
-
-                    with open(item_file, 'a') as file:
-                        file.write(
-                            f"{db.student_dict[input_ID].ID}:{db.student_dict[input_ID].name}:{datetime.date.today()}\n")
+                    db.addToStudentBacklog(input_ID)
 
                 # else checks if the user is a worker
                 elif db.check_login_worker(input_ID, input_password) and input_ID != 'admin':
                     workerMenuLayout.open_worker_window(db.worker_dict[input_ID])
-                    item_file = db.file_dir_worker_backlog
-                    with open(item_file, 'a') as file:
-                        file.write(
-                            f"{db.worker_dict[input_ID].ID}:{db.worker_dict[input_ID].name}:{datetime.date.today()}\n")
+                    db.addToWorkerBacklog(input_ID)
 
                 elif db.check_login_worker(input_ID, input_password):
                     managerMenuLayout.open_manager_window(db.worker_dict[input_ID])

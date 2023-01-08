@@ -41,7 +41,7 @@ def open_rate_window(item_name):
 
 
 def return_item(user_selection, student_loaned_items):
-    if len(user_selection) > 0:  # check if the user choose items to return
+    if len(user_selection) > 0:  # check if the user chose items to return
         item_id = []
         for index, item in enumerate(student_loaned_items):
             if index in user_selection:
@@ -50,7 +50,7 @@ def return_item(user_selection, student_loaned_items):
         for ID in item_id:
             if db.item_dict[ID].status == 'loan requested':
                 db.item_dict[ID].status = 'available'
-                db.item_dict[ID].owner = 0
+                db.item_dict[ID].owner = ''
                 db.item_dict[ID].aq_date = ''
                 db.item_dict[ID].du_date = ''
             else:
@@ -139,7 +139,7 @@ def open_request_item_window(current_student, item_id):
 
 def open_student_window(current_student):
     """func to create and manage the menu of the persona user type student"""
-    current_inventory_headings = ['ID', 'Item', 'Quantity', 'Loan Date', 'Loan Period', 'Description', 'Rating']
+    current_inventory_headings = ['Item', 'Quantity', 'Loan Period (weeks)', 'Rating', 'Description']
     current_inventory = db.getAvailableItemTable_forMenu()
     student_menu_layout = [
         [sg.Table(values=current_inventory,
@@ -165,9 +165,14 @@ def open_student_window(current_student):
         if student_menu_event == "Request Item":
             if student_menu_values['-TABLE-']:
                 if len(student_menu_values['-TABLE-']) == 1:
-                    item_idx = student_menu_values['-TABLE-'][0]
-                    item_id = current_inventory[item_idx][0]
-                    open_request_item_window(current_student, item_id)
+                    chosen_item_idx = student_menu_values['-TABLE-'][0]
+                    chosen_item_name = current_inventory[chosen_item_idx][0]
+                    chosen_item_ID = None
+                    for item in db.item_dict.values():  # choose specific item to loan from database
+                        if item.name == chosen_item_name and item.owner in (None, "", '0'):
+                            chosen_item_ID = item.ID
+                            break
+                    open_request_item_window(current_student, chosen_item_ID)
                     student_menu_window.close()
                     open_student_window(current_student)
                 else:
@@ -177,13 +182,15 @@ def open_student_window(current_student):
 
         if student_menu_event == "My Items":
             open_my_items_window(current_student)
+            student_menu_window.close()
+            open_student_window(current_student)
 
         if student_menu_event == "Rate":
             # check if the user choose item before pressing on rate button
             if len(student_menu_values['-TABLE-']) == 1:
-                item_idx = student_menu_values['-TABLE-'][0]
-                item_name = current_inventory[item_idx][1]
-                open_rate_window(item_name)
+                chosen_item_idx = student_menu_values['-TABLE-'][0]
+                chosen_item_name = current_inventory[chosen_item_idx][1]
+                open_rate_window(chosen_item_name)
                 student_menu_window.close()
                 open_student_window(current_student)
                 # warning to the user if he chose more than one item to rate in the same time
