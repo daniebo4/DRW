@@ -1,16 +1,17 @@
-from datetime import datetime
 import PySimpleGUI as sg
 from DataBase import db
-from Personas import Item,Worker
+from Personas import Item, Worker
 
 
+# to do : complete this func
 def add_item_check(input_name, input_quantity, input_description):
     return True
 
 
 def open_add_window_manger(current_worker):
     """
-    Using this functionality the manager can add items to the system,with the following info:Name,Quantity,Description
+    Using this functionality the manager can add items to the system,with the following info:Name,Quantity,
+    Description and loan period
     """
     # Window Layout:
     add_items_layout = [
@@ -40,7 +41,8 @@ def open_add_window_manger(current_worker):
                 if len(db.item_dict.keys()) == 0:
                     input_ID = 1
                 else:
-                    input_ID = max([int(ID) for ID in db.item_dict.keys()]) + 1  # gets maximum Id in item list
+                    input_ID = max([int(ID) for ID in db.item_dict.keys()]) + 1  # gets maximum ID in item list to
+                    # generate new, not used item ID
 
                 while input_quantity > 0:
                     db.addItem(Item(str(input_ID), input_name, "", "", input_description, '0', '0', '0', "available",
@@ -56,18 +58,14 @@ def open_add_window_manger(current_worker):
             break
 
 
+# to do : create method in DataBase.py to get list of workers
 def open_manage_workers():
     """
     Using this functionality the manager can View a list of all the workers in the system and add or remove workers
     """
     # Window Layout:
     manage_workers_headings = ['Name', 'ID']
-    with open(db.file_dir_student_backlog, 'r') as file:  # Students database
-        """opens the file of the student to read and create a list from"""
-        backlog_list = file.readlines()
-        backlog_list = list(map(lambda x: x.split(":"), backlog_list))
-
-    manage_workers_values = backlog_list
+    manage_workers_values = None  # get_workers method from DataBase.py
     manage_workers_layout = [
         [sg.Table(values=manage_workers_values,
                   headings=manage_workers_headings,
@@ -89,13 +87,10 @@ def open_manage_workers():
     while True:
         manage_workers_event, my_items_values = manage_workers_window.read()
         if manage_workers_event == "Add New Worker":
-            if manage_workers_event == "Add New Worker":  # check if student want to return items
-                # user_selection = manage_workers_values['-TABLE-']
-                # output = add_worker()
-                #  manage_workers_window.close()
+            if manage_workers_event == "Add New Worker":
                 add_new_worker()
-            else:  # warning if the user not choose item to return
-                manage_workers_window["Error"].update("No Items Selected !")
+            else:  # warning if the user didn't select worker
+                manage_workers_window["Error"].update("No Worker Selected !")
         if manage_workers_event == "Remove Worker":
             remove_worker()
         elif manage_workers_event == "Exit" or manage_workers_event == sg.WIN_CLOSED:
@@ -122,7 +117,7 @@ def add_new_worker():
     add_new_worker_window = sg.Window("Add New Worker", add_new_worker_layout, element_justification='c')
     # Window Layout Conditions,according to button clicked by user:
     while True:
-        add_new_worker_event_check=True
+        add_new_worker_event_check = True
         add_new_worker_event, add_new_worker_values = add_new_worker_window.read()
         if add_new_worker_event == 'Add':
             input_ID = add_new_worker_values['input_ID']
@@ -131,7 +126,10 @@ def add_new_worker():
             input_secret_word = add_new_worker_values['input_secret_word']
             if input_ID in db.worker_dict:
                 add_new_worker_window["Error"].update("ID already exist")
-                add_new_worker_event_check=False
+                add_new_worker_event_check = False
+            elif input_ID in db.student_dict:
+                add_new_worker_window["Error"].update("ID is registered as student")
+                add_new_worker_event_check = False
             else:
                 db.addWorker(Worker(str(input_ID), str(input_password), input_name, input_secret_word))
         if add_new_worker_event == sg.WIN_CLOSED or add_new_worker_event == "Exit" or (
@@ -156,23 +154,34 @@ def remove_worker():
             break
 
 
+def remove_item():
+    """This function allows the manager to remove items from the system"""
+    # Window Layout:
+    remove_worker_layout = [
+        [sg.Text("Are you sure you want to remove this item?")],
+        [sg.Button(button_text="Yes"),
+         sg.Button(button_text="No"), ]]
+    remove_worker_window = sg.Window("Remove Item", remove_worker_layout, element_justification='c')
+    # Window Layout Conditions,according to button clicked by user:
+    while True:
+        remove_worker_event, remove_worker_values = remove_worker_window.read()
+        if remove_worker_event == sg.WIN_CLOSED or remove_worker_event == "Yes" or remove_worker_event == "No":
+            remove_worker_window.close()
+            break
+
+
 def open_backlog(input_event_personas='StudentsLog'):
     """
     Using this functionality the manager can view a log of logins into the system by different users
     """
     # Window Layout:
     open_backlog_headings = ['ID', 'Name', 'Login dates:']
+    backlog_list = None
     if input_event_personas == "StudentsLog":
-        with open(db.file_dir_student_backlog, 'r') as file:  # Students database
-            """opens the file of the student to read and create a list from"""
-            backlog_list = file.readlines()
-            backlog_list = list(map(lambda x: x.split(":"), backlog_list))
+        backlog_list = db.student_backlog
 
     elif input_event_personas == "WorkersLog":
-        with open(db.file_dir_worker_backlog, 'r') as file:  # Students database
-            """opens the file of the student to read and create a list from"""
-            backlog_list = file.readlines()
-            backlog_list = list(map(lambda x: x.split(":"), backlog_list))
+        backlog_list = db.worker_backlog
 
     open_backlog_values = backlog_list
     open_backlog_layout = [[sg.Table(values=open_backlog_values,
@@ -250,7 +259,7 @@ def open_manager_window(current_worker):
                   max_col_width=35,
                   auto_size_columns=True,
                   display_row_numbers=False,
-                  justification='l',
+                  justification='c',
                   num_rows=10,
                   key='-TABLE-',
                   row_height=35, enable_events=True)],
@@ -281,6 +290,9 @@ def open_manager_window(current_worker):
 
         if open_manager_event == "Manage Workers":
             open_manage_workers()
+
+        if open_manager_event == "Remove":
+            remove_item()
 
         if open_manager_event == sg.WIN_CLOSED or open_manager_event == "Exit":
             manager_window.close()

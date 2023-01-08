@@ -16,13 +16,15 @@ def mainMenu():
                     [sg.Text(size=(30, 1), key="Error")],
                     [sg.Submit(button_text="Log in"),
                      sg.Submit(button_text="Register"),
-                     sg.Exit(pad=((210, 0), (0, 0)))]]
+                     sg.Exit(pad=((315, 0), (0, 0)))]]
 
-    login_window = sg.Window("Inventory Management System ", login_layout, element_justification='c')
+    login_window = sg.Window("Inventory Management System ", login_layout, element_justification='c',finalize=True)
+    login_window['input_ID'].bind("<Return>", "_Enter")
+    login_window['input_password'].bind("<Return>", "_Enter")
     while True:
         login_event, login_values = login_window.read()
 
-        if login_event == "Log in":
+        if login_event == "Log in" or login_event == "input_ID" + "_Enter" or login_event == "input_password" + "_Enter":
             input_ID = login_values['input_ID']
             input_password = login_values['input_password']
 
@@ -39,19 +41,12 @@ def mainMenu():
                 # checks first if the user is a student
                 if db.check_login_student(input_ID, input_password):
                     studentMenuLayout.open_student_window(db.student_dict[input_ID])
-                    item_file = db.file_dir_student_backlog
-
-                    with open(item_file, 'a') as file:
-                        file.write(
-                            f"{db.student_dict[input_ID].ID}:{db.student_dict[input_ID].name}:{datetime.date.today()}\n")
+                    db.addToStudentBacklog(input_ID)
 
                 # else checks if the user is a worker
                 elif db.check_login_worker(input_ID, input_password) and input_ID != 'admin':
                     workerMenuLayout.open_worker_window(db.worker_dict[input_ID])
-                    item_file = db.file_dir_worker_backlog
-                    with open(item_file, 'a') as file:
-                        file.write(
-                            f"{db.worker_dict[input_ID].ID}:{db.worker_dict[input_ID].name}:{datetime.date.today()}\n")
+                    db.addToWorkerBacklog(input_ID)
 
                 elif db.check_login_worker(input_ID, input_password):
                     managerMenuLayout.open_manager_window(db.worker_dict[input_ID])

@@ -1,5 +1,7 @@
 import os
 from Personas import Student, Worker, Item
+from itertools import chain
+import datetime
 
 
 class DataBase:
@@ -7,21 +9,23 @@ class DataBase:
     Creates a new class database of work which contains the personas of the system.
     Databases are text files , following lines translate the data to dictionaries for easier access and manipulation.
     """
+
     def __init__(self, file_dir_student=None, file_dir_worker=None, file_dir_item=None,
-                 file_dir_student_backlog=None, file_dir_worker_backlog=None):
+                 file_dir_student_backlog=None, file_dir_worker_backlog=None, file_dir_design_students=None):
         self.file_dir_student_backlog = file_dir_student_backlog
         self.file_dir_worker_backlog = file_dir_worker_backlog
         self.file_dir_student = file_dir_student
         self.file_dir_worker = file_dir_worker
         self.file_dir_item = file_dir_item
-        if file_dir_student is not None:
+        self.file_dir_design_students = file_dir_design_students
+        if file_dir_student:
             with open(file_dir_student, 'r') as file:  # Students database
                 """opens the file of the student to read and create a list from"""
                 student_list = file.readlines()
                 student_list = list(map(lambda x: x.split(":"), student_list))
                 student_list = list(map(lambda x: Student(x[0], x[1], x[2], x[3]), student_list))
                 self.student_dict = {s.ID: s for s in student_list}
-        if file_dir_worker is not None:
+        if file_dir_worker:
             with open(file_dir_worker, 'r+') as file2:  # Workers database
                 worker_list = file2.readlines()
                 if os.path.getsize(file_dir_worker) == 0:
@@ -29,7 +33,7 @@ class DataBase:
                 worker_list = list(map(lambda x: x.split(":"), worker_list))
                 worker_list = list(map(lambda x: Worker(x[0], x[1], x[2], x[3]), worker_list))
                 self.worker_dict = {w.ID: w for w in worker_list}
-        if file_dir_item is not None:
+        if file_dir_item:
             with open(file_dir_item, 'r') as file3:  # Items database
                 item_list = file3.readlines()
                 item_list = list(map(lambda x: x.split(":"), item_list))
@@ -38,6 +42,16 @@ class DataBase:
                 item_list = list(
                     map(lambda x: Item(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7], x[8], x[9]), item_list))
                 self.item_dict = {i.ID: i for i in item_list}
+        if file_dir_student_backlog:
+            with open(file_dir_student_backlog, 'r') as file4:
+                self.student_backlog = list(map(lambda x: x.split(":"), file4.read().splitlines()))
+        if file_dir_worker_backlog:
+            with open(file_dir_worker_backlog, 'r') as file5:
+                self.worker_backlog = list(map(lambda x: x.split(":"), file5.read().splitlines()))
+        if file_dir_design_students:
+            with open(file_dir_design_students, 'r') as file6:
+                self.design_students_list = file6.read().splitlines()
+
 
     def getAvailableItemTable(self):
         """get the items that are in the database and puts in a list for tables to show the items"""
@@ -65,24 +79,19 @@ class DataBase:
     def getAvailableItemTable_forMenu(self):
         """this gets the available items like the one above but there are small changes
          in the table because we want to show the user what the loan period"""
-        item_list_to_print = []
         item_table_amount_dict = {}
-        # calculate quantity of items to be displayed
-        for item in self.item_dict.values():
-            # '0' means that currently the item has no owner
-            if item.owner in (None, "", '0'):
+        for item in self.item_dict.values():  # calculate quantity of items to be displayed
+            if item.owner in (None, "", '0'):  # '0' means that currently the item has no owner
                 if item.name not in item_table_amount_dict:
                     item_table_amount_dict[item.name] = 1
                 else:
                     item_table_amount_dict[item.name] += 1
 
-        # creates table of items to be displayed
-        items_in_table = set()
+        item_list_to_print = []
         for item in self.item_dict.values():
-            if item.name in item_table_amount_dict and item.owner in (None, "", '0'):
-                items_in_table.add(item.name)
-                current_item = [item.ID, item.name, item_table_amount_dict[item.name],
-                                item.aq_date, item.loan_period, item.description, item.rating]
+            if item.name in item_table_amount_dict and item.name not in chain(*item_list_to_print):
+                current_item = [item.name, item_table_amount_dict[item.name],
+                                item.loan_period, item.rating, item.description]
                 item_list_to_print.append(current_item)
         return item_list_to_print
 
@@ -158,6 +167,21 @@ class DataBase:
             file.write(f"{worker_obj.ID}:{worker_obj.password}:{worker_obj.name}:{worker_obj.secret_word}\n")
         db.worker_dict[worker_obj.ID] = worker_obj
 
+    def addToStudentBacklog(self, input_ID):
+        new_entry = [self.student_dict[input_ID].ID, self.student_dict[input_ID].name, datetime.date.today()]
+        self.student_backlog.append(new_entry)
+        with open(self.file_dir_student_backlog, 'a') as file:
+            file.write(
+                f"{new_entry[0]}:{new_entry[1]}:{new_entry[2]}\n")
+
+    def addToWorkerBacklog(self, input_ID):
+        new_entry = [self.worker_dict[input_ID].ID, self.worker_dict[input_ID].name, datetime.date.today()]
+        self.worker_backlog.append(new_entry)
+        with open(self.file_dir_worker_backlog, 'a') as file:
+            file.write(
+                f"{new_entry[0]}:{new_entry[1]}:{new_entry[2]}\n")
+
+
 
 project_root_dir = os.path.dirname(os.path.abspath(__file__))  # Finds path to current project folder
 db = DataBase(project_root_dir + '\\Students_data.txt',
@@ -165,4 +189,4 @@ db = DataBase(project_root_dir + '\\Students_data.txt',
               project_root_dir + '\\Items_data.txt',
               project_root_dir + '\\BackLogDatabaseStudents.txt',
               project_root_dir + '\\BackLogDatabaseWorkers.txt',
-              )
+              project_root_dir + '\\DesignDepartmentStudent.txt')
