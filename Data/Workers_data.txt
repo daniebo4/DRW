@@ -1,0 +1,4 @@
+admin:admin:admin:admin
+4:12:4:4
+7:8:kobi:7
+98:9:or:8
