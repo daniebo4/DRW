@@ -52,7 +52,6 @@ class DataBase:
             with open(file_dir_design_students, 'r') as file6:
                 self.design_students_list = file6.read().splitlines()
 
-
     def getAvailableItemTable(self):
         """get the items that are in the database and puts in a list for tables to show the items"""
         item_list_to_print = []
@@ -182,8 +181,7 @@ class DataBase:
                 f"{new_entry[0]}:{new_entry[1]}:{new_entry[2]}\n")
 
 
-
-project_root_dir = os.path.dirname(os.path.abspath(__file__))  # Finds path to current project folder
+project_root_dir = os.path.dirname(os.path.abspath(__file__)) + '\\Data'  # Finds path to current project folder
 db = DataBase(project_root_dir + '\\Students_data.txt',
               project_root_dir + '\\Workers_data.txt',
               project_root_dir + '\\Items_data.txt',
