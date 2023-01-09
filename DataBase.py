@@ -187,6 +187,12 @@ class DataBase:
                 worker_list.append([worker.name,worker.ID])
         return worker_list
 
+    def getStudents(self):
+        student_list=[]
+        for student in self.student_dict.values():
+            student_list.append([student.name,student.ID])
+        return student_list
+
 
 project_root_dir = os.path.dirname(os.path.abspath(__file__)) + '\\Data'  # Finds path to current project folder
 db = DataBase(project_root_dir + '\\Students_data.txt',

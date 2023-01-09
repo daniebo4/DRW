@@ -1,6 +1,7 @@
 import PySimpleGUI as sg
 from DataBase import db
 from Personas import Item, Worker
+from Layouts import registerLayout
 
 
 # to do : complete this func
@@ -311,6 +312,81 @@ def open_edit_window(current_worker):
     edit_items_layout_window.close()
 
 
+def remove_student(chosen_student_id):
+    """Function for removing a studentss from the system"""
+    # Window Layout:
+    remove_student_layout = [
+        [sg.Text("Are you sure you want to remove this student?")],
+        [sg.Button(button_text="Yes"),
+         sg.Button(button_text="No"), ]]
+    remove_student_window = sg.Window("Remove Student", remove_student_layout, element_justification='c')
+    # Window Layout Conditions,according to button clicked by user:
+    while True:
+        remove_student_event, remove_student_values = remove_student_window.read()
+        if remove_student_event == 'Yes':
+            db.student_dict.pop(chosen_student_id)
+            db.updateStudents()
+        if remove_student_event == sg.WIN_CLOSED or remove_student_event == "Yes" or remove_student_event == "No":
+            remove_student_window.close()
+            break
+
+
+def open_manage_students():
+    """
+       Using this functionality the manager can View a list of all the students in the system and add or remove students
+       """
+    # Window Layout:
+    current_students = db.getStudents()
+    manage_students_headings = ['Name', 'ID']
+    manage_students_layout = [
+        [sg.Table(values=current_students,
+                  headings=manage_students_headings,
+                  auto_size_columns=False,
+                  display_row_numbers=False,
+                  justification='c',
+                  num_rows=10,
+                  key='-TABLE-',
+                  row_height=35,
+                  def_col_width=25,
+                  enable_events=True, )],
+        [sg.Text(size=(15, 1), key="Error")],
+        [sg.Button('Add New Student', size=(15, 1)),
+         sg.Button('Remove Student', size=(15, 1)),
+         sg.Exit(pad=((280, 0), (0, 0)))]
+    ]
+    manage_students_window = sg.Window("Manage Students", manage_students_layout)
+    # Window Layout Conditions,according to button clicked by user:
+    while True:
+        manage_students_event, manage_students_values = manage_students_window.read()
+        if manage_students_event == "Add New Student":
+            if manage_students_event == "Add New Student":
+                registerLayout.open_register_window()
+                manage_students_window.close()
+                open_manage_students()
+
+
+        if manage_students_event == "Remove Student":
+            if manage_students_values['-TABLE-']:
+                if len(manage_students_values['-TABLE-']) == 1:
+                    chosen_student_idx = manage_students_values['-TABLE-'][0]
+                    chosen_student_id = current_students[chosen_student_idx][1]
+                    remove_student(chosen_student_id)
+                    manage_students_window.close()
+                    open_manage_students()
+                    manage_students_window.close()
+                    open_manage_students()
+
+                else:
+                    manage_students_window["Error"].update("multiple Students Selected !")
+            else:  # warning if the user didn't select student
+                manage_students_window["Error"].update("No student Selected !")
+
+
+        elif manage_students_event == "Exit" or manage_students_event == sg.WIN_CLOSED:
+            manage_students_window.close()
+            break
+
+
 def open_manager_window(current_worker):
     """The main manager window in the system,allows him the following:
     Adding and removing items
@@ -336,6 +412,8 @@ def open_manager_window(current_worker):
          sg.Button('Remove', size=(15, 1)),
          sg.Button('Edit', size=(15, 1)),
          sg.Button('Manage Workers', size=(15, 1)),
+         sg.Button('Manage Workers', size=(15, 1)),
+         sg.Button('Manage Students', size=(15, 1)),
          sg.Button('Backlog', size=(15, 1)),
          sg.Exit(pad=((0, 0), (0, 0)))]
     ]
@@ -361,6 +439,9 @@ def open_manager_window(current_worker):
 
         if open_manager_event == "Remove":
             remove_item()
+
+        if open_manager_event=="Manage Students":
+            open_manage_students()
 
         if open_manager_event == sg.WIN_CLOSED or open_manager_event == "Exit":
             manager_window.close()
