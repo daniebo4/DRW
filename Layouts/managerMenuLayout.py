@@ -59,6 +59,46 @@ def open_add_window_manger(current_worker):
 
 
 # to do : create method in DataBase.py to get list of workers
+def edit_worker(chosen_worker_id):
+    """Function for edit a worker's info"""
+    # Window Layout:
+    edit_worker_layout = [
+        [sg.Text('New Password:')],
+        [sg.InputText('', size=(20, 1), key='<Password>')],
+        [sg.Text('New Secret Word:')],
+        [sg.InputText('', size=(20, 1), key='<Secret_Word>')],
+        [sg.Text(size=(10, 0), key="Error"), ],
+        [sg.Button('Confirm', size=(10, 1)),
+         sg.Button('Exit', size=(10, 1)),
+         sg.Exit(pad=((50, 0), (50, 0)))]]
+    edit_worker_window = sg.Window("Edit Worker", edit_worker_layout, element_justification='c')
+    # Window Layout Conditions,according to button clicked by user:
+    while True:
+        check_info = False
+        edit_worker_event, edit_worker_values = edit_worker_window.read()
+        Password = edit_worker_values['<Password>']
+        Secret_Word = edit_worker_values['<Secret_Word>']
+        if edit_worker_event == 'Confirm':
+            if Password != '' and Secret_Word != '':
+                db.worker_dict[chosen_worker_id].password = Password
+                db.worker_dict[chosen_worker_id].secret_word = Secret_Word
+                check_info =True
+                db.updateWorkers()
+            elif Password != '' and Secret_Word == '':
+                db.worker_dict[chosen_worker_id].password = Password
+                check_info =True
+                db.updateWorkers()
+            elif Password == '' and Secret_Word != '':
+                db.worker_dict[chosen_worker_id].secret_word = Secret_Word
+                check_info =True
+                db.updateWorkers()
+            else:
+                edit_worker_window["Error"].update("No Input Data")
+        if edit_worker_event == sg.WIN_CLOSED or (edit_worker_event == "Confirm" and check_info==True) or edit_worker_event == "Exit" :
+            edit_worker_window.close()
+            break
+
+
 def open_manage_workers():
     """
     Using this functionality the manager can View a list of all the workers in the system and add or remove workers
@@ -80,6 +120,7 @@ def open_manage_workers():
         [sg.Text(size=(15, 1), key="Error")],
         [sg.Button('Add New Worker', size=(15, 1)),
          sg.Button('Remove Worker', size=(15, 1)),
+         sg.Button('Edit Worker', size=(15, 1)),
          sg.Exit(pad=((280, 0), (0, 0)))]
     ]
     manage_workers_window = sg.Window("Manage Workers", manage_workers_layout)
@@ -96,6 +137,19 @@ def open_manage_workers():
                     chosen_worker_idx = manage_workers_values['-TABLE-'][0]
                     chosen_worker_id = current_workers[chosen_worker_idx][1]
                     remove_worker(chosen_worker_id)
+                    manage_workers_window.close()
+                    open_manage_workers()
+                else:
+                    manage_workers_window["Error"].update("multiple Workers Selected !")
+            else:  # warning if the user didn't select worker
+                manage_workers_window["Error"].update("No Worker Selected !")
+
+        if manage_workers_event == "Edit Worker":
+            if manage_workers_values['-TABLE-']:
+                if len(manage_workers_values['-TABLE-']) == 1:
+                    chosen_worker_idx = manage_workers_values['-TABLE-'][0]
+                    chosen_worker_id = current_workers[chosen_worker_idx][1]
+                    edit_worker(chosen_worker_id)
                     manage_workers_window.close()
                     open_manage_workers()
                 else:
