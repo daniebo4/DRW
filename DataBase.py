@@ -180,6 +180,13 @@ class DataBase:
             file.write(
                 f"{new_entry[0]}:{new_entry[1]}:{new_entry[2]}\n")
 
+    def getWorkers(self):
+        worker_list=[]
+        for worker in self.worker_dict.values():
+            if worker.ID != 'admin':
+                worker_list.append([worker.name,worker.ID])
+        return worker_list
+
 
 project_root_dir = os.path.dirname(os.path.abspath(__file__)) + '\\Data'  # Finds path to current project folder
 db = DataBase(project_root_dir + '\\Students_data.txt',

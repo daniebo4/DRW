@@ -64,10 +64,10 @@ def open_manage_workers():
     Using this functionality the manager can View a list of all the workers in the system and add or remove workers
     """
     # Window Layout:
+    current_workers = db.getWorkers()
     manage_workers_headings = ['Name', 'ID']
-    manage_workers_values = None  # get_workers method from DataBase.py
     manage_workers_layout = [
-        [sg.Table(values=manage_workers_values,
+        [sg.Table(values=current_workers,
                   headings=manage_workers_headings,
                   auto_size_columns=False,
                   display_row_numbers=False,
@@ -85,14 +85,25 @@ def open_manage_workers():
     manage_workers_window = sg.Window("Manage Workers", manage_workers_layout)
     # Window Layout Conditions,according to button clicked by user:
     while True:
-        manage_workers_event, my_items_values = manage_workers_window.read()
+        manage_workers_event, manage_workers_values = manage_workers_window.read()
         if manage_workers_event == "Add New Worker":
             if manage_workers_event == "Add New Worker":
                 add_new_worker()
+
+        if manage_workers_event == "Remove Worker":
+            if manage_workers_values['-TABLE-']:
+                if len(manage_workers_values['-TABLE-']) == 1:
+                    chosen_worker_idx = manage_workers_values['-TABLE-'][0]
+                    chosen_worker_id = current_workers[chosen_worker_idx][1]
+                    remove_worker(chosen_worker_id)
+                    manage_workers_window.close()
+                    open_manage_workers()
+                else:
+                    manage_workers_window["Error"].update("multiple Workers Selected !")
             else:  # warning if the user didn't select worker
                 manage_workers_window["Error"].update("No Worker Selected !")
-        if manage_workers_event == "Remove Worker":
-            remove_worker()
+
+
         elif manage_workers_event == "Exit" or manage_workers_event == sg.WIN_CLOSED:
             manage_workers_window.close()
             break
@@ -138,7 +149,7 @@ def add_new_worker():
             break
 
 
-def remove_worker():
+def remove_worker(chosen_worker_id):
     """Function for removing a workers from the system"""
     # Window Layout:
     remove_worker_layout = [
@@ -149,6 +160,9 @@ def remove_worker():
     # Window Layout Conditions,according to button clicked by user:
     while True:
         remove_worker_event, remove_worker_values = remove_worker_window.read()
+        if remove_worker_event == 'Yes':
+            db.worker_dict.pop(chosen_worker_id)
+            db.updateWorkers()
         if remove_worker_event == sg.WIN_CLOSED or remove_worker_event == "Yes" or remove_worker_event == "No":
             remove_worker_window.close()
             break
