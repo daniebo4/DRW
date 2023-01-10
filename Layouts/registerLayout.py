@@ -9,6 +9,7 @@ register_errors = ("One or more fields not provided", "ID can only contain numbe
 
 # to do : add test for student not in design department
 def check_register(input_ID, input_password, input_name, input_secret_word):
+    """check if all the input values is correct and check if the user is already exist in the system"""
     if input_ID == '' or input_password == '' or input_name == '' or input_secret_word == '':
         return register_errors[0]
     elif not input_ID.isdigit():

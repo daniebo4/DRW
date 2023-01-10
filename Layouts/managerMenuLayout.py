@@ -324,7 +324,7 @@ def edit_student(chosen_student_id):
 
 
 def remove_student(chosen_student_id):
-    """Function for removing a studentss from the system"""
+    """Function for removing a students from the system"""
     # Window Layout:
     remove_student_layout = [
         [sg.Text("Are you sure you want to remove this student?")],

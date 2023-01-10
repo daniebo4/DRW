@@ -60,6 +60,7 @@ def open_requests_window(current_worker):
 
 # add conditions!!!
 def add_item_check(input_name, input_quantity, input_description):
+    """func to approve that all the new item fields are correct"""
     return True
 
 

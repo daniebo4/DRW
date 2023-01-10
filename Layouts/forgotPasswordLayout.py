@@ -28,6 +28,7 @@ def get_forgot_password(Name, ID, Secret):
 
 
 def open_forgot_password_window():
+    """build forgot password window"""
     forgot_password_layout = [[sg.Text("Forgot Password", justification='center')],
                               [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID')],
                               [sg.Text("Name :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_name')],
