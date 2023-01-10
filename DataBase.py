@@ -6,12 +6,23 @@ import datetime
 
 class DataBase:
     """
-    Creates a new class database of work which contains the personas of the system.
-    Databases are text files , following lines translate the data to dictionaries for easier access and manipulation.
+    This is the class which will contain all the data that we want to save locally and access
+    This class contains the Personas: Students, Workers, Manager and items
+    based on what persona you can access different methods in order to change information
+    about them for example:
+    due date of an item can be accessed by going into
     """
 
     def __init__(self, file_dir_student=None, file_dir_worker=None, file_dir_item=None,
                  file_dir_student_backlog=None, file_dir_worker_backlog=None, file_dir_design_students=None):
+        """
+        This is the constructor of the database, when initiated the database will be built with the text
+        databases that are included with the project, once the files are linked it reads through the files
+        Students, Works and Items and puts them in separated dictionaries that are the able to pass data through
+        layouts of the program for example:
+        instead of importing main in order to access the dictionary we can simply from DataBase import db
+        thus we will be able to access students, workers and more if needed
+        """
         self.file_dir_student_backlog = file_dir_student_backlog
         self.file_dir_worker_backlog = file_dir_worker_backlog
         self.file_dir_student = file_dir_student
@@ -120,6 +131,10 @@ class DataBase:
                 file.write(f"{s.ID}:{s.password}:{s.name}:{s.secret_word}\n")
 
     def addItem(self, item_obj):
+        """
+        Appends all the information belonging to item_obj into one line
+        separated by ':' int the text database.
+         """
         with open(self.file_dir_item, 'a') as file:
             file.write(f"{item_obj.ID}:{item_obj.name}:{item_obj.aq_date}:{item_obj.du_date}:"
                        f"{item_obj.description}:{item_obj.rating}:{item_obj.num_raters}:{item_obj.owner}"
@@ -127,6 +142,8 @@ class DataBase:
         db.item_dict[item_obj.ID] = item_obj
 
     def updateItems(self):
+        """Updates the file by rewriting the information
+        belonging to the item with matching ID's"""
         with open(self.file_dir_item, 'w') as file:
             for i in db.item_dict.values():
                 file.write(

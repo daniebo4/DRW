@@ -1,8 +1,11 @@
 import PySimpleGUI as sg
 from DataBase import db
 
-change_errors = ("One or more of the fields not entered", "ID can only contain numbers", "ID doesnt exist",
-                 "Current password not correct", "New passwords don't match")
+change_errors = ("One or more of the fields not entered",
+                 "ID can only contain numbers",
+                 "ID doesnt exist",
+                 "Current password not correct",
+                 "New passwords don't match")
 
 
 def attempt_to_change(input_ID, input_current_password, input_new_password, input_repeat_new_password):
@@ -10,7 +13,7 @@ def attempt_to_change(input_ID, input_current_password, input_new_password, inpu
     account and returns a string based on what happened """
     if input_ID == '' or input_current_password == '' or input_new_password == '' or input_repeat_new_password == '':
         return change_errors[0]
-    if not input_ID.isdigit() and not 'admin':
+    if not input_ID.isdigit() and input_ID != 'admin':
         return change_errors[1]
     else:
         if input_ID not in db.worker_dict:

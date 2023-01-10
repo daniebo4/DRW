@@ -6,6 +6,3 @@
 9:Whiteboard:::A very white board:0:0:0:available:3
 10:Whiteboard:::A very white board:0:0:0:available:3
 11:Whiteboard:::A very white board:0:0:0:available:3
-12:Hammer:::Silver , good for butchering:0:0:0:available:1
-13:Hammer:::Silver , good for butchering:0:0:0:available:1
-

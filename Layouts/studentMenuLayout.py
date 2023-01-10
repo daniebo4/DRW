@@ -6,7 +6,7 @@ from DataBase import db
 # to do : make rating not possible after student already rated item
 def rate(rating, item_name):
     """func to rate an item and update it in the database"""
-    if isinstance(rating, int):
+    if not isinstance(rating, int):
         return 'The rating is not an integer'
     for item in db.item_dict.values():
         if item_name == item.name:
@@ -18,6 +18,7 @@ def rate(rating, item_name):
                 round((((float(item.rating) * (temp_item_num_raters - 1)) + rating) / temp_item_num_raters), 2))
             item.num_raters = str(temp_item_num_raters)
     db.updateItems()
+    return 'Update rating successful'
 
 
 def open_rate_window(item_name):
@@ -100,8 +101,10 @@ def open_my_items_window(current_student):
 
 # to do : make function work with multiple items
 def request_item(current_student, item_id):
-    """func to request item to loan"""
+    """Goes through item database and tries to find an item that has been requested if it did
+    return true and updates the item"""
     if item_id in db.item_dict:  # check if the item exists in the database
+        # if yes then change the status in data to loan requested
         db.item_dict[item_id].owner = current_student.ID
         db.item_dict[item_id].status = 'loan requested'
         db.item_dict[item_id].aq_date = datetime.date.today()
