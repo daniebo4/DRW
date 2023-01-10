@@ -1,3 +1,2 @@
 admin:admin:admin:admin
-4:12:4:4
 98:76:or:90

@@ -2,23 +2,22 @@ import PySimpleGUI as sg
 from Layouts import forgotPasswordLayout, changePasswordLayout, workerMenuLayout, studentMenuLayout, registerLayout, \
     managerMenuLayout
 from DataBase import db
-import datetime
 
 
 def mainMenu():
     # Main event loop
     login_layout = [[sg.Text("Welcome to the design department\n inventory management system !")],
-                    [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID'),
+                    [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID', do_not_clear=False),
                      sg.Submit(button_text="Change password")],
                     [sg.Text("Password :", size=(10, 1)),
-                     sg.InputText('', size=(20, 1), key='input_password', password_char='●'),
+                     sg.InputText('', size=(20, 1), key='input_password', password_char='●', do_not_clear=False),
                      sg.Submit(button_text=" Forgot password ")],
                     [sg.Text(size=(30, 1), key="Error")],
                     [sg.Submit(button_text="Log in"),
                      sg.Submit(button_text="Register"),
                      sg.Exit(pad=((315, 0), (0, 0)))]]
 
-    login_window = sg.Window("Inventory Management System ", login_layout, element_justification='c',finalize=True)
+    login_window = sg.Window("Inventory Management System ", login_layout, element_justification='c', finalize=True)
     login_window['input_ID'].bind("<Return>", "_Enter")
     login_window['input_password'].bind("<Return>", "_Enter")
     while True:
@@ -43,13 +42,14 @@ def mainMenu():
                     studentMenuLayout.open_student_window(db.student_dict[input_ID])
                     db.addToStudentBacklog(input_ID)
 
+
                 # else checks if the user is a worker
                 elif db.check_login_worker(input_ID, input_password) and input_ID != 'admin':
                     workerMenuLayout.open_worker_window(db.worker_dict[input_ID])
                     db.addToWorkerBacklog(input_ID)
 
                 elif db.check_login_worker(input_ID, input_password):
-                    managerMenuLayout.open_manager_window(db.worker_dict[input_ID])
+                    managerMenuLayout.open_manager_window()
 
                 # conclude that user is not registered / details incorrect
                 else:

@@ -52,32 +52,17 @@ class DataBase:
             with open(file_dir_design_students, 'r') as file6:
                 self.design_students_list = file6.read().splitlines()
 
-    def getAvailableItemTable(self):
-        """get the items that are in the database and puts in a list for tables to show the items"""
-        item_list_to_print = []
-        item_table_amount_dict = {}
-        # calculate quantity of items to be displayed
+    def getAvailableItemTable_forManager(self):
+        """gets item list for manager"""
+        item_list = []
         for item in self.item_dict.values():
-            # '0' means that currently the item has no owner
-            if item.owner in (None, "", '0'):
-                if item.name not in item_table_amount_dict:
-                    item_table_amount_dict[item.name] = 1
-                else:
-                    item_table_amount_dict[item.name] += 1
-
-        # creates table of items to be displayed
-        items_in_table = set()
-        for item in self.item_dict.values():
-            if item.name in item_table_amount_dict and item.owner in (None, "", '0'):
-                items_in_table.add(item.name)
-                current_item = [item.ID, item.name, item_table_amount_dict[item.name],
-                                item.aq_date, item.du_date, item.description, item.rating]
-                item_list_to_print.append(current_item)
-        return item_list_to_print
+            item_list.append([item.ID, item.name, item.owner, item.status, item.aq_date, item.du_date, item.loan_period,
+                              item.description, item.rating])
+        return item_list
 
     def getAvailableItemTable_forMenu(self):
         """this gets the available items like the one above but there are small changes
-         in the table because we want to show the user what the loan period"""
+         in the table because we want to show the user the quantity of items without item ID"""
         item_table_amount_dict = {}
         for item in self.item_dict.values():  # calculate quantity of items to be displayed
             if item.owner in (None, "", '0'):  # '0' means that currently the item has no owner
@@ -181,16 +166,16 @@ class DataBase:
                 f"{new_entry[0]}:{new_entry[1]}:{new_entry[2]}\n")
 
     def getWorkers(self):
-        worker_list=[]
+        worker_list = []
         for worker in self.worker_dict.values():
             if worker.ID != 'admin':
-                worker_list.append([worker.name,worker.ID])
+                worker_list.append([worker.name, worker.ID])
         return worker_list
 
     def getStudents(self):
-        student_list=[]
+        student_list = []
         for student in self.student_dict.values():
-            student_list.append([student.name,student.ID])
+            student_list.append([student.name, student.ID])
         return student_list
 
 

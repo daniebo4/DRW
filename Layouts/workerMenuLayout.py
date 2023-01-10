@@ -1,5 +1,4 @@
 import PySimpleGUI as sg
-import datetime
 from DataBase import db
 from Personas import Item
 
@@ -197,8 +196,7 @@ def open_worker_window(current_worker):
     requests - opens a window to manage all the request mad by students for items
     returns - opens a window to manage the returns of all students
     """
-    current_inventory_headings = ['ID', 'Item', 'Quantity', 'Arrival Date', 'Loan Period (months)', 'Description',
-                                  'Rating']
+    current_inventory_headings = ['Item', 'Quantity', 'Loan Period (weeks)', 'Rating', 'Description']
     current_inventory = db.getAvailableItemTable_forMenu()
     worker_menu_layout = [
         [sg.Table(values=current_inventory,
@@ -211,29 +209,18 @@ def open_worker_window(current_worker):
                   key='-TABLE-',
                   row_height=35, enable_events=True)],
         [sg.Text(size=(10, 0), key="Error"), ],
-        [sg.Button('Add', size=(15, 1)),
-         sg.Button('Remove', size=(15, 1)),
-         sg.Button('Edit', size=(15, 1)),
-         sg.Button('Requests', size=(15, 1)),
+        [sg.Button('Requests', size=(15, 1)),
          sg.Button('Returns', size=(15, 1)),
          sg.Exit(pad=((0, 0), (0, 0)))]
     ]
 
-    worker_menu_window = sg.Window("worker Menu", worker_menu_layout, element_justification='c')
+    worker_menu_window = sg.Window("Worker Menu", worker_menu_layout, element_justification='c')
     while True:
         worker_menu_event, worker_menu_values = worker_menu_window.read()
         worker_menu_window["Error"].update("")
 
         if worker_menu_event == "Requests":
             open_requests_window(current_worker)
-
-        if worker_menu_event == "Add":
-            open_add_window(current_worker)
-            worker_menu_window.close()
-            open_worker_window(current_worker)
-
-        if worker_menu_event == "Edit":
-            open_edit_window(current_worker)
 
         if worker_menu_event == "Returns":
             open_returns_window(current_worker)
