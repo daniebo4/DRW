@@ -4,17 +4,17 @@ from DataBase import db
 
 
 class GetPasswordTest(unittest.TestCase):
-    # Test fields not entered
+    """ Test fields not entered"""
     def test1_fields_not_entered(self):
         self.assertEqual(forgotPasswordLayout.get_forgot_password('1', '2', ''),
                          forgotPasswordLayout.errors[0])
 
     def test2_ID_not_only_digits(self):
-        # Tests if ID is only digits
+        """Tests if ID is only digits"""
         self.assertEqual(forgotPasswordLayout.get_forgot_password('a', 'a', 'a'), "ID can only contain numbers")
 
     def test3_correct_ID_and_password(self):
-        # Tests if ID and password match but secret word doesn't
+        """Tests if ID and password match but secret word doesn't"""
         if db.student_dict:
             s = list(db.student_dict.values())[0]
             if len(s.secret_word) == 1:
@@ -25,7 +25,7 @@ class GetPasswordTest(unittest.TestCase):
                              "ID exists but name or secret word doesn't")
 
     def test4_correct_ID_and_secret_word(self):
-        # Tests if ID and secret word match but password doesn't
+        """Tests if ID and secret word match but password doesn't"""
         if db.student_dict:
             s = list(db.student_dict.values())[0]
             if len(s.password) == 1:
@@ -36,7 +36,7 @@ class GetPasswordTest(unittest.TestCase):
                              "ID doesn't exist or password incorrect")
 
     def test5_ID_not_correct(self):
-        # Tests ID doesnt exists
+        """Tests ID doesnt exists"""
         if db.student_dict:
             s = list(db.student_dict.values())[0]
             if len(s.ID) == 1:
@@ -50,7 +50,7 @@ class GetPasswordTest(unittest.TestCase):
 
     ########################################################
     def test6_correct_ID_and_password_worker(self):
-        # Tests if ID and password match but secret word doesn't
+        """Tests if ID and password match but secret word doesn't"""
         if db.worker_dict:
             s = list(db.worker_dict.values())[0]
             if len(s.secret_word) == 1:
@@ -61,7 +61,7 @@ class GetPasswordTest(unittest.TestCase):
                              "ID exists but name or secret word doesn't")
 
     def test7_correct_ID_and_secret_word_worker(self):
-        # Tests if ID and secret word match but password doesn't
+        """Tests if ID and secret word match but password doesn't"""
         if db.worker_dict:
             s = list(db.worker_dict.values())[0]
             if len(s.password) == 1:
@@ -72,7 +72,7 @@ class GetPasswordTest(unittest.TestCase):
                              "ID doesn't exist or password incorrect")
 
     def test8_ID_not_correct_manager(self):
-        # Tests ID doesnt exists
+        """Tests ID doesnt exists"""
         if db.worker_dict:
             s = list(db.worker_dict.values())[0]
             if len(s.ID) == 1:
@@ -88,7 +88,7 @@ class GetPasswordTest(unittest.TestCase):
                                                                                                             "incorrect")
 
     def test8_ID_not_correct_worker(self):
-        # Tests ID doesnt exists
+        """Tests ID doesnt exists"""
         if db.worker_dict:
             s = list(db.worker_dict.values())[1]
             if len(s.ID) == 1:

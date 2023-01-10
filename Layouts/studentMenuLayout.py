@@ -6,6 +6,8 @@ from DataBase import db
 # to do : make rating not possible after student already rated item
 def rate(rating, item_name):
     """func to rate an item and update it in the database"""
+    if isinstance(rating, int):
+        return 'The rating is not an integer'
     for item in db.item_dict.values():
         if item_name == item.name:
             if item.rating == '':
@@ -15,7 +17,6 @@ def rate(rating, item_name):
             item.rating = str(
                 round((((float(item.rating) * (temp_item_num_raters - 1)) + rating) / temp_item_num_raters), 2))
             item.num_raters = str(temp_item_num_raters)
-
     db.updateItems()
 
 
