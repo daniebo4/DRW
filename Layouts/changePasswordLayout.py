@@ -39,6 +39,7 @@ def attempt_to_change(input_ID, input_current_password, input_new_password, inpu
 
 
 def open_change_password_window():
+    """build change password window"""
     change_password_layout = [[sg.Text("Change Password")],
                               [sg.Text("ID :", size=(15, 1)), sg.InputText('', size=(20, 1), key='input_ID')],
                               [sg.Text("Current Password :", size=(15, 1)),
