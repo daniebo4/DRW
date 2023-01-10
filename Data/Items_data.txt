@@ -1,5 +1,3 @@
-2:Camera:::Canon camera:0:0:0:available:2
-3:Camera:::Canon camera:0:0:0:available:2
 4:Brush:::Quality brush:0:0:0:available:2
 5:Brush:::Quality brush:0:0:0:available:2
 6:Brush:::Quality brush:0:0:0:available:2
