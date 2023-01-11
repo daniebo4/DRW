@@ -193,7 +193,7 @@ def add_worker():
                               sg.InputText('', size=(20, 1), key='input_secret_word')],
                              [sg.Text(size=(30, 1), key="Error")],
                              [sg.Submit(button_text="Add"),
-                              sg.Exit(pad=((90, 0), (0, 0)))]]
+                              sg.Exit(pad=((250, 0), (0, 0)))]]
 
     add_worker_window = sg.Window("Add New Worker", add_new_worker_layout, element_justification='c')
     # Window Layout Conditions,according to button clicked by user:
@@ -230,8 +230,7 @@ def edit_worker(chosen_worker_id):
         [sg.InputText('', size=(20, 1), key='<Secret_Word>')],
         [sg.Text(size=(10, 0), key="Error"), ],
         [sg.Button('Confirm', size=(10, 1)),
-         sg.Button('Exit', size=(10, 1)),
-         sg.Exit(pad=((50, 0), (50, 0)))]]
+         sg.Exit(pad=((150, 0), (0, 0)))]]
     edit_worker_window = sg.Window("Edit Worker", edit_worker_layout, element_justification='c')
     # Window Layout Conditions,according to button clicked by user:
     while True:
@@ -277,7 +276,7 @@ def remove_worker(chosen_worker_id):
             db.updateWorkers()
             remove_worker_window.close()
             break
-        if remove_worker_event == sg.WIN_CLOSED:
+        if remove_worker_event == sg.WIN_CLOSED or remove_worker_event == 'No':
             remove_worker_window.close()
             break
 
@@ -292,8 +291,7 @@ def edit_student(chosen_student_id):
         [sg.InputText('', size=(20, 1), key='<Secret_Word>')],
         [sg.Text(size=(10, 0), key="Error")],
         [sg.Button('Confirm', size=(10, 1)),
-         sg.Button('Exit', size=(10, 1)),
-         sg.Exit(pad=((50, 0), (50, 0)))]]
+         sg.Exit(pad=((50, 0), (00, 0)))]]
     edit_student_window = sg.Window("Edit Student", edit_student_layout, element_justification='c')
     # Window Layout Conditions,according to button clicked by user:
     while True:
@@ -318,7 +316,7 @@ def edit_student(chosen_student_id):
             else:
                 edit_student_window["Error"].update("No Input Data")
         if edit_student_event == sg.WIN_CLOSED or (
-                edit_student_event == "Confirm" and check_info) or edit_student_event == "Exit":
+                edit_student_event == "Confirm" and check_info) or edit_student_event == "Exit" or edit_student_event == sg.WIN_CLOSED:
             edit_student_window.close()
             break
 
@@ -385,7 +383,7 @@ def manage_workers():
                 else:
                     manage_workers_window["Error"].update("multiple Workers Selected !")
             else:  # warning if the user didn't select worker
-                manage_workers_window["Error"].update("No Worker Selected !")
+                manage_workers_window["Error"].update("No worker Selected !")
 
         if manage_workers_event == "Edit Worker":
             if manage_workers_values['-TABLE-']:

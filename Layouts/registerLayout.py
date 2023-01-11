@@ -35,7 +35,7 @@ def open_register_window():
                         sg.InputText('', size=(20, 1), key='input_secret_word')],
                        [sg.Text(size=(30, 1), key="Error")],
                        [sg.Submit(button_text="Register"),
-                        sg.Exit(pad=((90, 0), (0, 0)))]]
+                        sg.Exit(pad=((250, 0), (0, 0)))]]
 
     register_window = sg.Window("Register", register_layout, element_justification='c')
 

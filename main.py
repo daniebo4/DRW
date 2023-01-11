@@ -5,7 +5,7 @@ from DataBase import db
 
 
 def mainMenu():
-    # Main event loop
+    # Main Menu Window Layout:
     login_layout = [[sg.Text("Welcome to the design department\n inventory management system !")],
                     [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID', do_not_clear=False),
                      sg.Submit(button_text="Change password")],
@@ -20,6 +20,7 @@ def mainMenu():
     login_window = sg.Window("Inventory Management System ", login_layout, element_justification='c', finalize=True)
     login_window['input_ID'].bind("<Return>", "_Enter")
     login_window['input_password'].bind("<Return>", "_Enter")
+    # Window Layout Conditions,according to button clicked by user:
     while True:
         login_event, login_values = login_window.read()
 
