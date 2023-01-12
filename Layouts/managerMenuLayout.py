@@ -6,7 +6,7 @@ from Layouts import registerLayout
 
 # to do : complete this func , func is called in add_item func
 def add_item_check(input_name, input_quantity, input_description):
-    return True
+    return input_quantity > 0
 
 
 def add_item():
@@ -24,10 +24,11 @@ def add_item():
         [sg.InputText('', size=(20, 1), key='input_description')],
         [sg.Text('Loan period (Weeks):')],
         [sg.InputText('', size=(20, 1), key='input_time_period')],
-        [sg.Text(size=(10, 0), key="Error")],
+        [sg.Text(size=(20, 0), key="Error")],
+        [sg.Text(size=(10, 0), key="a")],
         [sg.Button('Add', size=(10, 1)),
          sg.Button('Exit', size=(10, 1))]]
-    add_items_window = sg.Window("Add Items", add_items_layout, element_justification='c', size=(250, 350))
+    add_items_window = sg.Window("Add Items", add_items_layout, element_justification='c', size=(320, 420))
     # Window Layout Conditions,according to button clicked by user:
     while True:
         add_item_check_res = False
@@ -45,20 +46,20 @@ def add_item():
                     input_ID = max([int(ID) for ID in db.item_dict.keys()]) + 1  # gets maximum ID in item list to
                     # generate new, not used item ID
 
-                while input_quantity > 0:
-                    db.addItem(Item(str(input_ID), input_name, "", "", input_description, '0', '0', '0', "available",
-                                    input_loan_time_period))
-                    input_ID += 1
-                    input_quantity -= 1
+                add_item_func(input_ID, input_name, input_quantity, input_description,input_loan_time_period)
             else:
-                add_items_window["Error"].update("One or more of the fields are invalid")
+                    add_items_window["Error"].update("One or more of the fields are invalid")
 
-        if add_items_event == sg.WIN_CLOSED or add_items_event == "Exit" or (
-                add_items_event == "Add" and add_item_check_res):
+        if add_items_event == sg.WIN_CLOSED or add_items_event == "Exit" or (add_items_event == "Add" and add_item_check_res):
             add_items_window.close()
             break
-
-
+def add_item_func(input_ID,input_name, input_quantity, input_description,input_loan_time_period):
+    while input_quantity > 0:
+        db.addItem(Item(str(input_ID), input_name, "", "", input_description, '0', '0', '0', "available",
+                        input_loan_time_period))
+        input_ID += 1
+        input_quantity -= 1
+    return "Item was successfully added to database :)"
 def open_backlog(input_event_personas='StudentsLog'):
     """
     Using this functionality the manager can view a log of logins into the system by different users
@@ -133,19 +134,7 @@ def edit_item(current_item):
 
         if edit_item_event == 'Confirm':
             if input_name != '' or input_description != '' or input_aq_date != '' or input_du_date != '':
-                if input_name == '':
-                    input_name = current_item.name
-                if input_description == '':
-                    input_description = current_item.description
-                if input_aq_date == '':
-                    input_aq_date = current_item.aq_date
-                if input_du_date == '':
-                    input_du_date = current_item.du_date
-                current_item.name = input_name
-                current_item.description = input_description
-                current_item.aq_date = input_aq_date
-                current_item.du_date = input_du_date
-                db.updateItems()
+                edit_item_func(current_item,input_name,input_description,input_aq_date,input_du_date)
                 edit_items_window.close()
                 break
             else:
@@ -154,6 +143,22 @@ def edit_item(current_item):
         if edit_item_event == sg.WIN_CLOSED or edit_item_event == "Exit":
             edit_items_window.close()
             break
+
+def edit_item_func(current_item,input_name,input_description,input_aq_date,input_du_date):
+    if input_name == '':
+        input_name = current_item.name
+    if input_description == '':
+        input_description = current_item.description
+    if input_aq_date == '':
+        input_aq_date = current_item.aq_date
+    if input_du_date == '':
+        input_du_date = current_item.du_date
+    current_item.name = input_name
+    current_item.description = input_description
+    current_item.aq_date = input_aq_date
+    current_item.du_date = input_du_date
+    db.updateItems()
+    return "Item was successfully edited, nice"
 
 
 def remove_item(chosen_item_id):
@@ -169,8 +174,7 @@ def remove_item(chosen_item_id):
         remove_item_event, remove_item_values = remove_item_window.read()
 
         if remove_item_event == 'Yes':
-            db.item_dict.pop(chosen_item_id)
-            db.updateItems()
+            remove_item_func(chosen_item_id)
             remove_item_window.close()
             break
 
@@ -178,6 +182,73 @@ def remove_item(chosen_item_id):
             remove_item_window.close()
             break
 
+def remove_item_func(chosen_item_id):
+    db.item_dict.pop(chosen_item_id)
+    db.updateItems()
+    return True
+
+def manage_workers():
+    """
+    Using this functionality the manager can View a list of all the workers in the system and add or remove workers
+    """
+    # Window Layout:
+    current_workers = db.getWorkers()
+    manage_workers_headings = ['Name', 'ID']
+    manage_workers_layout = [
+        [sg.Table(values=current_workers,
+                  headings=manage_workers_headings,
+                  auto_size_columns=False,
+                  display_row_numbers=False,
+                  justification='c',
+                  num_rows=10,
+                  key='-TABLE-',
+                  row_height=35,
+                  def_col_width=25,
+                  enable_events=True, )],
+        [sg.Text(size=(15, 1), key="Error")],
+        [sg.Button('Add New Worker', size=(15, 1)),
+         sg.Button('Remove Worker', size=(15, 1)),
+         sg.Button('Edit Worker', size=(15, 1)),
+         sg.Exit(pad=((165, 0), (0, 0)))]
+    ]
+    manage_workers_window = sg.Window("Manage Workers", manage_workers_layout)
+    # Window Layout Conditions,according to button clicked by user:
+    while True:
+        manage_workers_event, manage_workers_values = manage_workers_window.read()
+        if manage_workers_event == "Add New Worker":
+            if manage_workers_event == "Add New Worker":
+                add_worker()
+                manage_workers()
+
+        if manage_workers_event == "Remove Worker":
+            if manage_workers_values['-TABLE-']:
+                if len(manage_workers_values['-TABLE-']) == 1:
+                    chosen_worker_idx = manage_workers_values['-TABLE-'][0]
+                    chosen_worker_id = current_workers[chosen_worker_idx][1]
+                    remove_worker(chosen_worker_id)
+                    manage_workers_window.close()
+                    manage_workers()
+                else:
+                    manage_workers_window["Error"].update("multiple Workers Selected !")
+            else:  # notifies user it didn't select a worker to remove
+                manage_workers_window["Error"].update("No worker Selected !")
+
+        if manage_workers_event == "Edit Worker":
+            if manage_workers_values['-TABLE-']:
+                if len(manage_workers_values['-TABLE-']) == 1:
+                    chosen_worker_idx = manage_workers_values['-TABLE-'][0]
+                    chosen_worker_id = current_workers[chosen_worker_idx][1]
+                    edit_worker(chosen_worker_id)
+                    manage_workers_window.close()
+                    manage_workers()
+                else:
+                    manage_workers_window["Error"].update("multiple Workers Selected !")
+            else:  # warning if the user didn't select worker
+                manage_workers_window["Error"].update("No Worker Selected !")
+
+        elif manage_workers_event == "Exit" or manage_workers_event == sg.WIN_CLOSED:
+            manage_workers_window.close()
+            break
 
 def add_worker():
     """
@@ -210,7 +281,7 @@ def add_worker():
                 elif input_ID in db.student_dict.keys():
                     add_worker_window["Error"].update("ID is registered as student")
                 else:
-                    db.addWorker(Worker(str(input_ID), str(input_password), input_name, input_secret_word))
+                    add_worker_func(input_ID, input_password, input_name, input_secret_word)
                     add_worker_window.close()
                     break
             else:
@@ -218,6 +289,10 @@ def add_worker():
         if add_worker_event == sg.WIN_CLOSED or add_worker_event == "Exit":
             add_worker_window.close()
             break
+
+def add_worker_func(input_ID, input_password, input_name, input_secret_word):
+    db.addWorker(Worker(str(input_ID), str(input_password), input_name, input_secret_word))
+    return "Worker was successfully added to database XD"
 
 
 def edit_worker(chosen_worker_id):
@@ -239,25 +314,31 @@ def edit_worker(chosen_worker_id):
         Password = edit_worker_values['<Password>']
         Secret_Word = edit_worker_values['<Secret_Word>']
         if edit_worker_event == 'Confirm':
-            if Password != '' and Secret_Word != '':
-                db.worker_dict[chosen_worker_id].password = Password
-                db.worker_dict[chosen_worker_id].secret_word = Secret_Word
+            if (Password != '' and Secret_Word != '') or (Password != '' and Secret_Word == '') or \
+                    (Password == '' and Secret_Word != '') :
+                edit_worker_func(chosen_worker_id, Password, Secret_Word)
                 check_info = True
-                db.updateWorkers()
-            elif Password != '' and Secret_Word == '':
-                db.worker_dict[chosen_worker_id].password = Password
-                check_info = True
-                db.updateWorkers()
-            elif Password == '' and Secret_Word != '':
-                db.worker_dict[chosen_worker_id].secret_word = Secret_Word
-                check_info = True
-                db.updateWorkers()
             else:
                 edit_worker_window["Error"].update("No Input Data")
         if edit_worker_event == sg.WIN_CLOSED or (
                 edit_worker_event == "Confirm" and check_info) or edit_worker_event == "Exit":
             edit_worker_window.close()
             break
+
+def edit_worker_func(chosen_worker_id,Password,Secret_Word):
+    if Password != '' and Secret_Word != '':
+        db.worker_dict[chosen_worker_id].password = Password
+        db.worker_dict[chosen_worker_id].secret_word = Secret_Word
+        db.updateWorkers()
+        return "Worker was edited successfully,cheers!"
+    elif Password != '' and Secret_Word == '':
+        db.worker_dict[chosen_worker_id].password = Password
+        db.updateWorkers()
+        return "Worker was edited successfully,cheers!"
+    elif Password == '' and Secret_Word != '':
+        db.worker_dict[chosen_worker_id].secret_word = Secret_Word
+        db.updateWorkers()
+        return "Worker was edited successfully,cheers!"
 
 
 def remove_worker(chosen_worker_id):
@@ -272,17 +353,20 @@ def remove_worker(chosen_worker_id):
     while True:
         remove_worker_event, remove_worker_values = remove_worker_window.read()
         if remove_worker_event == 'Yes':
-            db.worker_dict.pop(chosen_worker_id)
-            db.updateWorkers()
+            remove_worker_func(chosen_worker_id)
             remove_worker_window.close()
             break
         if remove_worker_event == sg.WIN_CLOSED or remove_worker_event == 'No':
             remove_worker_window.close()
             break
 
+def remove_worker_func(chosen_worker_id):
+    db.worker_dict.pop(chosen_worker_id)
+    db.updateWorkers()
+    return "Worker was successfully removed from database"
 
 def edit_student(chosen_student_id):
-    """Function for edit a student's info"""
+    """Function for editing student information"""
     # Window Layout:
     edit_student_layout = [
         [sg.Text('New Password:')],
@@ -321,86 +405,8 @@ def edit_student(chosen_student_id):
             break
 
 
-def remove_student(chosen_student_id):
-    """Function for removing a students from the system"""
-    # Window Layout:
-    remove_student_layout = [
-        [sg.Text("Are you sure you want to remove this student?")],
-        [sg.Button(button_text="Yes"),
-         sg.Button(button_text="No"), ]]
-    remove_student_window = sg.Window("Remove Student", remove_student_layout, element_justification='c')
-    # Window Layout Conditions,according to button clicked by user:
-    while True:
-        remove_student_event, remove_student_values = remove_student_window.read()
-        if remove_student_event == 'Yes':
-            db.student_dict.pop(chosen_student_id)
-            db.updateStudents()
-        if remove_student_event == sg.WIN_CLOSED or remove_student_event == "Yes" or remove_student_event == "No":
-            remove_student_window.close()
-            break
 
 
-def manage_workers():
-    """
-    Using this functionality the manager can View a list of all the workers in the system and add or remove workers
-    """
-    # Window Layout:
-    current_workers = db.getWorkers()
-    manage_workers_headings = ['Name', 'ID']
-    manage_workers_layout = [
-        [sg.Table(values=current_workers,
-                  headings=manage_workers_headings,
-                  auto_size_columns=False,
-                  display_row_numbers=False,
-                  justification='c',
-                  num_rows=10,
-                  key='-TABLE-',
-                  row_height=35,
-                  def_col_width=25,
-                  enable_events=True, )],
-        [sg.Text(size=(15, 1), key="Error")],
-        [sg.Button('Add New Worker', size=(15, 1)),
-         sg.Button('Remove Worker', size=(15, 1)),
-         sg.Button('Edit Worker', size=(15, 1)),
-         sg.Exit(pad=((165, 0), (0, 0)))]
-    ]
-    manage_workers_window = sg.Window("Manage Workers", manage_workers_layout)
-    # Window Layout Conditions,according to button clicked by user:
-    while True:
-        manage_workers_event, manage_workers_values = manage_workers_window.read()
-        if manage_workers_event == "Add New Worker":
-            if manage_workers_event == "Add New Worker":
-                add_worker()
-
-        if manage_workers_event == "Remove Worker":
-            if manage_workers_values['-TABLE-']:
-                if len(manage_workers_values['-TABLE-']) == 1:
-                    chosen_worker_idx = manage_workers_values['-TABLE-'][0]
-                    chosen_worker_id = current_workers[chosen_worker_idx][1]
-                    remove_worker(chosen_worker_id)
-                    manage_workers_window.close()
-                    manage_workers()
-                else:
-                    manage_workers_window["Error"].update("multiple Workers Selected !")
-            else:  # warning if the user didn't select worker
-                manage_workers_window["Error"].update("No worker Selected !")
-
-        if manage_workers_event == "Edit Worker":
-            if manage_workers_values['-TABLE-']:
-                if len(manage_workers_values['-TABLE-']) == 1:
-                    chosen_worker_idx = manage_workers_values['-TABLE-'][0]
-                    chosen_worker_id = current_workers[chosen_worker_idx][1]
-                    edit_worker(chosen_worker_id)
-                    manage_workers_window.close()
-                    manage_workers()
-                else:
-                    manage_workers_window["Error"].update("multiple Workers Selected !")
-            else:  # warning if the user didn't select worker
-                manage_workers_window["Error"].update("No Worker Selected !")
-
-        elif manage_workers_event == "Exit" or manage_workers_event == sg.WIN_CLOSED:
-            manage_workers_window.close()
-            break
 
 
 def manage_students():
@@ -466,7 +472,27 @@ def manage_students():
         elif manage_students_event == "Exit" or manage_students_event == sg.WIN_CLOSED:
             manage_students_window.close()
             break
+def remove_student(chosen_student_id):
+    """Function for removing a students from the system"""
+    # Window Layout:
+    remove_student_layout = [
+        [sg.Text("Are you sure you want to remove this student?")],
+        [sg.Button(button_text="Yes"),
+         sg.Button(button_text="No"), ]]
+    remove_student_window = sg.Window("Remove Student", remove_student_layout, element_justification='c')
+    # Window Layout Conditions,according to button clicked by user:
+    while True:
+        remove_student_event, remove_student_values = remove_student_window.read()
+        if remove_student_event == 'Yes':
+            remove_student_func(chosen_student_id)
+        if remove_student_event == sg.WIN_CLOSED or remove_student_event == "Yes" or remove_student_event == "No":
+            remove_student_window.close()
+            break
 
+def remove_student_func(chosen_student_id):
+    db.student_dict.pop(chosen_student_id)
+    db.updateStudents()
+    return "Student was removed successfully from database"
 
 def open_manager_window():
     """The main manager window in the system,allows him the following:
