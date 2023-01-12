@@ -2,25 +2,29 @@ import PySimpleGUI as sg
 from Layouts import forgotPasswordLayout, changePasswordLayout, workerMenuLayout, studentMenuLayout, registerLayout, \
     managerMenuLayout
 from DataBase import db
+sg.set_options(font=("Arial Baltic", 16))
 
-sg.change_look_and_feel('DarkBlue')
+sg.change_look_and_feel('systemdefaultforreal')
 
 def mainMenu():
     # Main Menu Window Layout:
-    login_layout = [[sg.Image('logo.png')],
-                    [sg.Text("Welcome to the design department\n inventory management system !")],
+    frame = [[sg.Image('logo.png')],
+
                     [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID', do_not_clear=False),
                      sg.Submit(button_text="Change password")],
                     [sg.Text("Password :", size=(10, 1)),
                      sg.InputText('', size=(20, 1), key='input_password', password_char='●', do_not_clear=False),
                      sg.Submit(button_text=" Forgot password ")],
                     [sg.Text(size=(30, 1), key="Error")],
-                    [sg.Submit(button_text="Log in"),
+                    [sg.Submit(button_text="Log in",button_color=('Green on Lightgrey')),
                      sg.Submit(button_text="Register"),
-                     sg.Exit(pad=((315, 0), (0, 0)))]]
+                     sg.Exit(pad=((360, 0), (0, 0)),button_color=('Brown on Lightgrey'),size=(7,1))]]
+    login_layout = [[sg.Frame("", frame)]]
 
     login_window = sg.Window("Inventory Management System ", login_layout, element_justification='c', finalize=True,
-                             use_custom_titlebar=True,titlebar_icon='icon.png',)
+                             use_custom_titlebar=True,titlebar_icon='icon.png', use_ttk_buttons=True, border_depth=10, titlebar_background_color='Lightgrey', ttk_theme = 'clam'
+                             ,auto_size_buttons =True)
+    login_window.BorderDepth=50
     login_window['input_ID'].bind("<Return>", "_Enter")
     login_window['input_password'].bind("<Return>", "_Enter")
     # Window Layout Conditions,according to button clicked by user:

@@ -3,7 +3,7 @@ from DataBase import db
 from Personas import Item, Worker
 from Layouts import registerLayout
 
-
+sg.change_look_and_feel('systemdefaultforreal')
 # to do : complete this func , func is called in add_item func
 def add_item_check(input_name, input_quantity, input_description):
     return True
@@ -37,7 +37,10 @@ def open_backlog(input_event_personas='StudentsLog'):
                            [sg.Button('Students Log', size=(10, 1), key='students_log'),
                             sg.Button('Workers Log', size=(10, 1), key='workers_log'),
                             sg.Exit(pad=((380, 0), (0, 0)))]]
-    open_backlog_window = sg.Window("Backlog", open_backlog_layout, element_justification='c', size=(700, 470))
+    open_backlog_window = sg.Window("Backlog", open_backlog_layout, element_justification='c', size=(700, 470),
+                                    finalize=True,
+                                    use_custom_titlebar=True, titlebar_icon='icon.png', use_ttk_buttons=True,
+                                    border_depth=10, titlebar_background_color='Lightgrey', ttk_theme='clam')
     # Window Layout Conditions,according to button clicked by user:
     while True:
         open_backlog_event, open_backlog_values = open_backlog_window.read()
@@ -72,7 +75,10 @@ def add_item():
         [sg.Text(size=(10, 0), key="Error")],
         [sg.Button('Add', size=(10, 1)),
          sg.Button('Exit', size=(10, 1))]]
-    add_items_window = sg.Window("Add Items", add_items_layout, element_justification='c', size=(250, 350))
+    add_items_window = sg.Window("Add Items", add_items_layout, element_justification='c', size=(250, 350),
+                                 finalize=True,
+                                 use_custom_titlebar=True, titlebar_icon='icon.png', use_ttk_buttons=True,
+                                 border_depth=10, titlebar_background_color='Lightgrey', ttk_theme='clam')
     # Window Layout Conditions,according to button clicked by user:
     while True:
         add_item_check_res = False
@@ -122,7 +128,9 @@ def edit_item(current_item):
         [sg.Button('Confirm', size=(10, 1)),
          sg.Button('Exit', size=(10, 1)),
          sg.Exit(pad=((50, 0), (50, 0)))]]
-    edit_items_window = sg.Window("Edit Items", edit_items_layout, element_justification='c', size=(250, 450))
+    edit_items_window = sg.Window("Edit Items", edit_items_layout, element_justification='c', size=(250, 450),
+                                  use_custom_titlebar=True, titlebar_icon='icon.png', use_ttk_buttons=True,
+                                  border_depth=10, titlebar_background_color='Lightgrey', ttk_theme='clam')
     # Window Layout Conditions,according to button clicked by user:
     while True:
         edit_item_event, edit_item_values = edit_items_window.read()
@@ -163,7 +171,9 @@ def remove_item(chosen_item_id):
         [sg.Text("Are you sure you want to remove this item?")],
         [sg.Button(button_text="Yes"),
          sg.Button(button_text="No"), ]]
-    remove_item_window = sg.Window("Remove Item", remove_item_layout, element_justification='c')
+    remove_item_window = sg.Window("Remove Item", remove_item_layout, element_justification='c',
+                                   use_custom_titlebar=True, titlebar_icon='icon.png', use_ttk_buttons=True,
+                                   border_depth=10, titlebar_background_color='Lightgrey', ttk_theme='clam')
     # Window Layout Conditions,according to button clicked by user:
     while True:
         remove_item_event, remove_item_values = remove_item_window.read()
@@ -195,7 +205,9 @@ def add_worker():
                              [sg.Submit(button_text="Add"),
                               sg.Exit(pad=((250, 0), (0, 0)))]]
 
-    add_worker_window = sg.Window("Add New Worker", add_new_worker_layout, element_justification='c')
+    add_worker_window = sg.Window("Add New Worker", add_new_worker_layout, element_justification='c',
+                                  use_custom_titlebar=True, titlebar_icon='icon.png', use_ttk_buttons=True,
+                                  border_depth=10, titlebar_background_color='Lightgrey', ttk_theme='clam')
     # Window Layout Conditions,according to button clicked by user:
     while True:
         add_worker_event, add_worker_values = add_worker_window.read()
@@ -231,7 +243,9 @@ def edit_worker(chosen_worker_id):
         [sg.Text(size=(10, 0), key="Error"), ],
         [sg.Button('Confirm', size=(10, 1)),
          sg.Exit(pad=((150, 0), (0, 0)))]]
-    edit_worker_window = sg.Window("Edit Worker", edit_worker_layout, element_justification='c')
+    edit_worker_window = sg.Window("Edit Worker", edit_worker_layout, element_justification='c',
+                                   use_custom_titlebar=True, titlebar_icon='icon.png', use_ttk_buttons=True,
+                                   border_depth=10, titlebar_background_color='Lightgrey', ttk_theme='clam')
     # Window Layout Conditions,according to button clicked by user:
     while True:
         check_info = False
@@ -292,7 +306,9 @@ def edit_student(chosen_student_id):
         [sg.Text(size=(10, 0), key="Error")],
         [sg.Button('Confirm', size=(10, 1)),
          sg.Exit(pad=((50, 0), (00, 0)))]]
-    edit_student_window = sg.Window("Edit Student", edit_student_layout, element_justification='c')
+    edit_student_window = sg.Window("Edit Student", edit_student_layout, element_justification='c',
+                                    use_custom_titlebar=True, titlebar_icon='icon.png', use_ttk_buttons=True,
+                                    border_depth=10, titlebar_background_color='Lightgrey', ttk_theme='clam')
     # Window Layout Conditions,according to button clicked by user:
     while True:
         check_info = False
@@ -328,7 +344,9 @@ def remove_student(chosen_student_id):
         [sg.Text("Are you sure you want to remove this student?")],
         [sg.Button(button_text="Yes"),
          sg.Button(button_text="No"), ]]
-    remove_student_window = sg.Window("Remove Student", remove_student_layout, element_justification='c')
+    remove_student_window = sg.Window("Remove Student", remove_student_layout, element_justification='c',
+                                      use_custom_titlebar=True, titlebar_icon='icon.png', use_ttk_buttons=True,
+                                      border_depth=10, titlebar_background_color='Lightgrey', ttk_theme='clam')
     # Window Layout Conditions,according to button clicked by user:
     while True:
         remove_student_event, remove_student_values = remove_student_window.read()
@@ -427,7 +445,9 @@ def manage_students():
          sg.Button('Edit Student', size=(15, 1)),
          sg.Exit(pad=((165, 0), (0, 0)))]
     ]
-    manage_students_window = sg.Window("Manage Students", manage_students_layout)
+    manage_students_window = sg.Window("Manage Students", manage_students_layout, use_custom_titlebar=True,
+                                       titlebar_icon='icon.png', use_ttk_buttons=True,
+                                       border_depth=10, titlebar_background_color='Lightgrey', ttk_theme='clam')
     # Window Layout Conditions,according to button clicked by user:
     while True:
         manage_students_event, manage_students_values = manage_students_window.read()
@@ -499,7 +519,9 @@ def open_manager_window():
          sg.Exit(pad=((0, 0), (0, 0)))]
     ]
 
-    manager_window = sg.Window("manager Menu", manager_menu_layout, element_justification='c')
+    manager_window = sg.Window("manager Menu", manager_menu_layout, element_justification='c', use_custom_titlebar=True,
+                               titlebar_icon='icon.png', use_ttk_buttons=True,
+                               border_depth=10, titlebar_background_color='Lightgrey', ttk_theme='clam')
     # Window Layout Conditions,according to button clicked by user:
     while True:
         manager_menu_event, manager_menu_values = manager_window.read()
