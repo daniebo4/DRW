@@ -5,8 +5,10 @@ from DataBase import db
 
 
 def mainMenu():
+    sg.change_look_and_feel('DarkBlue')
     # Main Menu Window Layout:
-    login_layout = [[sg.Text("Welcome to the design department\n inventory management system !")],
+    login_layout = [[sg.Image('logo.png')],
+                    [sg.Text("Welcome to the design department\n inventory management system !")],
                     [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID', do_not_clear=False),
                      sg.Submit(button_text="Change password")],
                     [sg.Text("Password :", size=(10, 1)),

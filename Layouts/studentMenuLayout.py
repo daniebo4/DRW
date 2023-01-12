@@ -154,7 +154,7 @@ def open_student_window(current_student):
                   justification='c',
                   num_rows=10,
                   key='-TABLE-',
-                  row_height=35, enable_events=True)],
+                  row_height=35, enable_events=True,)],
         [sg.Button('Request Item', size=(15, 1)),
          sg.Button('My Items', size=(15, 1)),
          sg.Button('Rate', size=(15, 1)),

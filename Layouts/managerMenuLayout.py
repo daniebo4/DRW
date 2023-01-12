@@ -9,6 +9,51 @@ def add_item_check(input_name, input_quantity, input_description):
     return True
 
 
+def open_backlog(input_event_personas='StudentsLog'):
+    """
+    Using this functionality the manager can view a log of logins into the system by different users
+    """
+    # Window Layout:
+    open_backlog_headings = ['ID', 'Name', 'Login dates:']
+    backlog_list = None
+    if input_event_personas == "StudentsLog":
+        backlog_list = db.student_backlog
+
+    elif input_event_personas == "WorkersLog":
+        backlog_list = db.worker_backlog
+
+    open_backlog_values = backlog_list
+    open_backlog_layout = [[sg.Table(values=open_backlog_values,
+                                     headings=open_backlog_headings,
+                                     auto_size_columns=False,
+                                     display_row_numbers=False,
+                                     justification='c',
+                                     num_rows=10,
+                                     key='-TABLE-',
+                                     row_height=35,
+                                     col_widths=[15, 15, 25],
+                                     enable_events=True, )],
+                           [sg.Text(size=(30, 1), key="Error")],
+                           [sg.Button('Students Log', size=(10, 1), key='students_log'),
+                            sg.Button('Workers Log', size=(10, 1), key='workers_log'),
+                            sg.Exit(pad=((380, 0), (0, 0)))]]
+    open_backlog_window = sg.Window("Backlog", open_backlog_layout, element_justification='c', size=(700, 470))
+    # Window Layout Conditions,according to button clicked by user:
+    while True:
+        open_backlog_event, open_backlog_values = open_backlog_window.read()
+        if open_backlog_event == 'students_log':
+            open_backlog_window.close()
+            open_backlog('StudentsLog')
+
+        elif open_backlog_event == 'workers_log':
+            open_backlog_window.close()
+            open_backlog("WorkersLog")
+
+        if open_backlog_event == sg.WIN_CLOSED or open_backlog_event == "Exit":
+            open_backlog_window.close()
+            break
+
+
 def add_item():
     """
     Using this functionality the manager can add items to the system,with the following info:Name,Quantity,
@@ -56,51 +101,6 @@ def add_item():
         if add_items_event == sg.WIN_CLOSED or add_items_event == "Exit" or (
                 add_items_event == "Add" and add_item_check_res):
             add_items_window.close()
-            break
-
-
-def open_backlog(input_event_personas='StudentsLog'):
-    """
-    Using this functionality the manager can view a log of logins into the system by different users
-    """
-    # Window Layout:
-    open_backlog_headings = ['ID', 'Name', 'Login dates:']
-    backlog_list = None
-    if input_event_personas == "StudentsLog":
-        backlog_list = db.student_backlog
-
-    elif input_event_personas == "WorkersLog":
-        backlog_list = db.worker_backlog
-
-    open_backlog_values = backlog_list
-    open_backlog_layout = [[sg.Table(values=open_backlog_values,
-                                     headings=open_backlog_headings,
-                                     auto_size_columns=False,
-                                     display_row_numbers=False,
-                                     justification='c',
-                                     num_rows=10,
-                                     key='-TABLE-',
-                                     row_height=35,
-                                     col_widths=[15, 15, 25],
-                                     enable_events=True, )],
-                           [sg.Text(size=(30, 1), key="Error")],
-                           [sg.Button('Students Log', size=(10, 1), key='students_log'),
-                            sg.Button('Workers Log', size=(10, 1), key='workers_log'),
-                            sg.Exit(pad=((380, 0), (0, 0)))]]
-    open_backlog_window = sg.Window("Backlog", open_backlog_layout, element_justification='c', size=(700, 470))
-    # Window Layout Conditions,according to button clicked by user:
-    while True:
-        open_backlog_event, open_backlog_values = open_backlog_window.read()
-        if open_backlog_event == 'students_log':
-            open_backlog_window.close()
-            open_backlog('StudentsLog')
-
-        elif open_backlog_event == 'workers_log':
-            open_backlog_window.close()
-            open_backlog("WorkersLog")
-
-        if open_backlog_event == sg.WIN_CLOSED or open_backlog_event == "Exit":
-            open_backlog_window.close()
             break
 
 
@@ -157,7 +157,7 @@ def edit_item(current_item):
 
 
 def remove_item(chosen_item_id):
-    """This function allows the manager to remove items from the system"""
+    """This function allows the manager to ems from the system"""
     # Window Layout:
     remove_item_layout = [
         [sg.Text("Are you sure you want to remove this item?")],
