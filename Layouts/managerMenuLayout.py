@@ -119,11 +119,11 @@ def edit_item(current_item):
         [sg.InputText('', size=(20, 1), key='aq_Date')],
         [sg.Text('Due Date:')],
         [sg.InputText('', size=(20, 1), key='du_Date')],
-        [sg.Text(size=(10, 0), key="Error"), ],
+        [sg.Text(size=(15, 0), key="Error"), ],
         [sg.Button('Confirm', size=(10, 1)),
          sg.Button('Exit', size=(10, 1)),
          sg.Exit(pad=((50, 0), (50, 0)))]]
-    edit_items_window = sg.Window("Edit Items", edit_items_layout, element_justification='c', size=(250, 450))
+    edit_items_window = sg.Window("Edit Items", edit_items_layout, element_justification='c', size=(250, 350))
     # Window Layout Conditions,according to button clicked by user:
     while True:
         edit_item_event, edit_item_values = edit_items_window.read()
