@@ -1,8 +1,8 @@
-4:Brush:::Quality brush:0:0:0:available:2
-5:Brush:::Quality brush:0:0:0:available:2
-6:Brush:::Quality brush:0:0:0:available:2
-7:Brush:::Quality brush:0:0:0:available:2
-8:Brush:::Quality brush:0:0:0:available:2
-9:Whiteboard:::A very white board:0:0:0:available:3
-10:Whiteboard:::A very white board:0:0:0:available:3
-11:Whiteboard:::A very white board:0:0:0:available:3
+4:Brush:::Quality brush:4.67:3.0:0:available:2
+5:Brush:::Quality brush:4.67:3.0:0:available:2
+6:Brush:::Quality brush:4.67:3.0:0:available:2
+7:Brush:::Quality brush:4.67:3.0:0:available:2
+8:Brush:::Quality brush:4.67:3.0:0:available:2
+9:Whiteboard:2023-01-12:2023-02-02:A very white board:4.0:2.0:1:loan accepted:3
+10:Whiteboard:::A very white board:4.0:2.0:0:available:3
+11:Whiteboard:::A very white board:4.0:2.0:0:available:3

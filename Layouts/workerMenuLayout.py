@@ -2,6 +2,8 @@ import PySimpleGUI as sg
 from DataBase import db
 from Personas import Item
 
+sg.change_look_and_feel('systemdefaultforreal')
+
 
 def confirm_request_item(user_selection, worker_requested_items):
     """This is a function that updates the data of an item owner to be the student's ID """
@@ -25,7 +27,7 @@ def open_requests_window(current_worker):
     # make function work with multiple items
     requested_items_headings = ['ID', 'Name', 'Description', 'Rating', 'Status', "Student's ID", "Student's Name"]
     worker_requested_items = db.get_loan_requested_items()
-    loan_items_layout = [
+    frame = [
         [sg.Table(values=worker_requested_items,
                   headings=requested_items_headings,
                   max_col_width=25,
@@ -40,8 +42,12 @@ def open_requests_window(current_worker):
          sg.Text(size=(15, 1), key="Error"),
          sg.Exit(pad=((125, 0), (0, 0)))]
     ]
+    loan_items_layout = [[sg.Frame("", frame)]]
+    requested_items_window = sg.Window("Requested Items", loan_items_layout, finalize=True,
+                                       use_custom_titlebar=True, titlebar_icon='icon.png', use_ttk_buttons=True,
+                                       border_depth=10, titlebar_background_color='Lightgrey', ttk_theme='clam',
+                                       )
 
-    requested_items_window = sg.Window("Requested Items", loan_items_layout)
     while True:
         requested_items_event, requested_items_values = requested_items_window.read()
         if requested_items_event == 'Accept':
@@ -66,7 +72,7 @@ def add_item_check(input_name, input_quantity, input_description):
 
 def open_add_window(current_worker):
     """This window is the way that a worker can add a new item to a list with entering its Name/Description """
-    add_items_layout = [
+    frame = [
         [sg.Text('Item Name')],
         [sg.InputText('', size=(20, 1), key='input_name')],
         [sg.Text('Item Quantity')],
@@ -78,7 +84,10 @@ def open_add_window(current_worker):
         [sg.Text(size=(10, 0), key="Error")],
         [sg.Button('Add', size=(10, 1)),
          sg.Button('Exit', size=(10, 1))]]
-    add_items_window = sg.Window("Add Items", add_items_layout, element_justification='c', size=(200, 300))
+    add_items_layout = [[sg.Frame("", frame)]]
+    add_items_window = sg.Window("Add Items", add_items_layout, element_justification='c', size=(200, 300),
+                                 use_custom_titlebar=True, titlebar_icon='icon.png', use_ttk_buttons=True,
+                                 border_depth=10, titlebar_background_color='Lightgrey', ttk_theme='clam')
     while True:
         add_item_check_res = False
         add_items_event, add_items_values = add_items_window.read()
@@ -110,7 +119,7 @@ def open_add_window(current_worker):
 
 def open_edit_window(current_worker):
     """This window gives access to a worker to edit an items Name/Quantity/Description """
-    edit_items_layout = [
+    frame = [
         [sg.Text('Item Name')],
         [sg.InputText('', size=(20, 1), key='<item_name>')],
         [sg.Text('Item Quantity')],
@@ -125,7 +134,10 @@ def open_edit_window(current_worker):
         [sg.Button('Confirm', size=(10, 1)),
          sg.Button('Exit', size=(10, 1)),
          sg.Exit(pad=((50, 0), (50, 0)))]]
-    edit_items_layout_window = sg.Window("Edit Items", edit_items_layout, element_justification='c', size=(200, 350))
+    edit_items_layout = [[sg.Frame("", frame)]]
+    edit_items_layout_window = sg.Window("Edit Items", edit_items_layout, element_justification='c', size=(200, 350),
+                                         use_custom_titlebar=True, titlebar_icon='icon.png', use_ttk_buttons=True,
+                                         border_depth=10, titlebar_background_color='Lightgrey', ttk_theme='clam')
     while True:
         add_items_layout_event, edit_items_layout_values = edit_items_layout_window.read()
         if add_items_layout_event == sg.WIN_CLOSED or add_items_layout_event == "Exit":
@@ -154,9 +166,9 @@ def confirm_return_item(user_selection, worker_loaned_items):
 
 def open_returns_window(current_worker):
     """A window to show the worker what items have been requested to return by all the students"""
-    loan_items_headings = ['ID', 'Name', 'Loan Date', 'Due Date', 'Description', 'Rating', 'status']
+    loan_items_headings = ['ID', 'Name', 'Loan Date', 'Due Date', 'Description', 'Rating ', 'status']
     worker_loaned_items = db.get_return_requested_items()
-    loan_items_layout = [
+    frame = [
         [sg.Table(values=worker_loaned_items,
                   headings=loan_items_headings,
                   max_col_width=25,
@@ -166,13 +178,16 @@ def open_returns_window(current_worker):
                   num_rows=10,
                   key='-TABLE-',
                   row_height=35,
-                  enable_events=True, )],
+                  enable_events=True,)],
         [sg.Button('Accept', size=(15, 1)),
          sg.Text(size=(15, 1), key="Error"),
          sg.Exit(pad=((300, 0), (0, 0)))]
     ]
+    loan_items_layout = [[sg.Frame("", frame)]]
 
-    loan_items_window = sg.Window("Returned Items", loan_items_layout)
+    loan_items_window = sg.Window("Returned Items", loan_items_layout, use_custom_titlebar=True,
+                                  titlebar_icon='icon.png', use_ttk_buttons=True, border_depth=10,
+                                  titlebar_background_color='Lightgrey', ttk_theme='clam')
     while True:
         loan_items_event, loan_items_values = loan_items_window.read()
         if loan_items_event == 'Accept':  # check if worker want to accept the request return items
@@ -197,25 +212,29 @@ def open_worker_window(current_worker):
     requests - opens a window to manage all the request mad by students for items
     returns - opens a window to manage the returns of all students
     """
-    current_inventory_headings = ['Item', 'Quantity', 'Loan Period (weeks)', 'Rating', 'Description']
+    current_inventory_headings = ['Item', 'Quantity', 'Loan Period (weeks)', 'Rating ', 'Description']
     current_inventory = db.getAvailableItemTable_forMenu()
-    worker_menu_layout = [
+    frame = [
         [sg.Table(values=current_inventory,
                   headings=current_inventory_headings,
-                  max_col_width=35,
+                  max_col_width=80,
                   auto_size_columns=True,
                   display_row_numbers=False,
                   justification='c',
                   num_rows=10,
                   key='-TABLE-',
-                  row_height=35, enable_events=True)],
+                  row_height=35,
+                  enable_events=True)],
         [sg.Text(size=(10, 0), key="Error"), ],
         [sg.Button('Requests', size=(15, 1)),
          sg.Button('Returns', size=(15, 1)),
          sg.Exit(pad=((0, 0), (0, 0)))]
     ]
+    worker_menu_layout = [[sg.Frame("",frame)]]
 
-    worker_menu_window = sg.Window("Worker Menu", worker_menu_layout, element_justification='c')
+    worker_menu_window = sg.Window("Worker Menu", worker_menu_layout, element_justification='c',
+                                   use_custom_titlebar=True, titlebar_icon='icon.png', use_ttk_buttons=True,
+                                   border_depth=10, titlebar_background_color='Lightgrey', ttk_theme='clam')
     while True:
         worker_menu_event, worker_menu_values = worker_menu_window.read()
         worker_menu_window["Error"].update("")

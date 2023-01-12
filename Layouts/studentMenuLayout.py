@@ -2,6 +2,8 @@ import datetime
 import PySimpleGUI as sg
 from DataBase import db
 
+sg.change_look_and_feel('systemdefaultforreal')
+
 
 # to do : make rating not possible after student already rated item
 def rate(rating, item_name):
@@ -23,12 +25,15 @@ def rate(rating, item_name):
 
 def open_rate_window(item_name):
     """func to create rating window and mange it"""
-    rate_layout = [[sg.Text("Rate Item")],
+    frame = [[sg.Text("Rate Item")],
                    [sg.Button('1', size=(4, 1)), sg.Button('2', size=(4, 1)), sg.Button('3', size=(4, 1)),
                     sg.Button('4', size=(4, 1)), sg.Button('5', size=(4, 1))],
                    ]
+    rate_layout = [[sg.Frame("", frame)]]
 
-    rate_window = sg.Window("Rate Menu", rate_layout, element_justification='c')
+    rate_window = sg.Window("Rate Menu", rate_layout, element_justification='c', use_custom_titlebar=True,
+                            titlebar_icon='icon.png', use_ttk_buttons=True, border_depth=10,
+                            titlebar_background_color='Lightgrey', ttk_theme='clam')
     while True:
         rate_event, rate_values = rate_window.read()
 
@@ -65,9 +70,9 @@ def return_item(user_selection, student_loaned_items):
 
 def open_my_items_window(current_student):
     """func to create and manage loaned item window"""
-    my_items_headings = ['ID', 'Name', 'Loan Date', 'Due Date', 'Description', 'Rating', 'status']
+    my_items_headings = ['ID ', 'Name', 'Loan Date', 'Due Date', 'Description', 'Rating ', 'status']
     student_loaned_items = db.get_students_loaned_items(current_student)
-    my_items_layout = [
+    frame = [
         [sg.Table(values=student_loaned_items,
                   headings=my_items_headings,
                   max_col_width=25,
@@ -78,12 +83,15 @@ def open_my_items_window(current_student):
                   key='-TABLE-',
                   row_height=35,
                   enable_events=True, )],
-        [sg.Button('Return', size=(15, 1)),
+        [sg.Button('Return', size=(7, 1)),
          sg.Text(size=(15, 1), key="Error"),
-         sg.Exit(pad=((300, 0), (0, 0)))]
+         sg.Exit(pad=((550, 0), (0, 0)),button_color=('Brown on Lightgrey'))]
     ]
+    my_items_layout = [[sg.Frame("", frame)]]
 
-    my_items_window = sg.Window("My Items", my_items_layout)
+    my_items_window = sg.Window("My Items", my_items_layout, use_custom_titlebar=True, titlebar_icon='icon.png',
+                                use_ttk_buttons=True, border_depth=10, titlebar_background_color='Lightgrey',
+                                ttk_theme='clam')
     while True:
         my_items_event, my_items_values = my_items_window.read()
         if my_items_event == 'Return':  # check if student want to return items
@@ -118,15 +126,19 @@ def request_item(current_student, item_id):
 
 def open_request_item_window(current_student, item_id):
     """create and manage request to loan item window"""
-    request_item_layout = [
+    frame = [
         [sg.Text("Are you sure you want to loan ?")],
         [sg.Text(f"The {db.item_dict[item_id].name} wil be due to return by "
                  f"{datetime.date.today() + datetime.timedelta(weeks=int(db.item_dict[item_id].loan_period))}")],
-        [sg.Button('Yes'),
-         sg.Button('No')]
+        [sg.Button('Yes',button_color=('green on Lightgrey')),
+         sg.Button('No',button_color=('brown on Lightgrey'))]
 
     ]
-    request_item_window = sg.Window("Request Item", request_item_layout, element_justification='c')
+    request_item_layout = [[sg.Frame("", frame)]]
+    request_item_window = sg.Window("Request Item", request_item_layout, element_justification='c',
+                                    use_custom_titlebar=True,
+                                    titlebar_icon='icon.png', use_ttk_buttons=True, border_depth=10,
+                                    titlebar_background_color='Lightgrey', ttk_theme='clam')
 
     while True:
         # check if the user is sure if he wants to loan the item was chosen
@@ -143,9 +155,9 @@ def open_request_item_window(current_student, item_id):
 
 def open_student_window(current_student):
     """func to create and manage the menu of the persona user type student"""
-    current_inventory_headings = ['Item', 'Quantity', 'Loan Period (weeks)', 'Rating', 'Description']
+    current_inventory_headings = ['Item', 'Quantity', 'Loan Period (weeks)', 'Rating ', 'Description']
     current_inventory = db.getAvailableItemTable_forMenu()
-    student_menu_layout = [
+    frame = [
         [sg.Table(values=current_inventory,
                   headings=current_inventory_headings,
                   max_col_width=35,
@@ -154,15 +166,17 @@ def open_student_window(current_student):
                   justification='c',
                   num_rows=10,
                   key='-TABLE-',
-                  row_height=35, enable_events=True,)],
+                  row_height=35, enable_events=True, )],
+        [sg.Text(size=(15, 1), key="Error")],
         [sg.Button('Request Item', size=(15, 1)),
          sg.Button('My Items', size=(15, 1)),
          sg.Button('Rate', size=(15, 1)),
-         sg.Text(size=(30, 1), key="Error"),
-         sg.Exit(pad=((0, 0), (0, 0)))]
+         sg.Exit(pad=((93, 0), (0, 0)),button_color=('Brown on Lightgrey'))]
     ]
-
-    student_menu_window = sg.Window("Student Menu", student_menu_layout, element_justification='c')
+    student_menu_layout = [[sg.Frame("", frame)]]
+    student_menu_window = sg.Window("Student Menu", student_menu_layout, element_justification='c', finalize=True,
+                                    use_custom_titlebar=True, titlebar_icon='icon.png', use_ttk_buttons=True,
+                                    border_depth=20, titlebar_background_color='Lightgrey', ttk_theme='clam')
     while True:
         student_menu_event, student_menu_values = student_menu_window.read()
         student_menu_window["Error"].update("")
@@ -193,7 +207,7 @@ def open_student_window(current_student):
             # check if the user choose item before pressing on rate button
             if len(student_menu_values['-TABLE-']) == 1:
                 chosen_item_idx = student_menu_values['-TABLE-'][0]
-                chosen_item_name = current_inventory[chosen_item_idx][1]
+                chosen_item_name = current_inventory[chosen_item_idx][0]
                 open_rate_window(chosen_item_name)
                 student_menu_window.close()
                 open_student_window(current_student)
