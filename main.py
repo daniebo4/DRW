@@ -3,9 +3,9 @@ from Layouts import forgotPasswordLayout, changePasswordLayout, workerMenuLayout
     managerMenuLayout
 from DataBase import db
 
+sg.change_look_and_feel('DarkBlue')
 
 def mainMenu():
-    sg.change_look_and_feel('DarkBlue')
     # Main Menu Window Layout:
     login_layout = [[sg.Image('logo.png')],
                     [sg.Text("Welcome to the design department\n inventory management system !")],
@@ -19,7 +19,8 @@ def mainMenu():
                      sg.Submit(button_text="Register"),
                      sg.Exit(pad=((315, 0), (0, 0)))]]
 
-    login_window = sg.Window("Inventory Management System ", login_layout, element_justification='c', finalize=True)
+    login_window = sg.Window("Inventory Management System ", login_layout, element_justification='c', finalize=True,
+                             use_custom_titlebar=True,titlebar_icon='icon.png',)
     login_window['input_ID'].bind("<Return>", "_Enter")
     login_window['input_password'].bind("<Return>", "_Enter")
     # Window Layout Conditions,according to button clicked by user:
