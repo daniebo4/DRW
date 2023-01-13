@@ -2,7 +2,7 @@ import PySimpleGUI as sg
 from DataBase import db
 from Personas import Item
 
-sg.change_look_and_feel('systemdefaultforreal')
+sg.change_look_and_feel('SystemDefaultForReal')
 
 
 def confirm_request_item(user_selection, worker_requested_items):
@@ -25,7 +25,7 @@ def open_requests_window(current_worker):
     """This is a window that opens when a manager wants to handle the requests
     of items that student requested"""
     # make function work with multiple items
-    requested_items_headings = ['ID', 'Name', 'Description', 'Rating', 'Status', "Student's ID", "Student's Name"]
+    requested_items_headings = ['ID ', 'Name ', 'Description', 'Rating ', 'Status', "Student's ID", "Student's Name"]
     worker_requested_items = db.get_loan_requested_items()
     frame = [
         [sg.Table(values=worker_requested_items,
@@ -38,13 +38,13 @@ def open_requests_window(current_worker):
                   key='-TABLE-',
                   row_height=35,
                   enable_events=True, )],
-        [sg.Button('Accept', size=(15, 1)),
+        [sg.Button('Accept', size=(15, 1), button_color=('Green on Lightgrey')),
          sg.Text(size=(15, 1), key="Error"),
-         sg.Exit(pad=((125, 0), (0, 0)))]
+         sg.Exit(pad=((240, 0), (0, 0)),size=(7,1), button_color=('Brown on Lightgrey'))]
     ]
     loan_items_layout = [[sg.Frame("", frame)]]
     requested_items_window = sg.Window("Requested Items", loan_items_layout, finalize=True,
-                                       use_custom_titlebar=True, titlebar_icon='icon.png', use_ttk_buttons=True,
+                                       use_custom_titlebar=False, icon='favicon.ico', use_ttk_buttons=True,
                                        border_depth=10, titlebar_background_color='Lightgrey', ttk_theme='clam',
                                        )
 
@@ -86,7 +86,7 @@ def open_add_window(current_worker):
          sg.Button('Exit', size=(10, 1))]]
     add_items_layout = [[sg.Frame("", frame)]]
     add_items_window = sg.Window("Add Items", add_items_layout, element_justification='c', size=(200, 300),
-                                 use_custom_titlebar=True, titlebar_icon='icon.png', use_ttk_buttons=True,
+                                 use_custom_titlebar=False, icon='favicon.ico', use_ttk_buttons=True,
                                  border_depth=10, titlebar_background_color='Lightgrey', ttk_theme='clam')
     while True:
         add_item_check_res = False
@@ -132,11 +132,11 @@ def open_edit_window(current_worker):
         [sg.InputText('', size=(20, 1), key='<item_Acquired>>')],
         [sg.Text(size=(10, 0), key="Error"), ],
         [sg.Button('Confirm', size=(10, 1)),
-         sg.Button('Exit', size=(10, 1)),
-         sg.Exit(pad=((50, 0), (50, 0)))]]
+         sg.Button('Exit', size=(10, 1), button_color=('Brown on Lightgrey')),
+         sg.Exit(pad=((50, 0), (50, 0)), button_color=('Brown on Lightgrey'))]]
     edit_items_layout = [[sg.Frame("", frame)]]
     edit_items_layout_window = sg.Window("Edit Items", edit_items_layout, element_justification='c', size=(200, 350),
-                                         use_custom_titlebar=True, titlebar_icon='icon.png', use_ttk_buttons=True,
+                                         use_custom_titlebar=False, icon='favicon.ico', use_ttk_buttons=True,
                                          border_depth=10, titlebar_background_color='Lightgrey', ttk_theme='clam')
     while True:
         add_items_layout_event, edit_items_layout_values = edit_items_layout_window.read()
@@ -166,7 +166,7 @@ def confirm_return_item(user_selection, worker_loaned_items):
 
 def open_returns_window(current_worker):
     """A window to show the worker what items have been requested to return by all the students"""
-    loan_items_headings = ['ID', 'Name', 'Loan Date', 'Due Date', 'Description', 'Rating ', 'status']
+    loan_items_headings = ['ID ', 'Name ', 'Loan Date', 'Due Date', 'Description', 'Rating ', 'status']
     worker_loaned_items = db.get_return_requested_items()
     frame = [
         [sg.Table(values=worker_loaned_items,
@@ -179,14 +179,14 @@ def open_returns_window(current_worker):
                   key='-TABLE-',
                   row_height=35,
                   enable_events=True,)],
-        [sg.Button('Accept', size=(15, 1)),
+        [sg.Button('Accept', size=(15, 1), button_color=('Green on Lightgrey')),
          sg.Text(size=(15, 1), key="Error"),
-         sg.Exit(pad=((300, 0), (0, 0)))]
+         sg.Exit(pad=((135, 0), (0, 0)),size=(7,1), button_color=('Brown on Lightgrey'))]
     ]
     loan_items_layout = [[sg.Frame("", frame)]]
 
-    loan_items_window = sg.Window("Returned Items", loan_items_layout, use_custom_titlebar=True,
-                                  titlebar_icon='icon.png', use_ttk_buttons=True, border_depth=10,
+    loan_items_window = sg.Window("Returned Items", loan_items_layout, use_custom_titlebar=False,
+                                  icon='favicon.ico', use_ttk_buttons=True, border_depth=10,
                                   titlebar_background_color='Lightgrey', ttk_theme='clam')
     while True:
         loan_items_event, loan_items_values = loan_items_window.read()
@@ -228,12 +228,12 @@ def open_worker_window(current_worker):
         [sg.Text(size=(10, 0), key="Error"), ],
         [sg.Button('Requests', size=(15, 1)),
          sg.Button('Returns', size=(15, 1)),
-         sg.Exit(pad=((0, 0), (0, 0)))]
+         sg.Exit(pad=((315, 0), (0, 0)),size=(7,1), button_color=('Brown on Lightgrey'))]
     ]
     worker_menu_layout = [[sg.Frame("",frame)]]
 
     worker_menu_window = sg.Window("Worker Menu", worker_menu_layout, element_justification='c',
-                                   use_custom_titlebar=True, titlebar_icon='icon.png', use_ttk_buttons=True,
+                                   use_custom_titlebar=False, icon='favicon.ico', use_ttk_buttons=True,
                                    border_depth=10, titlebar_background_color='Lightgrey', ttk_theme='clam')
     while True:
         worker_menu_event, worker_menu_values = worker_menu_window.read()

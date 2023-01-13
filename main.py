@@ -27,7 +27,7 @@ def mainMenu():
     login_window = sg.Window("Inventory Management System ", login_layout, element_justification='c', finalize=True
                              ,icon='favicon.ico', use_ttk_buttons=True, border_depth=10,
                              titlebar_background_color='Lightgrey', ttk_theme='clam'
-                             , auto_size_buttons=True,no_titlebar=False)
+                             , auto_size_buttons=True)
     login_window.BorderDepth = 50
     login_window['input_ID'].bind("<Return>", "_Enter")
     login_window['input_password'].bind("<Return>", "_Enter")

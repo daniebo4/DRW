@@ -31,8 +31,8 @@ def open_rate_window(item_name):
                    ]
     rate_layout = [[sg.Frame("", frame)]]
 
-    rate_window = sg.Window("Rate Menu", rate_layout, element_justification='c', use_custom_titlebar=True,
-                            titlebar_icon='icon.png', use_ttk_buttons=True, border_depth=10,
+    rate_window = sg.Window("Rate Menu", rate_layout, element_justification='c', use_custom_titlebar=False,
+                            icon='favicon.ico', use_ttk_buttons=True, border_depth=10,
                             titlebar_background_color='Lightgrey', ttk_theme='clam')
     while True:
         rate_event, rate_values = rate_window.read()
@@ -85,11 +85,11 @@ def open_my_items_window(current_student):
                   enable_events=True, )],
         [sg.Button('Return', size=(7, 1)),
          sg.Text(size=(15, 1), key="Error"),
-         sg.Exit(pad=((550, 0), (0, 0)),button_color=('Brown on Lightgrey'))]
+         sg.Exit(pad=((560, 0), (0, 0)),button_color=('Brown on Lightgrey'))]
     ]
     my_items_layout = [[sg.Frame("", frame)]]
 
-    my_items_window = sg.Window("My Items", my_items_layout, use_custom_titlebar=True, titlebar_icon='icon.png',
+    my_items_window = sg.Window("My Items", my_items_layout, use_custom_titlebar=False, icon='favicon.ico',
                                 use_ttk_buttons=True, border_depth=10, titlebar_background_color='Lightgrey',
                                 ttk_theme='clam')
     while True:
@@ -136,8 +136,8 @@ def open_request_item_window(current_student, item_id):
     ]
     request_item_layout = [[sg.Frame("", frame)]]
     request_item_window = sg.Window("Request Item", request_item_layout, element_justification='c',
-                                    use_custom_titlebar=True,
-                                    titlebar_icon='icon.png', use_ttk_buttons=True, border_depth=10,
+                                    use_custom_titlebar=False,
+                                    icon='favicon.ico', use_ttk_buttons=True, border_depth=10,
                                     titlebar_background_color='Lightgrey', ttk_theme='clam')
 
     while True:
@@ -171,11 +171,11 @@ def open_student_window(current_student):
         [sg.Button('Request Item', size=(15, 1)),
          sg.Button('My Items', size=(15, 1)),
          sg.Button('Rate', size=(15, 1)),
-         sg.Exit(pad=((93, 0), (0, 0)),button_color=('Brown on Lightgrey'))]
+         sg.Exit(pad=((110, 0), (0, 0)),size=(7,1),button_color=('Brown on Lightgrey'))]
     ]
     student_menu_layout = [[sg.Frame("", frame)]]
     student_menu_window = sg.Window("Student Menu", student_menu_layout, element_justification='c', finalize=True,
-                                    use_custom_titlebar=True, titlebar_icon='icon.png', use_ttk_buttons=True,
+                                    use_custom_titlebar=False, icon='favicon.ico', use_ttk_buttons=True,
                                     border_depth=20, titlebar_background_color='Lightgrey', ttk_theme='clam')
     while True:
         student_menu_event, student_menu_values = student_menu_window.read()
