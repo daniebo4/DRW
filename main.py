@@ -21,7 +21,7 @@ def mainMenu():
              [sg.Text(size=(30, 1), key="Error")],
              [sg.Submit(button_text="Log in", button_color=('Green on Lightgrey')),
               sg.Submit(button_text="Register"),
-              sg.Exit(pad=((360, 0), (0, 0)), button_color=('Brown on Lightgrey'), size=(7, 1))]]
+              sg.Exit(pad=((470, 0), (0, 0)), button_color=('Brown on Lightgrey'), size=(7, 1))]]
     login_layout = [[sg.Frame("", frame)]]
 
     login_window = sg.Window("Inventory Management System ", login_layout, element_justification='c', finalize=True

@@ -75,8 +75,8 @@ def open_my_items_window(current_student):
     frame = [
         [sg.Table(values=student_loaned_items,
                   headings=my_items_headings,
-                  max_col_width=25,
-                  auto_size_columns=True,
+                  col_widths = [5,15,10,10,20,10,10],
+                  auto_size_columns=False,
                   display_row_numbers=False,
                   justification='c',
                   num_rows=10,
@@ -85,7 +85,7 @@ def open_my_items_window(current_student):
                   enable_events=True, )],
         [sg.Button('Return', size=(7, 1)),
          sg.Text(size=(15, 1), key="Error"),
-         sg.Exit(pad=((560, 0), (0, 0)),button_color=('Brown on Lightgrey'))]
+         sg.Exit(pad=((1165, 0), (0, 0)),button_color=('Brown on Lightgrey'))]
     ]
     my_items_layout = [[sg.Frame("", frame)]]
 
@@ -160,8 +160,8 @@ def open_student_window(current_student):
     frame = [
         [sg.Table(values=current_inventory,
                   headings=current_inventory_headings,
-                  max_col_width=35,
-                  auto_size_columns=True,
+                  col_widths= [14,8,9,8,24],
+                  auto_size_columns=False,
                   display_row_numbers=False,
                   justification='c',
                   num_rows=10,
@@ -169,9 +169,9 @@ def open_student_window(current_student):
                   row_height=35, enable_events=True, )],
         [sg.Text(size=(15, 1), key="Error")],
         [sg.Button('Request Item', size=(15, 1)),
-         sg.Button('My Items', size=(15, 1)),
+         sg.Button('My Items', size=(25, 1)),
          sg.Button('Rate', size=(15, 1)),
-         sg.Exit(pad=((110, 0), (0, 0)),size=(7,1),button_color=('Brown on Lightgrey'))]
+         sg.Exit(pad=((135, 0), (0, 0)),size=(7,1),button_color=('Brown on Lightgrey'))]
     ]
     student_menu_layout = [[sg.Frame("", frame)]]
     student_menu_window = sg.Window("Student Menu", student_menu_layout, element_justification='c', finalize=True,

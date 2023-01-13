@@ -79,7 +79,7 @@ def open_backlog(input_event_personas='StudentsLog'):
     Using this functionality the manager can view a log of logins into the system by different users
     """
     # Window Layout:
-    open_backlog_headings = ['ID', 'Name', 'Login dates:']
+    open_backlog_headings = ['ID', 'Name', 'Login Date:']
     backlog_list = None
     if input_event_personas == "StudentsLog":
         backlog_list = db.student_backlog
