@@ -44,9 +44,9 @@ class ChangePasswordTest(unittest.TestCase):
                          changePasswordLayout.change_errors[4])
 
     def test5_ID_incorrect_worker_and_manager(self):
-        """Test if ID exists in worker/manager database"""
+        """Test if ID exists in worker database"""
         if DataBase.db.worker_dict:
-            s = list(DataBase.db.worker_dict.values())[0]
+            s = list(DataBase.db.worker_dict.values())[1]
             if len(s.ID) == 1:
                 incorrect_ID = s.ID
                 while incorrect_ID in DataBase.db.worker_dict:
@@ -56,6 +56,18 @@ class ChangePasswordTest(unittest.TestCase):
             self.assertEqual(changePasswordLayout.attempt_to_change(incorrect_ID, 'a', 'a', 'a'),
                              changePasswordLayout.change_errors[2])
 
+    def test6_ID_incorrect_manager(self):
+        """Test if manager exist in worker database"""
+        if DataBase.db.worker_dict:
+            s = list(DataBase.db.worker_dict.values())[0]
+            if len(s.ID) == 1:
+                incorrect_ID = s.ID
+                while incorrect_ID in DataBase.db.worker_dict:
+                    incorrect_ID = chr(ord(incorrect_ID) + 1)
+            else:
+                incorrect_ID = s.ID[0]
+            self.assertEqual(changePasswordLayout.attempt_to_change(incorrect_ID, 'a', 'a', 'a'),
+                             changePasswordLayout.change_errors[1])
 
 if __name__ == '__main__':
     unittest.main()

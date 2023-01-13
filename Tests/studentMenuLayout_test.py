@@ -27,7 +27,7 @@ class studentMenuTest(unittest.TestCase):
         tempStudent = Student("999", "1", "Test Student", "testing")
         DataBase.db.addStudent(tempStudent)
         DataBase.db.updateItems()
-        self.assertTrue(studentMenuLayout.request_item(tempStudent, testItem))
+        self.assertTrue(studentMenuLayout.request_item(tempStudent, testItem.ID))
         self.assertFalse(studentMenuLayout.request_item(tempStudent, '!'))
         # removes test item when finished
         DataBase.db.item_dict.pop(testItem.ID)
