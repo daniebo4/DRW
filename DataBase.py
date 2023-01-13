@@ -1,7 +1,9 @@
+import operator
 import os
 from Personas import Student, Worker, Item
 from itertools import chain
 import datetime
+import PySimpleGUI as sg
 
 
 class DataBase:
@@ -194,6 +196,7 @@ class DataBase:
         for student in self.student_dict.values():
             student_list.append([student.name, student.ID])
         return student_list
+
 
 
 project_root_dir = os.path.dirname(os.path.abspath(__file__)) + '\\Data'  # Finds path to current project folder

@@ -2,6 +2,7 @@ import PySimpleGUI as sg
 from DataBase import db
 from Personas import Item, Worker
 from Layouts import registerLayout
+import operator
 
 sg.set_options(font=("Arial Baltic", 16))
 sg.change_look_and_feel('SystemDefaultForReal')
@@ -11,6 +12,13 @@ sg.change_look_and_feel('SystemDefaultForReal')
 def add_item_check(input_name, input_quantity, input_description):
     return input_quantity > 0
 
+def sort_table( data, col_num_clicked):
+    """tries to sort the data given to it based on what operator has been clicked in table"""
+    try:
+        table_data = sorted(data, key=operator.itemgetter(col_num_clicked))
+    except Exception as e:
+        sg.popup_error('Error in sorting error', 'Exception', e)
+    return table_data
 
 def add_item():
     """
@@ -97,7 +105,7 @@ def open_backlog(input_event_personas='StudentsLog'):
                                      key='-TABLE-',
                                      row_height=35,
                                      col_widths=[15, 15, 25],
-                                     enable_events=True, )],
+                                     enable_events=True,enable_click_events=True )],
                            [sg.Text(size=(30, 1), key="Error")],
                            [sg.Button('Students Log', size=(12, 1), key='students_log'),
                             sg.Button('Workers Log', size=(12, 1), key='workers_log'),
@@ -110,6 +118,14 @@ def open_backlog(input_event_personas='StudentsLog'):
     # Window Layout Conditions,according to button clicked by user:
     while True:
         open_backlog_event, open_backlog_values = open_backlog_window.read()
+
+        if isinstance(open_backlog_event, tuple):
+            # Sorts table based on even clicked
+            if open_backlog_event[0] == '-TABLE-':
+                if open_backlog_event[2][0] == -1:
+                    col_num_clicked = open_backlog_event[2][1]
+                    new_table_data = sort_table(open_backlog_values, col_num_clicked)
+                    open_backlog_window['-TABLE-'].update(new_table_data)
         if open_backlog_event == 'students_log':
             open_backlog_window.close()
             open_backlog('StudentsLog')
@@ -231,7 +247,7 @@ def manage_workers():
                   key='-TABLE-',
                   row_height=35,
                   def_col_width=25,
-                  enable_events=True, )],
+                  enable_events=True,enable_click_events=True )],
         [sg.Text(size=(15, 1), key="Error")],
         [sg.Button('Add New Worker', size=(15, 1), button_color=('Green on Lightgrey')),
          sg.Button('Remove Worker', size=(15, 1), button_color=('Brown on Lightgrey')),
@@ -250,7 +266,13 @@ def manage_workers():
             if manage_workers_event == "Add New Worker":
                 add_worker()
                 manage_workers()
-
+        if isinstance(manage_workers_event, tuple):
+            # Sorts table based on even clicked
+            if manage_workers_event[0] == '-TABLE-':
+                if manage_workers_event[2][0] == -1:
+                    col_num_clicked = manage_workers_event[2][1]
+                    new_table_data = sort_table(current_workers, col_num_clicked)
+                    manage_workers_window['-TABLE-'].update(new_table_data)
         if manage_workers_event == "Remove Worker":
             if manage_workers_values['-TABLE-']:
                 if len(manage_workers_values['-TABLE-']) == 1:
@@ -473,7 +495,7 @@ def manage_students():
                   key='-TABLE-',
                   row_height=35,
                   def_col_width=25,
-                  enable_events=True, )],
+                  enable_events=True,enable_click_events=True )],
         [sg.Text(size=(15, 1), key="Error")],
         [sg.Button('Add New Student', size=(15, 1), button_color=('Green on Lightgrey')),
          sg.Button('Remove Student', size=(15, 1), button_color=('Brown on Lightgrey')),
@@ -493,7 +515,13 @@ def manage_students():
             registerLayout.open_register_window()
             manage_students_window.close()
             manage_students()
-
+        if isinstance(manage_students_event, tuple):
+            # Sorts table based on even clicked
+            if manage_students_event[0] == '-TABLE-':
+                if manage_students_event[2][0] == -1:
+                    col_num_clicked = manage_students_event[2][1]
+                    new_table_data = sort_table(current_students, col_num_clicked)
+                    manage_students_window['-TABLE-'].update(new_table_data)
         if manage_students_event == "Remove Student":
             if manage_students_values['-TABLE-']:
                 if len(manage_students_values['-TABLE-']) == 1:
@@ -573,7 +601,7 @@ def open_manager_window():
                   justification='c',
                   num_rows=10,
                   key='-TABLE-',
-                  row_height=35, enable_events=True)],
+                  row_height=35, enable_events=True,enable_click_events=True)],
         [sg.Text(size=(30, 0), key="Error"), ],
         [sg.Button('Add', size=(15, 1), button_color=('Green on Lightgrey')),
          sg.Button('Remove', size=(15, 1), button_color=('Brown on Lightgrey')),
@@ -599,7 +627,13 @@ def open_manager_window():
             add_item()
             manager_window.close()
             open_manager_window()
-
+        if isinstance(manager_menu_event, tuple):
+            # Sorts table based on even clicked
+            if manager_menu_event[0] == '-TABLE-':
+                if manager_menu_event[2][0] == -1 and manager_menu_event[2][1] != -1:
+                    col_num_clicked = manager_menu_event[2][1]
+                    new_table_data = sort_table(current_inventory, col_num_clicked)
+                    manager_window['-TABLE-'].update(new_table_data)
         if manager_menu_event == "Edit":
             if manager_menu_values['-TABLE-']:
                 if len(manager_menu_values['-TABLE-']) == 1:

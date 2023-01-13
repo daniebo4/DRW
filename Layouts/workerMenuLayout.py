@@ -1,8 +1,18 @@
 import PySimpleGUI as sg
 from DataBase import db
 from Personas import Item
+import operator
 
 sg.change_look_and_feel('SystemDefaultForReal')
+
+
+def sort_table(data, col_num_clicked):
+    """tries to sort the data given to it based on what operator has been clicked in table"""
+    try:
+        table_data = sorted(data, key=operator.itemgetter(col_num_clicked))
+    except Exception as e:
+        sg.pop_error('Error in sorting error', 'Exception', e)
+    return table_data
 
 
 def confirm_request_item(user_selection, worker_requested_items):
@@ -37,10 +47,10 @@ def open_requests_window(current_worker):
                   num_rows=10,
                   key='-TABLE-',
                   row_height=35,
-                  enable_events=True, )],
+                  enable_events=True,enable_click_events=True )],
         [sg.Button('Accept', size=(15, 1), button_color=('Green on Lightgrey')),
          sg.Text(size=(15, 1), key="Error"),
-         sg.Exit(pad=((240, 0), (0, 0)),size=(7,1), button_color=('Brown on Lightgrey'))]
+         sg.Exit(pad=((240, 0), (0, 0)), size=(7, 1), button_color=('Brown on Lightgrey'))]
     ]
     loan_items_layout = [[sg.Frame("", frame)]]
     requested_items_window = sg.Window("Requested Items", loan_items_layout, finalize=True,
@@ -58,6 +68,13 @@ def open_requests_window(current_worker):
                 open_requests_window(current_worker)
             else:  # warning if the user not choose item to return
                 requested_items_window["Error"].update("No Items Selected !")
+        if isinstance(requested_items_event, tuple):
+            # Sorts table based on even clicked
+            if requested_items_event[0] == '-TABLE-':
+                if requested_items_event[2][0] == -1:
+                    col_num_clicked = requested_items_event[2][1]
+                    new_table_data = sort_table(worker_requested_items, col_num_clicked)
+                    requested_items_window['-TABLE-'].update(new_table_data)
         if requested_items_event == "Exit" or requested_items_event == sg.WIN_CLOSED:
             requested_items_window.close()
             break
@@ -178,10 +195,10 @@ def open_returns_window(current_worker):
                   num_rows=10,
                   key='-TABLE-',
                   row_height=35,
-                  enable_events=True,)],
+                  enable_events=True,enable_click_events=True )],
         [sg.Button('Accept', size=(15, 1), button_color=('Green on Lightgrey')),
          sg.Text(size=(15, 1), key="Error"),
-         sg.Exit(pad=((135, 0), (0, 0)),size=(7,1), button_color=('Brown on Lightgrey'))]
+         sg.Exit(pad=((135, 0), (0, 0)), size=(7, 1), button_color=('Brown on Lightgrey'))]
     ]
     loan_items_layout = [[sg.Frame("", frame)]]
 
@@ -198,6 +215,13 @@ def open_returns_window(current_worker):
                 open_returns_window(current_worker)
             else:  # warning if the user not choose item to return
                 loan_items_window["Error"].update("No Items Selected !")
+        if isinstance(loan_items_event, tuple):
+            # Sorts table based on even clicked
+            if loan_items_event[0] == '-TABLE-':
+                if loan_items_event[2][0] == -1:
+                    col_num_clicked = loan_items_event[2][1]
+                    new_table_data = sort_table(worker_loaned_items, col_num_clicked)
+                    loan_items_window['-TABLE-'].update(new_table_data)
         if loan_items_event == "Exit" or loan_items_event == sg.WIN_CLOSED:
             loan_items_window.close()
             break
@@ -224,13 +248,14 @@ def open_worker_window(current_worker):
                   num_rows=10,
                   key='-TABLE-',
                   row_height=35,
-                  enable_events=True)],
+                  enable_events=True,
+                  enable_click_events=True)],
         [sg.Text(size=(10, 0), key="Error"), ],
         [sg.Button('Requests', size=(15, 1)),
          sg.Button('Returns', size=(15, 1)),
-         sg.Exit(pad=((315, 0), (0, 0)),size=(7,1), button_color=('Brown on Lightgrey'))]
+         sg.Exit(pad=((315, 0), (0, 0)), size=(7, 1), button_color=('Brown on Lightgrey'))]
     ]
-    worker_menu_layout = [[sg.Frame("",frame)]]
+    worker_menu_layout = [[sg.Frame("", frame)]]
 
     worker_menu_window = sg.Window("Worker Menu", worker_menu_layout, element_justification='c',
                                    use_custom_titlebar=False, icon='favicon.ico', use_ttk_buttons=True,
@@ -241,6 +266,14 @@ def open_worker_window(current_worker):
 
         if worker_menu_event == "Requests":
             open_requests_window(current_worker)
+
+        if isinstance(worker_menu_event, tuple):
+            # Sorts table based on even clicked
+            if worker_menu_event[0] == '-TABLE-':
+                if worker_menu_event[2][0] == -1:
+                    col_num_clicked = worker_menu_event[2][1]
+                    new_table_data = sort_table(current_inventory, col_num_clicked)
+                    worker_menu_window['-TABLE-'].update(new_table_data)
 
         if worker_menu_event == "Returns":
             open_returns_window(current_worker)
