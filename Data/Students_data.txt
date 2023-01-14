@@ -2,3 +2,6 @@
 264314638:123:dio:muda
 207402419:1234:jotaro:yare
 999:1:Test Student:testing
+203890614:4:Daniel:5
+289148353:1:Nisim:Fish
+279470154:123:Daniel:Cat

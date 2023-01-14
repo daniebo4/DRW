@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
 from DataBase import db
+
 sg.change_look_and_feel('systemdefaultforreal')
 change_errors = ("One or more of the fields not entered",
                  "ID can only contain numbers",
@@ -41,19 +42,22 @@ def attempt_to_change(input_ID, input_current_password, input_new_password, inpu
 def open_change_password_window():
     """build change password window"""
     frame = [[sg.Text("Change Password")],
-                              [sg.Text("ID :", size=(15, 1)), sg.InputText('', size=(20, 1), key='input_ID')],
-                              [sg.Text("Current Password :", size=(15, 1)),
-                               sg.InputText('', size=(20, 1), key='input_current_password', password_char='●')],
-                              [sg.Text("New Password :", size=(15, 1)),
-                               sg.InputText('', size=(20, 1), key='input_new_password', password_char='●')],
-                              [sg.Text("Repeat Password :", size=(15, 1)),
-                               sg.InputText('', size=(20, 1), key='input_repeat_new_password', password_char='●')],
-                              [sg.Text(size=(30, 1), key="Error")],
-                              [sg.Submit(button_text="Confirm"),
-                               sg.Exit(pad=((265, 0), (0, 0)),size=(7,1),button_color=('Brown on Lightgrey'))]]
+             [sg.Text("ID :", size=(15, 1)), sg.InputText('', size=(20, 1), key='input_ID')],
+             [sg.Text("Current Password :", size=(15, 1)),
+              sg.InputText('', size=(20, 1), key='input_current_password', password_char='●')],
+             [sg.Text("New Password :", size=(15, 1)),
+              sg.InputText('', size=(20, 1), key='input_new_password', password_char='●')],
+             [sg.Text("Repeat Password :", size=(15, 1)),
+              sg.InputText('', size=(20, 1), key='input_repeat_new_password', password_char='●')],
+             [sg.Text(size=(30, 1), key="Error")],
+             [sg.Submit(button_text="Confirm"),
+              sg.Exit(pad=((265, 0), (0, 0)), size=(7, 1), button_color=('Brown on Lightgrey'))]]
     change_password_layout = [[sg.Frame("", frame)]]
-    change_password_window = sg.Window("Change Password", change_password_layout, element_justification='c', finalize=True,
-                             use_custom_titlebar=True,titlebar_icon='icon.png', use_ttk_buttons=True, border_depth=10, titlebar_background_color='Lightgrey', ttk_theme = 'clam')
+    change_password_window = sg.Window("Change Password", change_password_layout, element_justification='c',
+                                       finalize=True
+                                       , icon='favicon.ico', use_ttk_buttons=True, border_depth=10,
+                                       titlebar_background_color='Lightgrey', ttk_theme='clam'
+                                       , auto_size_buttons=True)
     while True:
         change_check_res = False
         change_password_event, change_password_values = change_password_window.read()

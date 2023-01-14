@@ -7,6 +7,8 @@ register_errors = ("One or more fields not provided", "ID can only contain numbe
                    "ID is not in the department database")
 
 sg.change_look_and_feel('systemdefaultforreal')
+
+
 # to do : add test for student not in design department
 def check_register(input_ID, input_password, input_name, input_secret_word):
     """check if all the input values is correct and check if the user is already exist in the system"""
@@ -27,19 +29,21 @@ def check_register(input_ID, input_password, input_name, input_secret_word):
 def open_register_window():
     """The register window layout elements properties are here, when func is called open a new window"""
     frame = [[sg.Text("Register :")],
-                       [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID')],
-                       [sg.Text("Password :", size=(10, 1)),
-                        sg.InputText('', size=(20, 1), key='input_password', password_char='●')],
-                       [sg.Text("Name :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_name')],
-                       [sg.Text("Secret Word :", size=(10, 1)),
-                        sg.InputText('', size=(20, 1), key='input_secret_word')],
-                       [sg.Text(size=(30, 1), key="Error")],
-                       [sg.Submit(button_text="Register",button_color=('DarkGreen on Lightgrey')),
-                        sg.Exit(pad=((245, 0), (0, 0)),button_color=('Brown on Lightgrey'))]]
+             [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID')],
+             [sg.Text("Password :", size=(10, 1)),
+              sg.InputText('', size=(20, 1), key='input_password', password_char='●')],
+             [sg.Text("Name :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_name')],
+             [sg.Text("Secret Word :", size=(10, 1)),
+              sg.InputText('', size=(20, 1), key='input_secret_word')],
+             [sg.Text(size=(30, 1), key="Error")],
+             [sg.Submit(button_text="Register", button_color=('DarkGreen on Lightgrey')),
+              sg.Exit(pad=((245, 0), (0, 0)), button_color=('Brown on Lightgrey'))]]
 
     register_layout = [[sg.Frame("", frame)]]
-    register_window = sg.Window("Register", register_layout, element_justification='c', finalize=True,
-                             use_custom_titlebar=True,titlebar_icon='icon.png', use_ttk_buttons=True, border_depth=10, titlebar_background_color='Lightgrey', ttk_theme = 'clam')
+    register_window = sg.Window("Register", register_layout, element_justification='c', finalize=True
+                                , icon='favicon.ico', use_ttk_buttons=True, border_depth=10,
+                                titlebar_background_color='Lightgrey', ttk_theme='clam'
+                                , auto_size_buttons=True)
 
     while True:
         register_check_res = False

@@ -1,8 +1,27 @@
-4:Brush:2023-01-13:2023-01-27:Quality brush:4.67:3.0:1:loan requested:2
-5:Brush:::Quality brush:4.67:3.0:0:available:2
-6:Brush:::Quality brush:4.67:3.0:0:available:2
+4:Brush:2023-01-13:2023-01-27:Quality brush:4.67:3.0:1:return requested:2
+5:Brush:2023-01-14:2023-01-28:Quality brush:4.67:3.0:256623580:loan accepted:2
+6:Brush:2023-01-14:2023-01-28:Quality brush:4.67:3.0:244434893:loan requested:2
 7:Brush:::Quality brush:4.67:3.0:0:available:2
 8:Brush:::Quality brush:4.67:3.0:0:available:2
-9:Whiteboard:2023-01-12:2023-02-02:A very white board:4.0:2.0:1:loan accepted:3
-10:Whiteboard:2023-01-13:2023-02-03:A very white board:4.0:2.0:1:loan accepted:3
-11:Whiteboard:::A very white board:4.0:2.0:0:available:3
+9:Whiteboard:2023-01-14:2023-02-04:A very white board:4.0:4.0:1:loan requested:3
+10:Whiteboard:2023-01-13:2023-02-03:A very white board:4.0:4.0:1:return requested:3
+11:Whiteboard:::A very white board:4.0:4.0::available:3
+12:Paint:::Red paint:0:0:0:available:3
+13:Paint:::Red paint:0:0:0:available:3
+14:Paint:::Red paint:0:0:0:available:3
+15:Paint:::Red paint:0:0:0:available:3
+16:Paint:::Blue color:0:0:0:available:3
+17:Paint:::Blue color:0:0:0:available:3
+18:Paint:::Blue color:0:0:0:available:3
+19:Lens:::HDR-Lens:0:0:0:available:3
+20:Lens:::HDR-Lens:0:0:0:available:3
+21:Camera:2023-01-14:2023-02-11:Sony camera:3.0:1.0:0:available:4
+22:Camera:::Sony camera:3.0:1.0:0:available:4
+23:Video Camera:::Red - Camera:0:0:0:available:2
+24:Video Camera:::Red - Camera:0:0:0:available:2
+25:Wet Paint:::Yello:0:0:0:available:4
+26:Wet Paint:::Yello:0:0:0:available:4
+27:Wet Paint:::Yello:0:0:0:available:4
+28:Wet Paint:::Yello:0:0:0:available:4
+29:Wet Paint:::Yello:0:0:0:available:4
+30:Pen:::Writing:0:0:0:available:2
