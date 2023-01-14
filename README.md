@@ -32,11 +32,11 @@ He also can watch a backlog of student and worker logins.
 
 ## Installation
 
-1.Install Python 3.11.1.   
-2.Install Py Charm.
-3.In PyCharm's terminal, run the command 'pip install pysimplegui' in order to install PySimpleGUI.
-3.Open main.py using Py Charm.
-4.Run main.py in Py Charm.
+1.Install Python 3.11.1.     
+2.Install Py Charm.       
+3.In PyCharm's terminal, run the command 'pip install pysimplegui' in order to install PySimpleGUI.      
+3.Open main.py using Py Charm.    
+4.Run main.py in Py Charm.     
 
 
 ```bash
