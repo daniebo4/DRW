@@ -2,8 +2,86 @@ import PySimpleGUI as sg
 from DataBase import db
 from Personas import Item
 import operator
+import datetime
 
 sg.change_look_and_feel('SystemDefaultForReal')
+
+
+def items_status():
+    """This window lets the worker watch a list of items whose status is not 'available' ,
+        meaning they are currently requested , loaned or return requested
+        """
+    # Window Layout:
+    current_inventory_headings = ['ID ', 'Item', 'Owner ID', 'Owner name', 'Status', 'Loan Date', 'Due Date',
+                                  'Loan Period (weeks)', 'Description']
+    current_inventory = db.getItemStatuses_forWorker()
+    frame = [
+        [sg.Table(values=current_inventory,
+                  headings=current_inventory_headings,
+                  max_col_width=35,
+                  auto_size_columns=True,
+                  display_row_numbers=False,
+                  justification='c',
+                  num_rows=10,
+                  key='-TABLE-',
+                  row_height=35, enable_events=True, enable_click_events=True)]]
+    item_status_layout = [[sg.Frame("", frame)]]
+
+    item_status_window = sg.Window("Item Status", item_status_layout, element_justification='c', icon='favicon.ico',
+                                   use_ttk_buttons=True, border_depth=10,
+                                   titlebar_background_color='Lightgrey', ttk_theme='clam'
+                                   , auto_size_buttons=True)
+    while True:
+        item_status_event, item_status_values = item_status_window.read()
+
+        if isinstance(item_status_event, tuple):
+            # Sorts table based on even clicked
+            if item_status_event[0] == '-TABLE-':
+                if item_status_event[2][0] == -1 and item_status_event[2][1] != -1:
+                    col_num_clicked = item_status_event[2][1]
+                    current_inventory = sort_item_status_table(current_inventory, col_num_clicked)
+                    item_status_window['-TABLE-'].update(current_inventory)
+
+        if item_status_event == sg.WIN_CLOSED or item_status_event == "Exit":
+            item_status_window.close()
+            break
+
+
+def sort_item_status_table(data, col_num_clicked):
+    """tries to sort the data given to it based on what operator has been clicked in table"""
+    isNum, isDate = False, False
+    if col_num_clicked in (
+    0, 2, 7):  # if chosen column is ID or loan period , convert all ID to type int for correct sort
+        isNum = True
+        for item in data:
+            item[col_num_clicked] = int(item[col_num_clicked])
+
+    min_date = datetime.date(datetime.MINYEAR, 1, 1)
+    if col_num_clicked in (5, 6):  # if chosen column is date , convert empty fields to minimum date for correct sort
+        isDate = True
+        for item in data:
+            if item[col_num_clicked] == '':
+                item[col_num_clicked] = min_date
+
+    table_data = None
+    try:
+        table_data = sorted(data, key=operator.itemgetter(col_num_clicked))
+    except Exception as e:
+        sg.popup_error('Error in sorting error', 'Exception', e)
+
+    if table_data == data:  # detect if table is already sorted , if True , reverse the sort
+        table_data = list(reversed(table_data))
+
+    if isNum:
+        for item in table_data:
+            item[0] = str(item[0])
+
+    elif isDate:
+        for item in data:
+            if item[col_num_clicked] == min_date:
+                item[col_num_clicked] = ''
+
+    return table_data
 
 
 def sort_table(data, col_num_clicked):
@@ -64,11 +142,11 @@ def open_requests_window(current_worker):
                   max_col_width=25,
                   auto_size_columns=True,
                   display_row_numbers=False,
-                  justification='l',
+                  justification='c',
                   num_rows=10,
                   key='-TABLE-',
                   row_height=35,
-                  enable_events=True, enable_click_events=True)],
+                  enable_events=True, enable_click_events=True, )],
         [sg.Button('Accept', size=(15, 1), button_color=('Green on Lightgrey')),
          sg.Text(size=(15, 1), key="Error"),
          sg.Exit(pad=((240, 0), (0, 0)), size=(7, 1), button_color=('Brown on Lightgrey'))]
@@ -76,7 +154,8 @@ def open_requests_window(current_worker):
     loan_items_layout = [[sg.Frame("", frame)]]
     requested_items_window = sg.Window("Requested Items", loan_items_layout, finalize=True,
                                        use_custom_titlebar=False, icon='favicon.ico', use_ttk_buttons=True,
-                                       border_depth=10, titlebar_background_color='Lightgrey', ttk_theme='clam', )
+                                       border_depth=10, titlebar_background_color='Lightgrey',
+                                       ttk_theme='clam', element_justification='c')
 
     while True:
         requested_items_event, requested_items_values = requested_items_window.read()
@@ -112,7 +191,9 @@ def confirm_return_item(user_selection, worker_loaned_items):
         for ID in item_id:
             db.item_dict[ID].status = 'available'  # update the status of the returned items in the database
             db.item_dict[ID].owner = '0'  # remove previous owner of the returned item
-        db.updateItems()
+            db.item_dict[ID].aq_date = ''
+            db.item_dict[ID].du_date = ''
+            db.updateItems()
 
         return True
     else:  # write error to the user if he didn't choose items to return
@@ -129,7 +210,7 @@ def open_returns_window(current_worker):
                   max_col_width=25,
                   auto_size_columns=True,
                   display_row_numbers=False,
-                  justification='l',
+                  justification='c',
                   num_rows=10,
                   key='-TABLE-',
                   row_height=35,
@@ -191,6 +272,7 @@ def open_worker_window(current_worker):
         [sg.Text(size=(10, 0), key="Error"), ],
         [sg.Button('Requests', size=(15, 1)),
          sg.Button('Returns', size=(15, 1)),
+         sg.Button('Item Status', size=(15, 1)),
          sg.Exit(pad=((315, 0), (0, 0)), size=(7, 1), button_color=('Brown on Lightgrey'))]
     ]
     worker_menu_layout = [[sg.Frame("", frame)]]
@@ -217,6 +299,9 @@ def open_worker_window(current_worker):
             open_returns_window(current_worker)
             worker_menu_window.close()
             open_worker_window(current_worker)
+
+        if worker_menu_event == 'Item Status':
+            items_status()
 
         if worker_menu_event == sg.WIN_CLOSED or worker_menu_event == "Exit":
             worker_menu_window.close()

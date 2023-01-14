@@ -73,6 +73,16 @@ class DataBase:
                               item.description, item.rating])
         return item_list
 
+    def getItemStatuses_forWorker(self):
+        """gets item status list for worker """
+        item_list = []
+        for item in self.item_dict.values():
+            if item.status in ('loan requested', 'loan accepted', 'return requested'):
+                item_list.append([item.ID, item.name, item.owner, self.student_dict[item.owner].name,
+                                  item.status, item.aq_date, item.du_date, item.loan_period,
+                                  item.description, item.rating])
+        return item_list
+
     def getAvailableItemTable_forMenu(self):
         """this gets the available items like the one above but there are small changes
          in the table because we want to show the user the quantity of items without item ID"""
@@ -196,7 +206,6 @@ class DataBase:
         for student in self.student_dict.values():
             student_list.append([student.ID, student.name])
         return student_list
-
 
 
 project_root_dir = os.path.dirname(os.path.abspath(__file__)) + '\\Data'  # Finds path to current project folder
