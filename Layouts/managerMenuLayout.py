@@ -3,6 +3,7 @@ from DataBase import db
 from Personas import Item, Worker
 from Layouts import registerLayout
 import operator
+import datetime
 
 sg.set_options(font=("Arial Baltic", 16))
 sg.change_look_and_feel('SystemDefaultForReal')
@@ -14,10 +15,38 @@ def add_item_check(input_name, input_quantity, input_description):
 
 def sort_table(data, col_num_clicked):
     """tries to sort the data given to it based on what operator has been clicked in table"""
+    isID, isDate = False, False
+    min_date = datetime.date(datetime.MINYEAR, 1, 1)
+
+    if col_num_clicked == 0:  # if chosen column is ID , convert all ID to type int for correct sort
+        isID = True
+        for item in data:
+            item[col_num_clicked] = int(item[col_num_clicked])
+
+    if col_num_clicked in (4, 5):  # if chosen column is date , convert empty fields to minimum date
+        isDate = True
+        for item in data:
+            if item[col_num_clicked] == '':
+                item[col_num_clicked] = min_date
+
+    table_data = None
     try:
         table_data = sorted(data, key=operator.itemgetter(col_num_clicked))
     except Exception as e:
         sg.popup_error('Error in sorting error', 'Exception', e)
+
+    if table_data == data: # detect if table is already sorted , if True , reverse the sort
+        table_data = list(reversed(table_data))
+
+    if isID:
+        for item in table_data:
+            item[0] = str(item[0])
+
+    elif isDate:
+        for item in data:
+            if item[col_num_clicked] == min_date:
+                item[col_num_clicked] = ''
+
     return table_data
 
 
@@ -95,8 +124,7 @@ def open_backlog(input_event_personas='StudentsLog'):
     elif input_event_personas == "WorkersLog":
         backlog_list = db.worker_backlog
 
-    open_backlog_values = backlog_list
-    frame = [[sg.Table(values=open_backlog_values,
+    frame = [[sg.Table(values=backlog_list,
                        headings=open_backlog_headings,
                        auto_size_columns=False,
                        display_row_numbers=False,
@@ -124,8 +152,8 @@ def open_backlog(input_event_personas='StudentsLog'):
             if open_backlog_event[0] == '-TABLE-':
                 if open_backlog_event[2][0] == -1:
                     col_num_clicked = open_backlog_event[2][1]
-                    new_table_data = sort_table(open_backlog_values, col_num_clicked)
-                    open_backlog_window['-TABLE-'].update(new_table_data)
+                    backlog_list = sort_table(backlog_list, col_num_clicked)
+                    open_backlog_window['-TABLE-'].update(backlog_list)
         if open_backlog_event == 'students_log':
             open_backlog_window.close()
             open_backlog('StudentsLog')
@@ -237,7 +265,7 @@ def manage_workers():
     """
     # Window Layout:
     current_workers = db.getWorkers()
-    manage_workers_headings = ['Name', 'ID']
+    manage_workers_headings = ['ID', 'Name']
     frame = [
         [sg.Table(values=current_workers,
                   headings=manage_workers_headings,
@@ -272,8 +300,8 @@ def manage_workers():
             if manage_workers_event[0] == '-TABLE-':
                 if manage_workers_event[2][0] == -1:
                     col_num_clicked = manage_workers_event[2][1]
-                    new_table_data = sort_table(current_workers, col_num_clicked)
-                    manage_workers_window['-TABLE-'].update(new_table_data)
+                    current_workers = sort_table(current_workers, col_num_clicked)
+                    manage_workers_window['-TABLE-'].update(current_workers)
         if manage_workers_event == "Remove Worker":
             if manage_workers_values['-TABLE-']:
                 if len(manage_workers_values['-TABLE-']) == 1:
@@ -485,7 +513,7 @@ def manage_students():
        """
     # Window Layout:
     current_students = db.getStudents()
-    manage_students_headings = ['Name', 'ID']
+    manage_students_headings = ['ID', 'Name']
     frame = [
         [sg.Table(values=current_students,
                   headings=manage_students_headings,
@@ -521,8 +549,8 @@ def manage_students():
             if manage_students_event[0] == '-TABLE-':
                 if manage_students_event[2][0] == -1:
                     col_num_clicked = manage_students_event[2][1]
-                    new_table_data = sort_table(current_students, col_num_clicked)
-                    manage_students_window['-TABLE-'].update(new_table_data)
+                    current_students = sort_table(current_students, col_num_clicked)
+                    manage_students_window['-TABLE-'].update(current_students)
         if manage_students_event == "Remove Student":
             if manage_students_values['-TABLE-']:
                 if len(manage_students_values['-TABLE-']) == 1:
@@ -633,8 +661,8 @@ def open_manager_window():
             if manager_menu_event[0] == '-TABLE-':
                 if manager_menu_event[2][0] == -1 and manager_menu_event[2][1] != -1:
                     col_num_clicked = manager_menu_event[2][1]
-                    new_table_data = sort_table(current_inventory, col_num_clicked)
-                    manager_window['-TABLE-'].update(new_table_data)
+                    current_inventory = sort_table(current_inventory, col_num_clicked)
+                    manager_window['-TABLE-'].update(current_inventory)
         if manager_menu_event == "Edit":
             if manager_menu_values['-TABLE-']:
                 if len(manager_menu_values['-TABLE-']) == 1:

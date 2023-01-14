@@ -109,7 +109,7 @@ class DataBase:
         for item in self.item_dict.values():
             if item.status == 'loan requested':
                 current_item = [item.ID, item.name, item.description, item.rating,
-                                item.status, item.owner, self.student_dict[item.owner].ID]
+                                item.status, item.owner, self.student_dict[item.owner].name]
                 item_list_to_print.append(current_item)
         return item_list_to_print
 
@@ -118,7 +118,7 @@ class DataBase:
         for item in self.item_dict.values():
             if item.status == 'return requested':
                 current_item = [item.ID, item.name, item.description, item.rating,
-                                item.status, item.owner, self.student_dict[item.owner].ID]
+                                item.status, item.owner, self.student_dict[item.owner].name]
                 item_list_to_print.append(current_item)
         return item_list_to_print
 
@@ -188,13 +188,13 @@ class DataBase:
         worker_list = []
         for worker in self.worker_dict.values():
             if worker.ID != 'admin':
-                worker_list.append([worker.name, worker.ID])
+                worker_list.append([worker.ID, worker.name])
         return worker_list
 
     def getStudents(self):
         student_list = []
         for student in self.student_dict.values():
-            student_list.append([student.name, student.ID])
+            student_list.append([student.ID, student.name])
         return student_list
 
 
