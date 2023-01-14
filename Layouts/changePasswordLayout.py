@@ -55,8 +55,10 @@ def open_change_password_window():
     change_password_layout = [[sg.Frame("", frame)]]
     change_password_window = sg.Window("Change Password", change_password_layout, element_justification='c',
                                        finalize=True,
-                                       use_custom_titlebar=True, titlebar_icon='icon.png', use_ttk_buttons=True,
-                                       border_depth=10, titlebar_background_color='Lightgrey', ttk_theme='clam')
+                                       icon='favicon.ico',
+                                       use_ttk_buttons=True, border_depth=10,
+                                       titlebar_background_color='Lightgrey', ttk_theme='clam'
+                                       , auto_size_buttons=True)
     while True:
         change_check_res = False
         change_password_event, change_password_values = change_password_window.read()

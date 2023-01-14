@@ -43,9 +43,10 @@ def open_forgot_password_window():
 
     forgot_password_window = sg.Window("Forgot Password", forgot_password_layout, resizable=True,
                                        element_justification='c', finalize=True,
-                                       use_custom_titlebar=True, titlebar_icon='icon.png', use_ttk_buttons=True,
-                                       border_depth=10,
-                                       titlebar_background_color='Lightgrey', ttk_theme='clam')
+                                       icon='favicon.ico',
+                                       use_ttk_buttons=True, border_depth=10,
+                                       titlebar_background_color='Lightgrey', ttk_theme='clam'
+                                       , auto_size_buttons=True)
     while True:
         forgot_password_event, forgot_password_values = forgot_password_window.read()
         if forgot_password_event == "Confirm":
