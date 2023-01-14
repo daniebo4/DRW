@@ -6,7 +6,7 @@ A python project created to satisfy the needs of students in the design
 department for better managed inventory system in collages.   
 Main features: item management, item loans and returns, users management.     
 
-How to use:
+## How to use:
 
 DRW is a storage system made for the students of SCE design department where student can ask
 to loan out items and workers and managers are in charge of handling requests.
