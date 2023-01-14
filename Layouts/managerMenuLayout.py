@@ -35,7 +35,7 @@ def sort_table(data, col_num_clicked):
     except Exception as e:
         sg.popup_error('Error in sorting error', 'Exception', e)
 
-    if table_data == data: # detect if table is already sorted , if True , reverse the sort
+    if table_data == data:  # detect if table is already sorted , if True , reverse the sort
         table_data = list(reversed(table_data))
 
     if isID:
@@ -219,6 +219,7 @@ def edit_item_func(current_item, input_name, input_description, input_aq_date, i
         input_aq_date = current_item.aq_date
     if input_du_date == '':
         input_du_date = current_item.du_date
+
     current_item.name = input_name
     current_item.description = input_description
     current_item.aq_date = input_aq_date
@@ -292,9 +293,9 @@ def manage_workers():
     while True:
         manage_workers_event, manage_workers_values = manage_workers_window.read()
         if manage_workers_event == "Add New Worker":
-            if manage_workers_event == "Add New Worker":
-                add_worker()
-                manage_workers()
+            add_worker()
+            manage_workers_window.close()
+            manage_workers()
         if isinstance(manage_workers_event, tuple):
             # Sorts table based on even clicked
             if manage_workers_event[0] == '-TABLE-':
@@ -405,8 +406,7 @@ def edit_worker(chosen_worker_id):
         Password = edit_worker_values['<Password>']
         Secret_Word = edit_worker_values['<Secret_Word>']
         if edit_worker_event == 'Confirm':
-            if (Password != '' and Secret_Word != '') or (Password != '' and Secret_Word == '') or \
-                    (Password == '' and Secret_Word != ''):
+            if Password != '' or Secret_Word != '':
                 edit_worker_func(chosen_worker_id, Password, Secret_Word)
                 check_info = True
             else:
@@ -418,19 +418,15 @@ def edit_worker(chosen_worker_id):
 
 
 def edit_worker_func(chosen_worker_id, Password, Secret_Word):
-    if Password != '' and Secret_Word != '':
-        db.worker_dict[chosen_worker_id].password = Password
-        db.worker_dict[chosen_worker_id].secret_word = Secret_Word
-        db.updateWorkers()
-        return "Worker was edited successfully,cheers!"
-    elif Password != '' and Secret_Word == '':
-        db.worker_dict[chosen_worker_id].password = Password
-        db.updateWorkers()
-        return "Worker was edited successfully,cheers!"
-    elif Password == '' and Secret_Word != '':
-        db.worker_dict[chosen_worker_id].secret_word = Secret_Word
-        db.updateWorkers()
-        return "Worker was edited successfully,cheers!"
+    if Password == '':
+        Password = db.worker_dict[chosen_worker_id].password
+    if Secret_Word == '':
+        Secret_Word = db.worker_dict[chosen_worker_id].secret_word
+
+    db.worker_dict[chosen_worker_id].password = Password
+    db.worker_dict[chosen_worker_id].secret_word = Secret_Word
+    db.updateWorkers()
+    return "Worker was edited successfully,cheers!"
 
 
 def remove_worker(chosen_worker_id):
@@ -485,26 +481,29 @@ def edit_student(chosen_student_id):
         edit_student_event, edit_student_values = edit_student_window.read()
         Password = edit_student_values['<Password>']
         Secret_Word = edit_student_values['<Secret_Word>']
+
         if edit_student_event == 'Confirm':
-            if Password != '' and Secret_Word != '':
-                db.student_dict[chosen_student_id].password = Password
-                db.student_dict[chosen_student_id].secret_word = Secret_Word
+            if Password != '' or Secret_Word != '':
+                edit_student_func(chosen_student_id, Password, Secret_Word)
                 check_info = True
-                db.updateStudents()
-            elif Password != '' and Secret_Word == '':
-                db.student_dict[chosen_student_id].password = Password
-                check_info = True
-                db.updateStudents()
-            elif Password == '' and Secret_Word != '':
-                db.student_dict[chosen_student_id].secret_word = Secret_Word
-                check_info = True
-                db.updateStudents()
             else:
                 edit_student_window["Error"].update("No Input Data")
         if edit_student_event == sg.WIN_CLOSED or (
                 edit_student_event == "Confirm" and check_info) or edit_student_event == "Exit" or edit_student_event == sg.WIN_CLOSED:
             edit_student_window.close()
             break
+
+
+def edit_student_func(chosen_student_id, Password, Secret_Word):
+    if Password == '':
+        Password = db.student_dict[chosen_student_id].password
+    if Secret_Word == '':
+        Secret_Word = db.student_dict[chosen_student_id].secret_word
+
+    db.student_dict[chosen_student_id].password = Password
+    db.student_dict[chosen_student_id].secret_word = Secret_Word
+    db.updateStudents()
+    return "Student was edited successfully,cheers!"
 
 
 def manage_students():
@@ -568,7 +567,7 @@ def manage_students():
             if manage_students_values['-TABLE-']:
                 if len(manage_students_values['-TABLE-']) == 1:
                     chosen_student_idx = manage_students_values['-TABLE-'][0]
-                    chosen_student_id = current_students[chosen_student_idx][1]
+                    chosen_student_id = current_students[chosen_student_idx][0]
                     edit_student(chosen_student_id)
                     manage_students_window.close()
                     manage_students()
@@ -632,13 +631,13 @@ def open_manager_window():
                   key='-TABLE-',
                   row_height=35, enable_events=True, enable_click_events=True)],
         [sg.Text(size=(30, 0), key="Error"), ],
-        [sg.Button('Add', size=(15, 1), button_color=('Green on Lightgrey')),
-         sg.Button('Remove', size=(15, 1), button_color=('Brown on Lightgrey')),
-         sg.Button('Edit', size=(15, 1), button_color=('DarkBlue on Lightgrey')),
+        [sg.Button('Add', size=(15, 1), button_color='Green on Lightgrey'),
+         sg.Button('Remove', size=(15, 1), button_color='Brown on Lightgrey'),
+         sg.Button('Edit', size=(15, 1), button_color='DarkBlue on Lightgrey'),
          sg.Button('Manage Workers', size=(15, 1)),
          sg.Button('Manage Students', size=(15, 1)),
          sg.Button('Backlog', size=(15, 1)),
-         sg.Exit(pad=((0, 0), (0, 0)), button_color=('Brown on Lightgrey'))]
+         sg.Exit(pad=((0, 0), (0, 0)), button_color='Brown on Lightgrey')]
     ]
     manager_menu_layout = [[sg.Frame("", frame)]]
 
