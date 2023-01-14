@@ -39,13 +39,13 @@ he can watch the backlog of student and workers
 
 
 ```bash
-pip install pyautogui
+pip install pysimplegui
 ```
 
 
 ## Contributing
 
-Lior Abargerl , Daniel Borisenko, Maor Merling, Elad Levi
+Lior Abergel , Daniel Borisenko, Maor Merling, Elad Levi
 
 Pull requests are welcome. For major changes, please open an issue first
 to discuss what you would like to change.
