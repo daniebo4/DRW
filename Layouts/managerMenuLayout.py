@@ -9,9 +9,10 @@ sg.set_options(font=("Arial Baltic", 16))
 sg.change_look_and_feel('SystemDefaultForReal')
 
 
-def add_item_check(input_name, input_quantity, input_description):
-    return input_quantity > 0
-
+def add_item_check(input_quantity):
+    if isinstance(input_quantity,int):
+        return input_quantity > 0
+    return False
 
 def sort_table(data, col_num_clicked):
     """tries to sort the data given to it based on what operator has been clicked in table"""
@@ -65,7 +66,7 @@ def add_item():
         [sg.InputText('', size=(20, 1), key='input_description')],
         [sg.Text('Loan period (Weeks):')],
         [sg.InputText('', size=(20, 1), key='input_time_period')],
-        [sg.Text(size=(20, 0), key="Error")],
+        [sg.Text(size=(15, 2), key="Error")],
         [sg.Text(size=(10, 0), key="a")],
         [sg.Button('Add', size=(7, 1), button_color=('Green on Lightgrey')),
          sg.Button('Exit', size=(7, 1), button_color=('Brown on Lightgrey'))]]
@@ -81,10 +82,12 @@ def add_item():
         add_items_event, add_items_values = add_items_window.read()
         if add_items_event == 'Add':
             input_name = add_items_values['input_name']
-            input_quantity = int(add_items_values['input_quantity'])
+            input_quantity = add_items_values['input_quantity']
+            if input_quantity.isdigit():
+                input_quantity = int(input_quantity)
             input_description = add_items_values['input_description']
             input_loan_time_period = add_items_values['input_time_period']
-            add_item_check_res = add_item_check(input_name, input_quantity, input_description)
+            add_item_check_res = add_item_check(input_quantity)
             if add_item_check_res:
                 if len(db.item_dict.keys()) == 0:
                     input_ID = 1
