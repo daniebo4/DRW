@@ -3,22 +3,53 @@ from DataBase import db
 from Personas import Item, Worker
 from Layouts import registerLayout
 import operator
+import datetime
 
 sg.set_options(font=("Arial Baltic", 16))
 sg.change_look_and_feel('SystemDefaultForReal')
 
 
-# to do : complete this func , func is called in add_item func
-def add_item_check(input_name, input_quantity, input_description):
-    return input_quantity > 0
+def add_item_check(input_quantity):
+    if isinstance(input_quantity,int):
+        return input_quantity > 0
+    return False
 
-def sort_table( data, col_num_clicked):
+def sort_table(data, col_num_clicked):
     """tries to sort the data given to it based on what operator has been clicked in table"""
+    isID, isDate = False, False
+    min_date = datetime.date(datetime.MINYEAR, 1, 1)
+
+    if col_num_clicked == 0:  # if chosen column is ID , convert all ID to type int for correct sort
+        isID = True
+        for item in data:
+            item[col_num_clicked] = int(item[col_num_clicked])
+
+    if col_num_clicked in (4, 5):  # if chosen column is date , convert empty fields to minimum date
+        isDate = True
+        for item in data:
+            if item[col_num_clicked] == '':
+                item[col_num_clicked] = min_date
+
+    table_data = None
     try:
         table_data = sorted(data, key=operator.itemgetter(col_num_clicked))
     except Exception as e:
         sg.popup_error('Error in sorting error', 'Exception', e)
+
+    if table_data == data:  # detect if table is already sorted , if True , reverse the sort
+        table_data = list(reversed(table_data))
+
+    if isID:
+        for item in table_data:
+            item[0] = str(item[0])
+
+    elif isDate:
+        for item in data:
+            if item[col_num_clicked] == min_date:
+                item[col_num_clicked] = ''
+
     return table_data
+
 
 def add_item():
     """
@@ -35,12 +66,11 @@ def add_item():
         [sg.InputText('', size=(20, 1), key='input_description')],
         [sg.Text('Loan period (Weeks):')],
         [sg.InputText('', size=(20, 1), key='input_time_period')],
-        [sg.Text(size=(20, 0), key="Error")],
+        [sg.Text(size=(15, 2), key="Error")],
         [sg.Text(size=(10, 0), key="a")],
         [sg.Button('Add', size=(7, 1), button_color=('Green on Lightgrey')),
          sg.Button('Exit', size=(7, 1), button_color=('Brown on Lightgrey'))]]
-    add_items_layout=[[sg.Frame("", frame)]]
-
+    add_items_layout = [[sg.Frame("", frame)]]
 
     add_items_window = sg.Window("Add Items", add_items_layout, element_justification='c',
                                  icon='favicon.ico', use_ttk_buttons=True, border_depth=10,
@@ -52,10 +82,12 @@ def add_item():
         add_items_event, add_items_values = add_items_window.read()
         if add_items_event == 'Add':
             input_name = add_items_values['input_name']
-            input_quantity = int(add_items_values['input_quantity'])
+            input_quantity = add_items_values['input_quantity']
+            if input_quantity.isdigit():
+                input_quantity = int(input_quantity)
             input_description = add_items_values['input_description']
             input_loan_time_period = add_items_values['input_time_period']
-            add_item_check_res = add_item_check(input_name, input_quantity, input_description)
+            add_item_check_res = add_item_check(input_quantity)
             if add_item_check_res:
                 if len(db.item_dict.keys()) == 0:
                     input_ID = 1
@@ -95,21 +127,20 @@ def open_backlog(input_event_personas='StudentsLog'):
     elif input_event_personas == "WorkersLog":
         backlog_list = db.worker_backlog
 
-    open_backlog_values = backlog_list
-    frame = [[sg.Table(values=open_backlog_values,
-                                     headings=open_backlog_headings,
-                                     auto_size_columns=False,
-                                     display_row_numbers=False,
-                                     justification='c',
-                                     num_rows=10,
-                                     key='-TABLE-',
-                                     row_height=35,
-                                     col_widths=[15, 15, 25],
-                                     enable_events=True,enable_click_events=True )],
-                           [sg.Text(size=(30, 1), key="Error")],
-                           [sg.Button('Students Log', size=(12, 1), key='students_log'),
-                            sg.Button('Workers Log', size=(12, 1), key='workers_log'),
-                            sg.Exit(pad=((345, 0), (0, 0)), button_color=('Brown on Lightgrey'))]]
+    frame = [[sg.Table(values=backlog_list,
+                       headings=open_backlog_headings,
+                       auto_size_columns=False,
+                       display_row_numbers=False,
+                       justification='c',
+                       num_rows=10,
+                       key='-TABLE-',
+                       row_height=35,
+                       col_widths=[15, 15, 25],
+                       enable_events=True, enable_click_events=True)],
+             [sg.Text(size=(30, 1), key="Error")],
+             [sg.Button('Students Log', size=(12, 1), key='students_log'),
+              sg.Button('Workers Log', size=(12, 1), key='workers_log'),
+              sg.Exit(pad=((345, 0), (0, 0)), button_color=('Brown on Lightgrey'))]]
     open_backlog_layout = [[sg.Frame("", frame)]]
     open_backlog_window = sg.Window("Backlog", open_backlog_layout, element_justification='c',
                                     icon='favicon.ico', use_ttk_buttons=True, border_depth=10,
@@ -124,8 +155,8 @@ def open_backlog(input_event_personas='StudentsLog'):
             if open_backlog_event[0] == '-TABLE-':
                 if open_backlog_event[2][0] == -1:
                     col_num_clicked = open_backlog_event[2][1]
-                    new_table_data = sort_table(open_backlog_values, col_num_clicked)
-                    open_backlog_window['-TABLE-'].update(new_table_data)
+                    backlog_list = sort_table(backlog_list, col_num_clicked)
+                    open_backlog_window['-TABLE-'].update(backlog_list)
         if open_backlog_event == 'students_log':
             open_backlog_window.close()
             open_backlog('StudentsLog')
@@ -191,6 +222,7 @@ def edit_item_func(current_item, input_name, input_description, input_aq_date, i
         input_aq_date = current_item.aq_date
     if input_du_date == '':
         input_du_date = current_item.du_date
+
     current_item.name = input_name
     current_item.description = input_description
     current_item.aq_date = input_aq_date
@@ -204,12 +236,13 @@ def remove_item(chosen_item_id):
     # Window Layout:
     frame = [
         [sg.Text("Are you sure you want to remove this item?")],
-        [sg.Button(button_text="Yes", button_color=('Green on Lightgrey'), size=(7, 1),pad=(75,0)),
-         sg.Button(button_text="No", button_color=('Brown on Lightgrey'), size=(7, 1)) ]]
+        [sg.Button(button_text="Yes", button_color=('Green on Lightgrey'), size=(7, 1), pad=(75, 0)),
+         sg.Button(button_text="No", button_color=('Brown on Lightgrey'), size=(7, 1))]]
     remove_item_layout = [[sg.Frame("", frame)]]
-    remove_item_window = sg.Window("Remove Item", remove_item_layout, element_justification='c',icon='favicon.ico', use_ttk_buttons=True, border_depth=10,
-                             titlebar_background_color='Lightgrey', ttk_theme='clam'
-                             , auto_size_buttons=True)
+    remove_item_window = sg.Window("Remove Item", remove_item_layout, element_justification='c', icon='favicon.ico',
+                                   use_ttk_buttons=True, border_depth=10,
+                                   titlebar_background_color='Lightgrey', ttk_theme='clam'
+                                   , auto_size_buttons=True)
     # Window Layout Conditions,according to button clicked by user:
     while True:
         remove_item_event, remove_item_values = remove_item_window.read()
@@ -236,7 +269,7 @@ def manage_workers():
     """
     # Window Layout:
     current_workers = db.getWorkers()
-    manage_workers_headings = ['Name', 'ID']
+    manage_workers_headings = ['ID', 'Name']
     frame = [
         [sg.Table(values=current_workers,
                   headings=manage_workers_headings,
@@ -247,7 +280,7 @@ def manage_workers():
                   key='-TABLE-',
                   row_height=35,
                   def_col_width=25,
-                  enable_events=True,enable_click_events=True )],
+                  enable_events=True, enable_click_events=True)],
         [sg.Text(size=(15, 1), key="Error")],
         [sg.Button('Add New Worker', size=(15, 1), button_color=('Green on Lightgrey')),
          sg.Button('Remove Worker', size=(15, 1), button_color=('Brown on Lightgrey')),
@@ -263,16 +296,16 @@ def manage_workers():
     while True:
         manage_workers_event, manage_workers_values = manage_workers_window.read()
         if manage_workers_event == "Add New Worker":
-            if manage_workers_event == "Add New Worker":
-                add_worker()
-                manage_workers()
+            add_worker()
+            manage_workers_window.close()
+            manage_workers()
         if isinstance(manage_workers_event, tuple):
             # Sorts table based on even clicked
             if manage_workers_event[0] == '-TABLE-':
                 if manage_workers_event[2][0] == -1:
                     col_num_clicked = manage_workers_event[2][1]
-                    new_table_data = sort_table(current_workers, col_num_clicked)
-                    manage_workers_window['-TABLE-'].update(new_table_data)
+                    current_workers = sort_table(current_workers, col_num_clicked)
+                    manage_workers_window['-TABLE-'].update(current_workers)
         if manage_workers_event == "Remove Worker":
             if manage_workers_values['-TABLE-']:
                 if len(manage_workers_values['-TABLE-']) == 1:
@@ -310,15 +343,15 @@ def add_worker():
     """
     # Window Layout:
     frame = [[sg.Text("Add a New Worker:")],
-                             [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID')],
-                             [sg.Text("Password :", size=(10, 1)),
-                              sg.InputText('', size=(20, 1), key='input_password', password_char='●')],
-                             [sg.Text("Name :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_name')],
-                             [sg.Text("Secret Word :", size=(10, 1)),
-                              sg.InputText('', size=(20, 1), key='input_secret_word')],
-                             [sg.Text(size=(30, 1), key="Error")],
-                             [sg.Submit(button_text="Add"),
-                              sg.Exit(pad=((250, 0), (0, 0)))]]
+             [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID')],
+             [sg.Text("Password :", size=(10, 1)),
+              sg.InputText('', size=(20, 1), key='input_password', password_char='●')],
+             [sg.Text("Name :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_name')],
+             [sg.Text("Secret Word :", size=(10, 1)),
+              sg.InputText('', size=(20, 1), key='input_secret_word')],
+             [sg.Text(size=(30, 1), key="Error")],
+             [sg.Submit(button_text="Add"),
+              sg.Exit(pad=((250, 0), (0, 0)))]]
     add_new_worker_layout = [[sg.Frame("", frame)]]
     add_worker_window = sg.Window("Add New Worker", add_new_worker_layout, element_justification='c',
                                   icon='favicon.ico', use_ttk_buttons=True, border_depth=10,
@@ -376,8 +409,7 @@ def edit_worker(chosen_worker_id):
         Password = edit_worker_values['<Password>']
         Secret_Word = edit_worker_values['<Secret_Word>']
         if edit_worker_event == 'Confirm':
-            if (Password != '' and Secret_Word != '') or (Password != '' and Secret_Word == '') or \
-                    (Password == '' and Secret_Word != ''):
+            if Password != '' or Secret_Word != '':
                 edit_worker_func(chosen_worker_id, Password, Secret_Word)
                 check_info = True
             else:
@@ -389,19 +421,15 @@ def edit_worker(chosen_worker_id):
 
 
 def edit_worker_func(chosen_worker_id, Password, Secret_Word):
-    if Password != '' and Secret_Word != '':
-        db.worker_dict[chosen_worker_id].password = Password
-        db.worker_dict[chosen_worker_id].secret_word = Secret_Word
-        db.updateWorkers()
-        return "Worker was edited successfully,cheers!"
-    elif Password != '' and Secret_Word == '':
-        db.worker_dict[chosen_worker_id].password = Password
-        db.updateWorkers()
-        return "Worker was edited successfully,cheers!"
-    elif Password == '' and Secret_Word != '':
-        db.worker_dict[chosen_worker_id].secret_word = Secret_Word
-        db.updateWorkers()
-        return "Worker was edited successfully,cheers!"
+    if Password == '':
+        Password = db.worker_dict[chosen_worker_id].password
+    if Secret_Word == '':
+        Secret_Word = db.worker_dict[chosen_worker_id].secret_word
+
+    db.worker_dict[chosen_worker_id].password = Password
+    db.worker_dict[chosen_worker_id].secret_word = Secret_Word
+    db.updateWorkers()
+    return "Worker was edited successfully,cheers!"
 
 
 def remove_worker(chosen_worker_id):
@@ -456,20 +484,11 @@ def edit_student(chosen_student_id):
         edit_student_event, edit_student_values = edit_student_window.read()
         Password = edit_student_values['<Password>']
         Secret_Word = edit_student_values['<Secret_Word>']
+
         if edit_student_event == 'Confirm':
-            if Password != '' and Secret_Word != '':
-                db.student_dict[chosen_student_id].password = Password
-                db.student_dict[chosen_student_id].secret_word = Secret_Word
+            if Password != '' or Secret_Word != '':
+                edit_student_func(chosen_student_id, Password, Secret_Word)
                 check_info = True
-                db.updateStudents()
-            elif Password != '' and Secret_Word == '':
-                db.student_dict[chosen_student_id].password = Password
-                check_info = True
-                db.updateStudents()
-            elif Password == '' and Secret_Word != '':
-                db.student_dict[chosen_student_id].secret_word = Secret_Word
-                check_info = True
-                db.updateStudents()
             else:
                 edit_student_window["Error"].update("No Input Data")
         if edit_student_event == sg.WIN_CLOSED or (
@@ -478,13 +497,25 @@ def edit_student(chosen_student_id):
             break
 
 
+def edit_student_func(chosen_student_id, Password, Secret_Word):
+    if Password == '':
+        Password = db.student_dict[chosen_student_id].password
+    if Secret_Word == '':
+        Secret_Word = db.student_dict[chosen_student_id].secret_word
+
+    db.student_dict[chosen_student_id].password = Password
+    db.student_dict[chosen_student_id].secret_word = Secret_Word
+    db.updateStudents()
+    return "Student was edited successfully,cheers!"
+
+
 def manage_students():
     """
        Using this functionality the manager can View a list of all the students in the system and add or remove students
        """
     # Window Layout:
     current_students = db.getStudents()
-    manage_students_headings = ['Name', 'ID']
+    manage_students_headings = ['ID', 'Name']
     frame = [
         [sg.Table(values=current_students,
                   headings=manage_students_headings,
@@ -495,7 +526,7 @@ def manage_students():
                   key='-TABLE-',
                   row_height=35,
                   def_col_width=25,
-                  enable_events=True,enable_click_events=True )],
+                  enable_events=True, enable_click_events=True)],
         [sg.Text(size=(15, 1), key="Error")],
         [sg.Button('Add New Student', size=(15, 1), button_color=('Green on Lightgrey')),
          sg.Button('Remove Student', size=(15, 1), button_color=('Brown on Lightgrey')),
@@ -520,8 +551,8 @@ def manage_students():
             if manage_students_event[0] == '-TABLE-':
                 if manage_students_event[2][0] == -1:
                     col_num_clicked = manage_students_event[2][1]
-                    new_table_data = sort_table(current_students, col_num_clicked)
-                    manage_students_window['-TABLE-'].update(new_table_data)
+                    current_students = sort_table(current_students, col_num_clicked)
+                    manage_students_window['-TABLE-'].update(current_students)
         if manage_students_event == "Remove Student":
             if manage_students_values['-TABLE-']:
                 if len(manage_students_values['-TABLE-']) == 1:
@@ -539,7 +570,7 @@ def manage_students():
             if manage_students_values['-TABLE-']:
                 if len(manage_students_values['-TABLE-']) == 1:
                     chosen_student_idx = manage_students_values['-TABLE-'][0]
-                    chosen_student_id = current_students[chosen_student_idx][1]
+                    chosen_student_id = current_students[chosen_student_idx][0]
                     edit_student(chosen_student_id)
                     manage_students_window.close()
                     manage_students()
@@ -601,15 +632,15 @@ def open_manager_window():
                   justification='c',
                   num_rows=10,
                   key='-TABLE-',
-                  row_height=35, enable_events=True,enable_click_events=True)],
+                  row_height=35, enable_events=True, enable_click_events=True)],
         [sg.Text(size=(30, 0), key="Error"), ],
-        [sg.Button('Add', size=(15, 1), button_color=('Green on Lightgrey')),
-         sg.Button('Remove', size=(15, 1), button_color=('Brown on Lightgrey')),
-         sg.Button('Edit', size=(15, 1), button_color=('DarkBlue on Lightgrey')),
+        [sg.Button('Add', size=(15, 1), button_color='Green on Lightgrey'),
+         sg.Button('Remove', size=(15, 1), button_color='Brown on Lightgrey'),
+         sg.Button('Edit', size=(15, 1), button_color='DarkBlue on Lightgrey'),
          sg.Button('Manage Workers', size=(15, 1)),
          sg.Button('Manage Students', size=(15, 1)),
          sg.Button('Backlog', size=(15, 1)),
-         sg.Exit(pad=((0, 0), (0, 0)), button_color=('Brown on Lightgrey'))]
+         sg.Exit(pad=((0, 0), (0, 0)), button_color='Brown on Lightgrey')]
     ]
     manager_menu_layout = [[sg.Frame("", frame)]]
 
@@ -632,8 +663,8 @@ def open_manager_window():
             if manager_menu_event[0] == '-TABLE-':
                 if manager_menu_event[2][0] == -1 and manager_menu_event[2][1] != -1:
                     col_num_clicked = manager_menu_event[2][1]
-                    new_table_data = sort_table(current_inventory, col_num_clicked)
-                    manager_window['-TABLE-'].update(new_table_data)
+                    current_inventory = sort_table(current_inventory, col_num_clicked)
+                    manager_window['-TABLE-'].update(current_inventory)
         if manager_menu_event == "Edit":
             if manager_menu_values['-TABLE-']:
                 if len(manager_menu_values['-TABLE-']) == 1:
@@ -669,5 +700,3 @@ def open_manager_window():
         if manager_menu_event == sg.WIN_CLOSED or manager_menu_event == "Exit":
             manager_window.close()
             break
-
-

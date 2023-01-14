@@ -3,7 +3,7 @@ from Layouts import forgotPasswordLayout, changePasswordLayout, workerMenuLayout
     managerMenuLayout
 from DataBase import db
 
-sg.set_options(font=("Arial Baltic", 16))
+sg.set_options(font=("Arial Baltic", 12))
 
 sg.change_look_and_feel('systemdefaultforreal')
 
@@ -11,8 +11,6 @@ sg.change_look_and_feel('systemdefaultforreal')
 def mainMenu():
     # Main Menu Window Layout:
     frame = [[sg.Image('logo.png')],
-
-
              [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID', do_not_clear=False),
               sg.Submit(button_text="Change password")],
              [sg.Text("Password :", size=(10, 1)),
@@ -25,7 +23,7 @@ def mainMenu():
     login_layout = [[sg.Frame("", frame)]]
 
     login_window = sg.Window("Inventory Management System ", login_layout, element_justification='c', finalize=True
-                             ,icon='favicon.ico', use_ttk_buttons=True, border_depth=10,
+                             , icon='favicon.ico', use_ttk_buttons=True, border_depth=10,
                              titlebar_background_color='Lightgrey', ttk_theme='clam'
                              , auto_size_buttons=True)
     login_window.BorderDepth = 50
@@ -71,7 +69,9 @@ def mainMenu():
             registerLayout.open_register_window()
 
         if login_event == "Change password":
-            changePasswordLayout.open_change_password_window()
+            result = changePasswordLayout.open_change_password_window()
+            if result is True:
+                login_window["Error"].update("Password changed successfully !")
 
         if login_event == " Forgot password ":  # There are spaces before and after the string !!!!
             forgotPasswordLayout.open_forgot_password_window()

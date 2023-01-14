@@ -1,27 +1,42 @@
-4:Brush:2023-01-13:2023-01-27:Quality brush:4.67:3.0:1:return requested:2
-5:Brush:2023-01-14:2023-01-28:Quality brush:4.67:3.0:256623580:loan accepted:2
-6:Brush:2023-01-14:2023-01-28:Quality brush:4.67:3.0:244434893:loan requested:2
-7:Brush:::Quality brush:4.67:3.0:0:available:2
-8:Brush:::Quality brush:4.67:3.0:0:available:2
-9:Whiteboard:2023-01-14:2023-02-04:A very white board:4.0:4.0:1:loan requested:3
-10:Whiteboard:2023-01-13:2023-02-03:A very white board:4.0:4.0:1:return requested:3
-11:Whiteboard:::A very white board:4.0:4.0::available:3
-12:Paint:::Red paint:0:0:0:available:3
-13:Paint:::Red paint:0:0:0:available:3
-14:Paint:::Red paint:0:0:0:available:3
-15:Paint:::Red paint:0:0:0:available:3
-16:Paint:::Blue color:0:0:0:available:3
-17:Paint:::Blue color:0:0:0:available:3
-18:Paint:::Blue color:0:0:0:available:3
-19:Lens:::HDR-Lens:0:0:0:available:3
-20:Lens:::HDR-Lens:0:0:0:available:3
-21:Camera:2023-01-14:2023-02-11:Sony camera:3.0:1.0:0:available:4
-22:Camera:::Sony camera:3.0:1.0:0:available:4
-23:Video Camera:::Red - Camera:0:0:0:available:2
-24:Video Camera:::Red - Camera:0:0:0:available:2
-25:Wet Paint:::Yello:0:0:0:available:4
-26:Wet Paint:::Yello:0:0:0:available:4
-27:Wet Paint:::Yello:0:0:0:available:4
-28:Wet Paint:::Yello:0:0:0:available:4
-29:Wet Paint:::Yello:0:0:0:available:4
-30:Pen:::Writing:0:0:0:available:2
+1:Brush:::High Quality Brush:0:0:0:available:2
+2:Brush:::High Quality Brush:0:0:0:available:2
+3:Brush:::High Quality Brush:0:0:0:available:2
+4:Brush:::High Quality Brush:0:0:0:available:2
+5:Brush:::High Quality Brush:0:0:0:available:2
+6:Camera:::Canon Camera:0:0:0:available:3
+7:Camera:::Canon Camera:0:0:0:available:3
+8:Camera:::Canon Camera:0:0:0:available:3
+9:Camera:::Canon Camera:0:0:0:available:3
+10:Camera:::Canon Camera:0:0:0:available:3
+11:Camera:::Canon Camera:0:0:0:available:3
+12:Camera:::Canon Camera:0:0:0:available:3
+13:Camera:::Canon Camera:0:0:0:available:3
+14:Camera:::Canon Camera:0:0:0:available:3
+15:Camera:::Canon Camera:0:0:0:available:3
+16:Wet Paint:::Good paint:0:0:0:available:1
+17:Wet Paint:::Good paint:0:0:0:available:1
+18:Wet Paint:::Good paint:0:0:0:available:1
+19:Wet Paint:::Good paint:0:0:0:available:1
+20:Wet Paint:::Good paint:0:0:0:available:1
+21:White Canvas:::Very Very White:0:0:0:available:2
+22:White Canvas:::Very Very White:0:0:0:available:2
+23:White Canvas:::Very Very White:0:0:0:available:2
+24:White Canvas:::Very Very White:0:0:0:available:2
+25:White Canvas:::Very Very White:0:0:0:available:2
+26:Whiteboard:::Nice and smooth:0:0:0:available:3
+27:Whiteboard:::Nice and smooth:0:0:0:available:3
+28:Whiteboard:::Nice and smooth:0:0:0:available:3
+29:Whiteboard:::Nice and smooth:0:0:0:available:3
+30:Whiteboard:::Nice and smooth:0:0:0:available:3
+31:Whiteboard Markers:::Blue Color:0:0:0:available:1
+32:Whiteboard Markers:::Blue Color:0:0:0:available:1
+33:Whiteboard Markers:::Blue Color:0:0:0:available:1
+34:Whiteboard Markers:::Blue Color:0:0:0:available:1
+35:Paint Palette:::Colored like the rainbow:0:0:0:available:2
+36:Paint Palette:::Colored like the rainbow:0:0:0:available:2
+37:Paint Palette:::Colored like the rainbow:0:0:0:available:2
+38:Paint Palette:::Colored like the rainbow:0:0:0:available:2
+39:Paint Palette:::Colored like the rainbow:0:0:0:available:2
+40:Cutting Knife:::Caution ! very sharp:0:0:0:available:2
+41:Cutting Knife:::Caution ! very sharp:0:0:0:available:2
+42:Cutting Knife:::Caution ! very sharp:0:0:0:available:2

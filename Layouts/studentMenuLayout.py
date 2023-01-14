@@ -7,12 +7,75 @@ import operator
 sg.change_look_and_feel('SystemDefaultForReal')
 
 
-def sort_table(data, col_num_clicked):
+def sort_available_items_table(data, col_num_clicked):
     """tries to sort the data given to it based on what operator has been clicked in table"""
+    isNum = False
+
+    if col_num_clicked == 2:  # if chosen column is load period , convert all fields to type int for correct sort
+        isNum = True
+        for item in data:
+            item[col_num_clicked] = int(item[col_num_clicked])
+
+    elif col_num_clicked == 3:  # if chosen column is rating , convert all fields to type float for correct sort
+        isNum = True
+        for item in data:
+            item[col_num_clicked] = float(item[col_num_clicked])
+
+    table_data = None
     try:
         table_data = sorted(data, key=operator.itemgetter(col_num_clicked))
     except Exception as e:
-        sg.pop_error('Error in sorting error', 'Exception', e)
+        sg.popup_error('Error in sorting error', 'Exception', e)
+
+    if table_data == data:
+        table_data = list(reversed(table_data))
+
+    if isNum:
+        for item in table_data:
+            item[col_num_clicked] = str(item[col_num_clicked])
+
+    return table_data
+
+
+def sort_my_items_table(data, col_num_clicked):
+    """tries to sort the data given to it based on what operator has been clicked in table"""
+    isNum, isDate = False, False
+    min_date = datetime.date(datetime.MINYEAR, 1, 1)
+
+    if col_num_clicked == 0:  # if chosen column is ID , convert all fields to type int for correct sort
+        isNum = True
+        for item in data:
+            item[col_num_clicked] = int(item[col_num_clicked])
+
+    elif col_num_clicked in (3, 4):  # if chosen column is rating , convert all fields to type float for correct sort
+        isDate = True
+        for item in data:
+            if item[col_num_clicked] == '':
+                item[col_num_clicked] = min_date
+
+    if col_num_clicked == 5:  # if chosen column is ID , convert all fields to type int for correct sort
+        isNum = True
+        for item in data:
+            item[col_num_clicked] = float(item[col_num_clicked])
+
+    table_data = None
+    try:
+        table_data = sorted(data, key=operator.itemgetter(col_num_clicked))
+    except Exception as e:
+        sg.popup_error('Error in sorting error', 'Exception', e)
+
+    if table_data == data:
+        table_data = list(reversed(table_data))
+
+    if isNum:
+        for item in table_data:
+            item[col_num_clicked] = str(item[col_num_clicked])
+
+    elif isDate:
+        for item in data:
+            if item[col_num_clicked] == min_date:
+                item[col_num_clicked] = ''
+
     return table_data
 
 
@@ -35,7 +98,7 @@ def rate(rating, item_name):
 
 def open_rate_window(item_name):
     """func to create rating window and mange it"""
-    frame = [[sg.Text("Rate Item")],
+    frame = [[sg.Text(f"Rate Item : {item_name}")],
              [sg.Button('1', size=(4, 1)), sg.Button('2', size=(4, 1)), sg.Button('3', size=(4, 1)),
               sg.Button('4', size=(4, 1)), sg.Button('5', size=(4, 1))],
              ]
@@ -64,6 +127,7 @@ def return_item(user_selection, student_loaned_items):
             if index in user_selection:
                 item_id.append(item[0])
 
+        item_rated_set = set()
         for ID in item_id:
             if db.item_dict[ID].status == 'loan requested':
                 db.item_dict[ID].status = 'available'
@@ -72,6 +136,9 @@ def return_item(user_selection, student_loaned_items):
                 db.item_dict[ID].du_date = ''
             else:
                 db.item_dict[ID].status = 'return requested'  # update the status of the returned items in the database
+                if db.item_dict[ID].name not in item_rated_set:
+                    open_rate_window(db.item_dict[ID].name)
+                    item_rated_set.add(db.item_dict[ID].name)
         db.updateItems()
         return True
     else:  # write error to the user if he didn't choose items to return
@@ -80,13 +147,13 @@ def return_item(user_selection, student_loaned_items):
 
 def open_my_items_window(current_student):
     """func to create and manage loaned item window"""
-    my_items_headings = ['ID ', 'Name', 'Loan Date', 'Due Date', 'Description', 'Rating ', 'status']
+    my_items_headings = ['ID ', 'Name', 'Loan Date', 'Due Date', 'Description', 'Rating ', 'Status']
     student_loaned_items = db.get_students_loaned_items(current_student)
     frame = [
         [sg.Table(values=student_loaned_items,
                   headings=my_items_headings,
-                  col_widths=25,
-                  auto_size_columns=True,
+                  col_widths=[5, 15, 10, 10, 20, 10, 10],
+                  auto_size_columns=False,
                   display_row_numbers=False,
                   justification='c',
                   num_rows=10,
@@ -96,7 +163,7 @@ def open_my_items_window(current_student):
                   enable_click_events=True)],
         [sg.Button('Return', size=(7, 1)),
          sg.Text(size=(15, 1), key="Error"),
-         sg.Exit(pad=((560, 0), (0, 0)), button_color=('Brown on Lightgrey'))]
+         sg.Exit(pad=((600, 0), (0, 0)), button_color='Brown on Lightgrey')]
     ]
     my_items_layout = [[sg.Frame("", frame)]]
 
@@ -118,8 +185,8 @@ def open_my_items_window(current_student):
             if my_items_event[0] == '-TABLE-':
                 if my_items_event[2][0] == -1:
                     col_num_clicked = my_items_event[2][1]
-                    new_table_data = sort_table(student_loaned_items, col_num_clicked)
-                    my_items_window['-TABLE-'].update(new_table_data)
+                    student_loaned_items = sort_my_items_table(student_loaned_items, col_num_clicked)
+                    my_items_window['-TABLE-'].update(student_loaned_items)
         if my_items_event == "Exit" or my_items_event == sg.WIN_CLOSED:
             my_items_window.close()
             break
@@ -178,18 +245,17 @@ def open_student_window(current_student):
     frame = [
         [sg.Table(values=current_inventory,
                   headings=current_inventory_headings,
-                  col_widths=35,
-                  auto_size_columns=True,
+                  col_widths=[14, 8, 9, 8, 24],
+                  auto_size_columns=False,
                   display_row_numbers=False,
                   justification='c',
                   num_rows=10,
                   key='-TABLE-',
                   row_height=35, enable_events=True, enable_click_events=True)],
-        [sg.Text(size=(15, 1), key="Error")],
+        [sg.Text(size=(30, 1), key="Error")],
         [sg.Button('Request Item', size=(15, 1)),
-         sg.Button('My Items', size=(15, 1)),
-         sg.Button('Rate', size=(15, 1)),
-         sg.Exit(pad=((110, 0), (0, 0)), size=(7, 1), button_color=('Brown on Lightgrey'))]
+         sg.Button('My Items', size=(25, 1)),
+         sg.Exit(pad=((135, 0), (0, 0)), size=(7, 1), button_color=('Brown on Lightgrey'))]
     ]
     student_menu_layout = [[sg.Frame("", frame)]]
     student_menu_window = sg.Window("Student Menu", student_menu_layout, element_justification='c', finalize=True,
@@ -221,26 +287,13 @@ def open_student_window(current_student):
             student_menu_window.close()
             open_student_window(current_student)
 
-        if student_menu_event == "Rate":
-            # check if the user choose item before pressing on rate button
-            if len(student_menu_values['-TABLE-']) == 1:
-                chosen_item_idx = student_menu_values['-TABLE-'][0]
-                chosen_item_name = current_inventory[chosen_item_idx][0]
-                open_rate_window(chosen_item_name)
-                student_menu_window.close()
-                open_student_window(current_student)
-                # warning to the user if he chose more than one item to rate in the same time
-            elif len(student_menu_values['-TABLE-']) > 1:
-                student_menu_window["Error"].update("You can only rate one item at a time")
-            else:  # warning to the user if he isn't choose item before pressing on rate button
-                student_menu_window["Error"].update("choose item to rate!")
         if isinstance(student_menu_event, tuple):
             # Sorts table based on even clicked
             if student_menu_event[0] == '-TABLE-':
                 if student_menu_event[2][0] == -1:
                     col_num_clicked = student_menu_event[2][1]
-                    new_table_data = sort_table(current_inventory, col_num_clicked)
-                    student_menu_window['-TABLE-'].update(new_table_data)
+                    current_inventory = sort_available_items_table(current_inventory, col_num_clicked)
+                    student_menu_window['-TABLE-'].update(current_inventory)
         if student_menu_event == sg.WIN_CLOSED or student_menu_event == "Exit":
             student_menu_window.close()
             break

@@ -54,10 +54,9 @@ def open_change_password_window():
               sg.Exit(pad=((265, 0), (0, 0)), size=(7, 1), button_color=('Brown on Lightgrey'))]]
     change_password_layout = [[sg.Frame("", frame)]]
     change_password_window = sg.Window("Change Password", change_password_layout, element_justification='c',
-                                       finalize=True
-                                       , icon='favicon.ico', use_ttk_buttons=True, border_depth=10,
-                                       titlebar_background_color='Lightgrey', ttk_theme='clam'
-                                       , auto_size_buttons=True)
+                                       finalize=True,
+                                       use_custom_titlebar=True, titlebar_icon='icon.png', use_ttk_buttons=True,
+                                       border_depth=10, titlebar_background_color='Lightgrey', ttk_theme='clam')
     while True:
         change_check_res = False
         change_password_event, change_password_values = change_password_window.read()
@@ -69,9 +68,12 @@ def open_change_password_window():
             # The system calls the function below to check input from user
             change_check_res = attempt_to_change(input_ID, input_current_password, input_new_password,
                                                  input_repeat_new_password)
-            if change_check_res is not True:
+            if change_check_res is True:
+                change_password_window.close()
+                return True
+            else:
                 change_password_window["Error"].update(change_check_res)
 
-        if change_password_event == sg.WIN_CLOSED or change_password_event == "Exit" or change_check_res is True:
+        if change_password_event == sg.WIN_CLOSED or change_password_event == "Exit":
             change_password_window.close()
             break
