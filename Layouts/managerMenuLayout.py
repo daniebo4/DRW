@@ -8,17 +8,18 @@ sg.set_options(font=("Arial Baltic", 16))
 sg.change_look_and_feel('SystemDefaultForReal')
 
 
-# to do : complete this func , func is called in add_item func
 def add_item_check(input_name, input_quantity, input_description):
     return input_quantity > 0
 
-def sort_table( data, col_num_clicked):
+
+def sort_table(data, col_num_clicked):
     """tries to sort the data given to it based on what operator has been clicked in table"""
     try:
         table_data = sorted(data, key=operator.itemgetter(col_num_clicked))
     except Exception as e:
         sg.popup_error('Error in sorting error', 'Exception', e)
     return table_data
+
 
 def add_item():
     """
@@ -39,8 +40,7 @@ def add_item():
         [sg.Text(size=(10, 0), key="a")],
         [sg.Button('Add', size=(7, 1), button_color=('Green on Lightgrey')),
          sg.Button('Exit', size=(7, 1), button_color=('Brown on Lightgrey'))]]
-    add_items_layout=[[sg.Frame("", frame)]]
-
+    add_items_layout = [[sg.Frame("", frame)]]
 
     add_items_window = sg.Window("Add Items", add_items_layout, element_justification='c',
                                  icon='favicon.ico', use_ttk_buttons=True, border_depth=10,
@@ -97,19 +97,19 @@ def open_backlog(input_event_personas='StudentsLog'):
 
     open_backlog_values = backlog_list
     frame = [[sg.Table(values=open_backlog_values,
-                                     headings=open_backlog_headings,
-                                     auto_size_columns=False,
-                                     display_row_numbers=False,
-                                     justification='c',
-                                     num_rows=10,
-                                     key='-TABLE-',
-                                     row_height=35,
-                                     col_widths=[15, 15, 25],
-                                     enable_events=True,enable_click_events=True )],
-                           [sg.Text(size=(30, 1), key="Error")],
-                           [sg.Button('Students Log', size=(12, 1), key='students_log'),
-                            sg.Button('Workers Log', size=(12, 1), key='workers_log'),
-                            sg.Exit(pad=((345, 0), (0, 0)), button_color=('Brown on Lightgrey'))]]
+                       headings=open_backlog_headings,
+                       auto_size_columns=False,
+                       display_row_numbers=False,
+                       justification='c',
+                       num_rows=10,
+                       key='-TABLE-',
+                       row_height=35,
+                       col_widths=[15, 15, 25],
+                       enable_events=True, enable_click_events=True)],
+             [sg.Text(size=(30, 1), key="Error")],
+             [sg.Button('Students Log', size=(12, 1), key='students_log'),
+              sg.Button('Workers Log', size=(12, 1), key='workers_log'),
+              sg.Exit(pad=((345, 0), (0, 0)), button_color=('Brown on Lightgrey'))]]
     open_backlog_layout = [[sg.Frame("", frame)]]
     open_backlog_window = sg.Window("Backlog", open_backlog_layout, element_justification='c',
                                     icon='favicon.ico', use_ttk_buttons=True, border_depth=10,
@@ -204,12 +204,13 @@ def remove_item(chosen_item_id):
     # Window Layout:
     frame = [
         [sg.Text("Are you sure you want to remove this item?")],
-        [sg.Button(button_text="Yes", button_color=('Green on Lightgrey'), size=(7, 1),pad=(75,0)),
-         sg.Button(button_text="No", button_color=('Brown on Lightgrey'), size=(7, 1)) ]]
+        [sg.Button(button_text="Yes", button_color=('Green on Lightgrey'), size=(7, 1), pad=(75, 0)),
+         sg.Button(button_text="No", button_color=('Brown on Lightgrey'), size=(7, 1))]]
     remove_item_layout = [[sg.Frame("", frame)]]
-    remove_item_window = sg.Window("Remove Item", remove_item_layout, element_justification='c',icon='favicon.ico', use_ttk_buttons=True, border_depth=10,
-                             titlebar_background_color='Lightgrey', ttk_theme='clam'
-                             , auto_size_buttons=True)
+    remove_item_window = sg.Window("Remove Item", remove_item_layout, element_justification='c', icon='favicon.ico',
+                                   use_ttk_buttons=True, border_depth=10,
+                                   titlebar_background_color='Lightgrey', ttk_theme='clam'
+                                   , auto_size_buttons=True)
     # Window Layout Conditions,according to button clicked by user:
     while True:
         remove_item_event, remove_item_values = remove_item_window.read()
@@ -247,7 +248,7 @@ def manage_workers():
                   key='-TABLE-',
                   row_height=35,
                   def_col_width=25,
-                  enable_events=True,enable_click_events=True )],
+                  enable_events=True, enable_click_events=True)],
         [sg.Text(size=(15, 1), key="Error")],
         [sg.Button('Add New Worker', size=(15, 1), button_color=('Green on Lightgrey')),
          sg.Button('Remove Worker', size=(15, 1), button_color=('Brown on Lightgrey')),
@@ -310,15 +311,15 @@ def add_worker():
     """
     # Window Layout:
     frame = [[sg.Text("Add a New Worker:")],
-                             [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID')],
-                             [sg.Text("Password :", size=(10, 1)),
-                              sg.InputText('', size=(20, 1), key='input_password', password_char='●')],
-                             [sg.Text("Name :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_name')],
-                             [sg.Text("Secret Word :", size=(10, 1)),
-                              sg.InputText('', size=(20, 1), key='input_secret_word')],
-                             [sg.Text(size=(30, 1), key="Error")],
-                             [sg.Submit(button_text="Add"),
-                              sg.Exit(pad=((250, 0), (0, 0)))]]
+             [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID')],
+             [sg.Text("Password :", size=(10, 1)),
+              sg.InputText('', size=(20, 1), key='input_password', password_char='●')],
+             [sg.Text("Name :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_name')],
+             [sg.Text("Secret Word :", size=(10, 1)),
+              sg.InputText('', size=(20, 1), key='input_secret_word')],
+             [sg.Text(size=(30, 1), key="Error")],
+             [sg.Submit(button_text="Add"),
+              sg.Exit(pad=((250, 0), (0, 0)))]]
     add_new_worker_layout = [[sg.Frame("", frame)]]
     add_worker_window = sg.Window("Add New Worker", add_new_worker_layout, element_justification='c',
                                   icon='favicon.ico', use_ttk_buttons=True, border_depth=10,
@@ -495,7 +496,7 @@ def manage_students():
                   key='-TABLE-',
                   row_height=35,
                   def_col_width=25,
-                  enable_events=True,enable_click_events=True )],
+                  enable_events=True, enable_click_events=True)],
         [sg.Text(size=(15, 1), key="Error")],
         [sg.Button('Add New Student', size=(15, 1), button_color=('Green on Lightgrey')),
          sg.Button('Remove Student', size=(15, 1), button_color=('Brown on Lightgrey')),
@@ -601,7 +602,7 @@ def open_manager_window():
                   justification='c',
                   num_rows=10,
                   key='-TABLE-',
-                  row_height=35, enable_events=True,enable_click_events=True)],
+                  row_height=35, enable_events=True, enable_click_events=True)],
         [sg.Text(size=(30, 0), key="Error"), ],
         [sg.Button('Add', size=(15, 1), button_color=('Green on Lightgrey')),
          sg.Button('Remove', size=(15, 1), button_color=('Brown on Lightgrey')),
@@ -669,5 +670,3 @@ def open_manager_window():
         if manager_menu_event == sg.WIN_CLOSED or manager_menu_event == "Exit":
             manager_window.close()
             break
-
-

@@ -11,8 +11,6 @@ sg.change_look_and_feel('systemdefaultforreal')
 def mainMenu():
     # Main Menu Window Layout:
     frame = [[sg.Image('logo.png')],
-
-
              [sg.Text("ID :", size=(10, 1)), sg.InputText('', size=(20, 1), key='input_ID', do_not_clear=False),
               sg.Submit(button_text="Change password")],
              [sg.Text("Password :", size=(10, 1)),
@@ -71,7 +69,9 @@ def mainMenu():
             registerLayout.open_register_window()
 
         if login_event == "Change password":
-            changePasswordLayout.open_change_password_window()
+            result = changePasswordLayout.open_change_password_window()
+            if result is True:
+                login_window["Error"].update("Password changed successfully !")
 
         if login_event == " Forgot password ":  # There are spaces before and after the string !!!!
             forgotPasswordLayout.open_forgot_password_window()
