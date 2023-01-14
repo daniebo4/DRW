@@ -51,7 +51,7 @@ def sort_item_status_table(data, col_num_clicked):
     """tries to sort the data given to it based on what operator has been clicked in table"""
     isNum, isDate = False, False
     if col_num_clicked in (
-    0, 2, 7):  # if chosen column is ID or loan period , convert all ID to type int for correct sort
+            0, 2, 7):  # if chosen column is ID or loan period , convert all ID to type int for correct sort
         isNum = True
         for item in data:
             item[col_num_clicked] = int(item[col_num_clicked])
@@ -74,7 +74,7 @@ def sort_item_status_table(data, col_num_clicked):
 
     if isNum:
         for item in table_data:
-            item[0] = str(item[0])
+            item[col_num_clicked] = str(item[col_num_clicked])
 
     elif isDate:
         for item in data:
@@ -109,7 +109,37 @@ def sort_table(data, col_num_clicked):
 
     if isNum:
         for item in table_data:
-            item[0] = str(item[0])
+            item[col_num_clicked] = str(item[col_num_clicked])
+
+    return table_data
+
+
+def sort_available_table(data, col_num_clicked):
+    """tries to sort the data given to it based on what operator has been clicked in table"""
+    isNum = False
+
+    if col_num_clicked in (1, 2):  # if chosen column is number , convert all ID to type int for correct sort
+        isNum = True
+        for item in data:
+            item[col_num_clicked] = int(item[col_num_clicked])
+
+    if col_num_clicked == 3:  # if chosen column is rating , convert empty fields to float for correct sort
+        isNum = True
+        for item in data:
+            item[col_num_clicked] = float(item[col_num_clicked])
+
+    table_data = None
+    try:
+        table_data = sorted(data, key=operator.itemgetter(col_num_clicked))
+    except Exception as e:
+        sg.popup_error('Error in sorting error', 'Exception', e)
+
+    if table_data == data:  # detect if table is already sorted , if True , reverse the sort
+        table_data = list(reversed(table_data))
+
+    if isNum:
+        for item in table_data:
+            item[col_num_clicked] = str(item[col_num_clicked])
 
     return table_data
 
@@ -292,8 +322,8 @@ def open_worker_window(current_worker):
             if worker_menu_event[0] == '-TABLE-':
                 if worker_menu_event[2][0] == -1:
                     col_num_clicked = worker_menu_event[2][1]
-                    new_table_data = sort_table(current_inventory, col_num_clicked)
-                    worker_menu_window['-TABLE-'].update(new_table_data)
+                    current_inventory = sort_available_table(current_inventory, col_num_clicked)
+                    worker_menu_window['-TABLE-'].update(current_inventory)
 
         if worker_menu_event == "Returns":
             open_returns_window(current_worker)
